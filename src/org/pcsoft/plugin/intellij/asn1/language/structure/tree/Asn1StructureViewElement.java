@@ -10,11 +10,7 @@ import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.NotNull;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.Asn1File;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.gen.Asn1ClassDefinition;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.gen.Asn1ClassDefinitionField;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.gen.Asn1ObjectClassDefinition;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.gen.Asn1ObjectClassDefinitionField;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.gen.Asn1ObjectDefinition;
+import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.*;
 
 import java.util.ArrayList;
 import java.util.Collection;

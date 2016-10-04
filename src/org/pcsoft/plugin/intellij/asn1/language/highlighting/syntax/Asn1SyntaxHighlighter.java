@@ -10,7 +10,6 @@ import org.jetbrains.annotations.NotNull;
 import org.pcsoft.plugin.intellij.asn1.language.parser.lexer.Asn1LexerAdapter;
 import org.pcsoft.plugin.intellij.asn1.language.parser.token.Asn1CustomElementFactory;
 import org.pcsoft.plugin.intellij.asn1.language.parser.token.Asn1GenElementFactory;
-import org.pcsoft.plugin.intellij.asn1.language.parser.token.Asn1GenElementFactory;
 
 /**
  * Created by pfeifchr on 27.09.2016.
@@ -39,7 +38,7 @@ public class Asn1SyntaxHighlighter extends SyntaxHighlighterBase {
     public TextAttributesKey[] getTokenHighlights(IElementType iElementType) {
         if (iElementType.equals(Asn1CustomElementFactory.COMMENT)) {
             return new TextAttributesKey[]{COMMENT};
-        } else if (iElementType.equals(Asn1ElementFactory.NAME)) {
+        } else if (iElementType.equals(Asn1GenElementFactory.NAME)) {
             return new TextAttributesKey[]{NAME};
         } else if (iElementType.equals(Asn1CustomElementFactory.OPERATOR)) {
             return new TextAttributesKey[]{OPERATOR};
@@ -47,8 +46,8 @@ public class Asn1SyntaxHighlighter extends SyntaxHighlighterBase {
             return new TextAttributesKey[]{BAD_CHARACTER};
         } else if (iElementType.equals(Asn1CustomElementFactory.KEYWORD)) {
             return new TextAttributesKey[]{KEYWORD};
-        } else if (iElementType.equals(Asn1ElementFactory.PRIMITIVE_TYPE) || iElementType.equals(Asn1ElementFactory.LIST_TYPE) ||
-                iElementType.equals(Asn1ElementFactory.LIST_OF_TYPE)) {
+        } else if (iElementType.equals(Asn1GenElementFactory.PRIMITIVE_TYPE) || iElementType.equals(Asn1GenElementFactory.LIST_TYPE) ||
+                iElementType.equals(Asn1GenElementFactory.LIST_OF_TYPE)) {
             return new TextAttributesKey[]{NATIVE_TYPE};
         } else if (iElementType.equals(Asn1GenElementFactory.NUMBER)) {
             return new TextAttributesKey[]{NUMBER};
@@ -56,7 +55,7 @@ public class Asn1SyntaxHighlighter extends SyntaxHighlighterBase {
             return new TextAttributesKey[]{SEPARATOR};
         } else if (iElementType.equals(Asn1CustomElementFactory.SYMBOL)) {
             return new TextAttributesKey[]{SYMBOL};
-        } else if (iElementType.equals(Asn1ElementFactory.TEXT) || iElementType.equals(Asn1CustomElementFactory.QUOTE)) {
+        } else if (iElementType.equals(Asn1GenElementFactory.TEXT) || iElementType.equals(Asn1CustomElementFactory.QUOTE)) {
             return new TextAttributesKey[]{STRING};
         }
 

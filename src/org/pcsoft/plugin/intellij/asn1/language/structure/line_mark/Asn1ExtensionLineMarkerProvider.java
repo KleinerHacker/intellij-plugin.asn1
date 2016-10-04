@@ -8,8 +8,8 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.ResolveResult;
 import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.gen.Asn1ClassDefinition;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.gen.Asn1ObjectClassDefinition;
+import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ClassDefinition;
+import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ObjectClassDefinition;
 import org.pcsoft.plugin.intellij.asn1.language.reference.Asn1ObjectClassDefinitionReference;
 import org.pcsoft.plugin.intellij.asn1.language.reference.Asn1ReferenceUtils;
 

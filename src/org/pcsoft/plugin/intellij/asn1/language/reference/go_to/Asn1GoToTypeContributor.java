@@ -4,8 +4,8 @@ import com.intellij.navigation.ChooseByNameContributor;
 import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.gen.Asn1ClassDefinition;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.gen.Asn1ObjectClassDefinition;
+import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ClassDefinition;
+import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ObjectClassDefinition;
 import org.pcsoft.plugin.intellij.asn1.language.reference.Asn1ReferenceUtils;
 
 import java.util.ArrayList;

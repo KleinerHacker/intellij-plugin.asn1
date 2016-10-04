@@ -8,25 +8,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiReference;
 import com.intellij.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.Nullable;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.gen.Asn1ClassDefinition;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.gen.Asn1ClassDefinitionField;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.gen.Asn1ClassDefinitionFieldName;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.gen.Asn1ClassDefinitionName;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.gen.Asn1ClassDefinitionRef;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.gen.Asn1ImportElementFile;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.gen.Asn1ImportElementName;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.gen.Asn1ModuleDefinition;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.gen.Asn1ModuleDefinitionName;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.gen.Asn1ObjectClassDefinition;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.gen.Asn1ObjectClassDefinitionField;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.gen.Asn1ObjectClassDefinitionFieldName;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.gen.Asn1ObjectClassDefinitionFieldRef;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.gen.Asn1ObjectClassDefinitionName;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.gen.Asn1ObjectClassDefinitionRef;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.gen.Asn1ObjectDefinition;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.gen.Asn1ObjectDefinitionName;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.gen.Asn1TagDefinition;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.gen.Asn1ValueObjectIdentifierPart;
+import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.*;
 import org.pcsoft.plugin.intellij.asn1.language.parser.token.Asn1CustomElementFactory;
 import org.pcsoft.plugin.intellij.asn1.language.parser.token.Asn1GenElementFactory;
 import org.pcsoft.plugin.intellij.asn1.language.reference.Asn1ClassDefinitionReference;
@@ -36,7 +18,7 @@ import org.pcsoft.plugin.intellij.asn1.language.reference.Asn1ObjectClassDefinit
 import org.pcsoft.plugin.intellij.asn1.type.Asn1TagType;
 import org.pcsoft.plugin.intellij.asn1.type.Asn1TaggingType;
 
-import javax.swing.Icon;
+import javax.swing.*;
 
 /**
  * Created by pfeifchr on 27.09.2016.
@@ -53,7 +35,7 @@ public interface Asn1ElementUtils {
     }
 
     static ASTNode getNameNode(final PsiElement element) {
-        final ASTNode astNode = element.getNode().findChildByType(Asn1ElementFactory.NAME);
+        final ASTNode astNode = element.getNode().findChildByType(Asn1GenElementFactory.NAME);
         if (astNode != null) {
             return astNode;
         } else {
@@ -67,7 +49,7 @@ public interface Asn1ElementUtils {
     }
 
     static PsiElement setName(final Asn1ModuleDefinition moduleDefinition, final String newName) {
-        final ASTNode astNode = moduleDefinition.getModuleDefinitionName().getNode().findChildByType(Asn1ElementFactory.NAME);
+        final ASTNode astNode = getNameNode(moduleDefinition.getModuleDefinitionName());
         if (astNode != null) {
             //TODO
         }
@@ -76,7 +58,7 @@ public interface Asn1ElementUtils {
     }
 
     static PsiElement getNameIdentifier(final Asn1ModuleDefinition moduleDefinition) {
-        final ASTNode astNode = moduleDefinition.getModuleDefinitionName().getNode().findChildByType(Asn1ElementFactory.NAME);
+        final ASTNode astNode = getNameNode(moduleDefinition.getModuleDefinitionName());
         if (astNode != null) {
             return astNode.getPsi();
         } else {
@@ -96,7 +78,7 @@ public interface Asn1ElementUtils {
     }
 
     static PsiElement setName(final Asn1ImportElementFile importElementFile, final String newName) {
-        final ASTNode astNode = importElementFile.getNode().findChildByType(Asn1ElementFactory.NAME);
+        final ASTNode astNode = getNameNode(importElementFile);
         if (astNode != null) {
             //TODO
         }
@@ -105,7 +87,7 @@ public interface Asn1ElementUtils {
     }
 
     static PsiElement getNameIdentifier(final Asn1ImportElementFile importElementFile) {
-        final ASTNode astNode = importElementFile.getNode().findChildByType(Asn1ElementFactory.NAME);
+        final ASTNode astNode = getNameNode(importElementFile);
         if (astNode != null) {
             return astNode.getPsi();
         } else {
@@ -124,7 +106,7 @@ public interface Asn1ElementUtils {
     }
 
     static PsiElement setName(final Asn1ImportElementName importElementName, final String newName) {
-        final ASTNode astNode = importElementName.getNode().findChildByType(Asn1ElementFactory.NAME);
+        final ASTNode astNode = getNameNode(importElementName);
         if (astNode != null) {
             //TODO
         }
@@ -133,7 +115,7 @@ public interface Asn1ElementUtils {
     }
 
     static PsiElement getNameIdentifier(final Asn1ImportElementName importElementName) {
-        final ASTNode astNode = importElementName.getNode().findChildByType(Asn1GenElementFactory.NAME);
+        final ASTNode astNode = getNameNode(importElementName);
         if (astNode != null) {
             return astNode.getPsi();
         } else {
@@ -484,7 +466,7 @@ public interface Asn1ElementUtils {
 
     //region Element - Tag Definition
     static int getTagNumber(final Asn1TagDefinition tagDefinition) {
-        final ASTNode astNode = tagDefinition.getNode().findChildByType(Asn1ElementFactory.NUMBER);
+        final ASTNode astNode = tagDefinition.getNode().findChildByType(Asn1GenElementFactory.NUMBER);
         if (astNode != null) {
             return Integer.parseInt(astNode.getText());
         } else {
@@ -528,7 +510,7 @@ public interface Asn1ElementUtils {
 
     @Nullable
     static Integer getNumber(final Asn1ValueObjectIdentifierPart objectIdentifierPart) {
-        final ASTNode astNode = objectIdentifierPart.getNode().findChildByType(Asn1ElementFactory.NUMBER);
+        final ASTNode astNode = objectIdentifierPart.getNode().findChildByType(Asn1GenElementFactory.NUMBER);
         if (astNode != null) {
             return Integer.parseInt(astNode.getText());
         } else {

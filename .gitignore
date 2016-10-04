@@ -1,5 +1,5 @@
-.idea
 out
+gen
 src/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/gen
 src/org/pcsoft/plugin/intellij/asn1/language/parser/Asn1Parser.java
 src/org/pcsoft/plugin/intellij/asn1/language/parser/lexer/Asn1Lexer.java

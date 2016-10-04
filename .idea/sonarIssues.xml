@@ -1,0 +1,564 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="issues">
+    <option name="index">
+      <map>
+        <entry key="/a.dummy">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="/asn1.bnf.preview">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="/fragment.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../IdXPress/source/Server/api/pom.xml">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../IdXPress/source/Server/api/src/main/java/de/bdr/mobile/server/api/CContract.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../IdXPress/source/Server/common/pom.xml">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../IdXPress/source/Server/ws-interface/src/main/java/de/bdr/mobile/server/ws_interface/encoding/MachineEncoder.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../asn1-framework/source/api/pom.xml">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../asn1-framework/source/core/src/main/java/de/bdr/framework/asn1/core/coding/ber/util/BERNumberCodingUtils.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/resources/META-INF/plugin.xml">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/Asn1Icons.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/Asn1BracesMatcher.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/Asn1FileType.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/Asn1FileTypeFactory.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/Asn1Language.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/Asn1QuoteHandler.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/common/ASN1Commenter.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/common/Asn1StatementUpDownMover.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/contributor/Asn1NativeTypeCompletionContributor.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/contributor/reference/Asn1ReferenceContributor.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/folding/Asn1ImportFolding.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/folding/Asn1ModuleIODFolding.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/folding/Asn1TypeFolding.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/manipulator/ASN1ElementManipulator.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/manipulator/Asn1ClassDefinitionManipulator.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/manipulator/Asn1ClassFieldDefinitionTypeManipulator.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/manipulator/Asn1ClassFieldReferenceManipulator.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/manipulator/Asn1ElementManipulator.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/manipulator/Asn1FieldDefinitionReferenceManipulator.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/manipulator/Asn1ImportElementFileManipulator.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/manipulator/Asn1ImportElementTypeManipulator.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/parser/Asn1Parser.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/parser/Asn1ParserDefinition.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/parser/Asn1ParserUtil.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/parser/asn1.bnf">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/parser/asn1.flex">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/parser/highlighting/Asn1SyntaxHighlighter.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/parser/highlighting/Asn1SyntaxHighlighterFactory.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/parser/lexer/Asn1Lexer.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/parser/lexer/Asn1LexerAdapter.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/parser/lexer/asn1.bnf">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/parser/lexer/asn1.flex">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/Asn1ElementUtils.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/gen/Asn1ClassDefinition.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/gen/Asn1ClassDefinitionName.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/gen/Asn1ClassFieldDefinitionNameImpl.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/gen/Asn1TagDefinition.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/manipulator/Asn1ClassDefinitionRefClassManipulator.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/manipulator/Asn1ClassDefinitionRefManipulator.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/manipulator/Asn1ClassDefinitionRefObjectClassManipulator.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/manipulator/Asn1ObjectClassDefinitionFieldManipulator.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/manipulator/Asn1ObjectClassDefinitionFieldRefManipulator.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/manipulator/Asn1ObjectClassDefinitionManipulator.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/manipulator/Asn1ObjectClassDefinitionRefManipulator.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/util/Asn1ClassDefinitionElementUtils.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/util/Asn1ElementUtils.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/psi/Asn1File.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/psi/Asn1PsiElement.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/psi/Asn1PsiElementFactory.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/psi/Asn1UnknownPsiElement.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/psi/element/Asn1ElementRenameUtils.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/psi/element/Asn1ElementUtils.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/psi/element/Asn1ElementValueUtils.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/psi/element/Asn1LineImpl.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/psi/element/Asn1Line_Impl.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/psi/element/Asn1ModuleDefinition.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/psi/element/Asn1ModuleName.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/psi/element/Asn1ModuleNameImpl.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/psi/element/Asn1NamedElement.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/psi/element/Asn1NamedElementImpl.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/psi/element/Asn1PsiElement.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/psi/element/Asn1RenameUtils.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/psi/element/Asn1RenamingUtils.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/psi/element/Asn1UnknownPsiElement.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/psi/element/Asn1Visitor.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/psi/element/gen/Asn1ClassDefinitionImpl.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/psi/element/gen/Asn1ClassFieldDefinitionName.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/psi/element/gen/Asn1ClassFieldDefinitionNameImpl.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/psi/element/gen/Asn1ClassFieldDefinitionTypeImpl.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/psi/element/gen/Asn1ModuleDefinitionImpl.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/psi/element/manipulator/Asn1ObjectClassFieldDefinitionTypeManipulator.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/psi/type/Asn1TagType.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/psi/type/Asn1TaggingType.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/psi/type/ListOfType.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/psi/type/ListType.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/psi/type/PrimitiveType.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/psi/type/ValueType.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/reference/Asn1ClassDefinitionReference.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/reference/Asn1FileReference.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/reference/Asn1ObjectClassDefinitionFieldReference.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/reference/Asn1ObjectClassDefinitionReference.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/reference/Asn1ObjectClassFieldDefinitionReference.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/reference/Asn1Reference.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/reference/Asn1ReferenceUtils.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/reference/go_to/Asn1GoToFieldContributor.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/reference/go_to/Asn1GoToTypeContributor.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/structure/Asn1StructureViewElement.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/structure/Asn1StructureViewFactory.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/structure/Asn1StructureViewModel.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/structure/folding/Asn1ImportFolding.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/structure/folding/Asn1ModuleIODFolding.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/structure/folding/Asn1TypeFolding.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/structure/line_mark/Asn1ExtensionLineMarkerProvider.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/structure/line_mark/Asn1LineMarkerProvider.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/structure/tree/Asn1StructureViewElement.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/token/Asn1CustomElementFactory.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/token/Asn1ElementFactory.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/token/Asn1ElementType.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/token/Asn1TokenFactory.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/token/Asn1TokenSetFactory.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/token/Asn1TokenType.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>

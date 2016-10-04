@@ -8,9 +8,9 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import org.jetbrains.annotations.NotNull;
 import org.pcsoft.plugin.intellij.asn1.language.Asn1Language;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.gen.Asn1ClassDefinition;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.gen.Asn1ObjectClassDefinition;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.gen.Asn1ObjectDefinition;
+import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ClassDefinition;
+import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ObjectClassDefinition;
+import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ObjectDefinition;
 
 /**
  * Created by pfeifchr on 04.10.2016.

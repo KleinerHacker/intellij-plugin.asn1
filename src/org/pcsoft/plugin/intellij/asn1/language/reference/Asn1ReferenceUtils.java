@@ -11,10 +11,10 @@ import com.intellij.util.indexing.FileBasedIndex;
 import org.apache.commons.lang.StringUtils;
 import org.pcsoft.plugin.intellij.asn1.language.Asn1FileType;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.Asn1File;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.gen.Asn1ClassDefinition;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.gen.Asn1ClassDefinitionField;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.gen.Asn1ObjectClassDefinition;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.gen.Asn1ObjectClassDefinitionField;
+import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ClassDefinition;
+import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ClassDefinitionField;
+import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ObjectClassDefinition;
+import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ObjectClassDefinitionField;
 
 import java.util.ArrayList;
 import java.util.Collection;

@@ -16,7 +16,7 @@ import org.pcsoft.plugin.intellij.asn1.language.Asn1Language;
 import org.pcsoft.plugin.intellij.asn1.language.parser.lexer.Asn1LexerAdapter;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.Asn1File;
 import org.pcsoft.plugin.intellij.asn1.language.parser.token.Asn1CustomElementFactory;
-import org.pcsoft.plugin.intellij.asn1.language.parser.token.Asn1ElementFactory;
+import org.pcsoft.plugin.intellij.asn1.language.parser.token.Asn1GenElementFactory;
 
 /**
  * Created by pfeifchr on 27.09.2016.
@@ -61,7 +61,7 @@ public class Asn1ParserDefinition implements ParserDefinition {
     @NotNull
     @Override
     public PsiElement createElement(ASTNode astNode) {
-        return Asn1ElementFactory.Factory.createElement(astNode);
+        return Asn1GenElementFactory.Factory.createElement(astNode);
     }
 
     @Override

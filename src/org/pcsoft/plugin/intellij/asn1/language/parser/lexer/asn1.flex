@@ -3,7 +3,7 @@ package org.pcsoft.plugin.intellij.asn1.language.parser.lexer;
 import com.intellij.lexer.FlexLexer;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.TokenType;
-import org.pcsoft.plugin.intellij.asn1.language.parser.token.Asn1ElementFactory;
+import org.pcsoft.plugin.intellij.asn1.language.parser.token.Asn1GenElementFactory;
 import org.pcsoft.plugin.intellij.asn1.language.parser.token.Asn1CustomElementFactory;
 
 %%
@@ -47,19 +47,19 @@ LIST_OF_TYPE="SEQUENCE OF" | "SET OF"
 {COMMENT_BLOCK}                                 { return Asn1CustomElementFactory.COMMENT; }
 
 {KEYWORD}                                       { return Asn1CustomElementFactory.KEYWORD; }
-{PRIMITIVE_TYPE}                                { return Asn1ElementFactory.PRIMITIVE_TYPE; }
-{LIST_OF_TYPE}                                  { return Asn1ElementFactory.LIST_OF_TYPE; }
-{LIST_TYPE}                                     { return Asn1ElementFactory.LIST_TYPE; }
+{PRIMITIVE_TYPE}                                { return Asn1GenElementFactory.PRIMITIVE_TYPE; }
+{LIST_OF_TYPE}                                  { return Asn1GenElementFactory.LIST_OF_TYPE; }
+{LIST_TYPE}                                     { return Asn1GenElementFactory.LIST_TYPE; }
 {OPERATOR}                                      { return Asn1CustomElementFactory.OPERATOR; }
 {SEPARATOR}                                     { return Asn1CustomElementFactory.SEPARATOR; }
 {SYMBOL}                                        { return Asn1CustomElementFactory.SYMBOL; }
 {QUOTE}                                         { if (yystate() == STRING) yybegin(YYINITIAL); else yybegin(STRING); return Asn1CustomElementFactory.QUOTE; }
 
-{NUMBER}                                        { return Asn1ElementFactory.NUMBER; }
+{NUMBER}                                        { return Asn1GenElementFactory.NUMBER; }
 <STRING> {
-    {TEXT}                                      { return Asn1ElementFactory.TEXT; }
+    {TEXT}                                      { return Asn1GenElementFactory.TEXT; }
 }
-{NAME}                                          { return Asn1ElementFactory.NAME; }
+{NAME}                                          { return Asn1GenElementFactory.NAME; }
 
 {BR_ROUND_OPEN}                                 { return Asn1CustomElementFactory.BRACES_ROUND_OPEN; }
 {BR_ROUND_CLOSE}                                { return Asn1CustomElementFactory.BRACES_ROUND_CLOSE; }

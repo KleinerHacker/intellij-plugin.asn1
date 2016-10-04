@@ -5,8 +5,8 @@
 
     psiClassPrefix="Asn1"
     psiImplClassSuffix="Impl"
-    psiPackage="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.gen"
-    psiImplPackage="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.gen"
+    psiPackage="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element"
+    psiImplPackage="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element"
 
     elementTypeHolderClass="org.pcsoft.plugin.intellij.asn1.language.parser.token.Asn1GenElementFactory"
     elementTypeClass="org.pcsoft.plugin.intellij.asn1.language.parser.token.Asn1ElementType"
