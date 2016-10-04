@@ -1,12 +1,6 @@
-*.class
-
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
-
-# Package Files #
-*.jar
-*.war
-*.ear
-
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
-hs_err_pid*
+.idea
+out
+src/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/gen
+src/org/pcsoft/plugin/intellij/asn1/language/parser/Asn1Parser.java
+src/org/pcsoft/plugin/intellij/asn1/language/parser/lexer/Asn1Lexer.java
+src/org/pcsoft/plugin/intellij/asn1/language/parser/token/Asn1GenElementFactory.java
