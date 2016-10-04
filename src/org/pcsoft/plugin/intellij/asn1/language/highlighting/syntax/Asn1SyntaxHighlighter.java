@@ -12,7 +12,7 @@ import org.pcsoft.plugin.intellij.asn1.language.parser.token.Asn1CustomElementFa
 import org.pcsoft.plugin.intellij.asn1.language.parser.token.Asn1GenElementFactory;
 
 /**
- * Created by pfeifchr on 27.09.2016.
+ *
  */
 public class Asn1SyntaxHighlighter extends SyntaxHighlighterBase {
     public static final TextAttributesKey OPERATOR = TextAttributesKey.createTextAttributesKey("ASN1_OPERATOR", DefaultLanguageHighlighterColors.OPERATION_SIGN);

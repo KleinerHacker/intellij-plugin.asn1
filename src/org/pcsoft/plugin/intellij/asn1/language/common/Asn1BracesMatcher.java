@@ -9,7 +9,7 @@ import org.jetbrains.annotations.Nullable;
 import org.pcsoft.plugin.intellij.asn1.language.parser.token.Asn1CustomElementFactory;
 
 /**
- * Created by pfeifchr on 27.09.2016.
+ *
  */
 public class Asn1BracesMatcher implements PairedBraceMatcher {
     @Override

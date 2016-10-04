@@ -19,7 +19,7 @@ import org.pcsoft.plugin.intellij.asn1.language.parser.token.Asn1CustomElementFa
 import org.pcsoft.plugin.intellij.asn1.language.parser.token.Asn1GenElementFactory;
 
 /**
- * Created by pfeifchr on 27.09.2016.
+ *
  */
 public class Asn1ParserDefinition implements ParserDefinition {
     private static final IFileElementType FILE = new IFileElementType(Language.findInstance(Asn1Language.class));

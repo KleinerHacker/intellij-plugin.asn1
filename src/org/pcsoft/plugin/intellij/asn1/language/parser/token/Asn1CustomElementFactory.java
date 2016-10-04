@@ -4,7 +4,7 @@ import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
 
 /**
- * Created by pfeifchr on 27.09.2016.
+ *
  */
 public interface Asn1CustomElementFactory {
     IElementType WHITE_SPACE = new Asn1TokenType("WHITE_SPACE");

@@ -10,7 +10,7 @@ import org.pcsoft.plugin.intellij.asn1.language.Asn1Language;
 import javax.swing.Icon;
 
 /**
- * Created by pfeifchr on 27.09.2016.
+ *
  */
 public class Asn1File extends PsiFileBase {
     public Asn1File(@NotNull FileViewProvider fileViewProvider) {

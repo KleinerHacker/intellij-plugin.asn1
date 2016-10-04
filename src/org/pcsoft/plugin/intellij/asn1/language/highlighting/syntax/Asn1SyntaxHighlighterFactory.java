@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * Created by pfeifchr on 27.09.2016.
+ *
  */
 public class Asn1SyntaxHighlighterFactory extends SyntaxHighlighterFactory {
     @NotNull

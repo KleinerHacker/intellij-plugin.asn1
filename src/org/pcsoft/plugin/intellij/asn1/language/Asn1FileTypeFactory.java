@@ -5,7 +5,7 @@ import com.intellij.openapi.fileTypes.FileTypeFactory;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Created by pfeifchr on 27.09.2016.
+ *
  */
 public class Asn1FileTypeFactory extends FileTypeFactory {
     @Override

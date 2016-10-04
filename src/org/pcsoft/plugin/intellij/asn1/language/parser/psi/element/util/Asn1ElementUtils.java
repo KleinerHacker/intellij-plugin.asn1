@@ -21,7 +21,7 @@ import org.pcsoft.plugin.intellij.asn1.type.Asn1TaggingType;
 import javax.swing.*;
 
 /**
- * Created by pfeifchr on 27.09.2016.
+ *
  */
 public interface Asn1ElementUtils {
 
