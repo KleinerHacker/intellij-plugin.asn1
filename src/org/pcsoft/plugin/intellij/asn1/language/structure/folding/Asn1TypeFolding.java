@@ -11,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ClassDefinition;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ObjectClassDefinition;
+import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ObjectValueDefinition;
 import org.pcsoft.plugin.intellij.asn1.language.parser.token.Asn1CustomElementFactory;
 
 import java.util.ArrayList;
@@ -30,6 +31,7 @@ public class Asn1TypeFolding extends FoldingBuilderEx {
 
         list.addAll(handleClassDefinition(psiElement));
         list.addAll(handleObjectClassDefinition(psiElement));
+        list.addAll(handleObjectValueDefinition(psiElement));
 
         return list.toArray(new FoldingDescriptor[list.size()]);
     }
@@ -67,6 +69,40 @@ public class Asn1TypeFolding extends FoldingBuilderEx {
                                 new FoldingDescriptor(objectClassDefinition, new TextRange(
                                         objectClassDefinition.getNode().findChildByType(Asn1CustomElementFactory.BRACES_CURLY_OPEN).getStartOffset() + 1,
                                         objectClassDefinition.getNode().findChildByType(Asn1CustomElementFactory.BRACES_CURLY_CLOSE).getStartOffset()
+                                ))
+                        )
+                        .collect(Collectors.toList())
+        );
+        list.addAll(
+                objectClassDefinitions.stream()
+                        .filter(objectClassDefinition -> objectClassDefinition.getObjectClassConstructorContent() != null)
+                        .filter(objectClassDefinition -> objectClassDefinition.getObjectClassConstructorContent().getNode().findChildByType(Asn1CustomElementFactory.BRACES_CURLY_OPEN, objectClassDefinition.getObjectClassContent().getNode()) != null &&
+                                objectClassDefinition.getObjectClassConstructorContent().getNode().findChildByType(Asn1CustomElementFactory.BRACES_CURLY_CLOSE, objectClassDefinition.getObjectClassConstructorContent().getNode()) != null)
+                        .map(objectClassDefinition ->
+                                new FoldingDescriptor(objectClassDefinition.getObjectClassConstructorContent(), new TextRange(
+                                        objectClassDefinition.getObjectClassConstructorContent().getNode().findChildByType(Asn1CustomElementFactory.BRACES_CURLY_OPEN, objectClassDefinition.getObjectClassContent().getNode()).getStartOffset() + 1,
+                                        objectClassDefinition.getObjectClassConstructorContent().getNode().findChildByType(Asn1CustomElementFactory.BRACES_CURLY_CLOSE, objectClassDefinition.getObjectClassConstructorContent().getNode()).getStartOffset()
+                                ))
+                        )
+                        .collect(Collectors.toList())
+        );
+
+        return list;
+    }
+
+    private List<FoldingDescriptor> handleObjectValueDefinition(@NotNull PsiElement psiElement) {
+        final List<FoldingDescriptor> list = new ArrayList<>();
+
+        final Collection<Asn1ObjectValueDefinition> objectValueDefinitions = PsiTreeUtil.findChildrenOfType(psiElement, Asn1ObjectValueDefinition.class);
+        list.addAll(
+                objectValueDefinitions.stream()
+                        .filter(objectValueDefinition -> objectValueDefinition.getValueList() != null)
+                        .filter(objectValueDefinition -> objectValueDefinition.getValueList().getNode().findChildByType(Asn1CustomElementFactory.BRACES_CURLY_OPEN) != null &&
+                                objectValueDefinition.getValueList().getNode().findChildByType(Asn1CustomElementFactory.BRACES_CURLY_CLOSE) != null)
+                        .map(objectValueDefinition ->
+                                new FoldingDescriptor(objectValueDefinition, new TextRange(
+                                        objectValueDefinition.getValueList().getNode().findChildByType(Asn1CustomElementFactory.BRACES_CURLY_OPEN).getStartOffset() + 1,
+                                        objectValueDefinition.getValueList().getNode().findChildByType(Asn1CustomElementFactory.BRACES_CURLY_CLOSE).getStartOffset()
                                 ))
                         )
                         .collect(Collectors.toList())

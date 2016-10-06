@@ -24,31 +24,31 @@ asn1File ::= moduleDefinition
 moduleDefinition ::= moduleDefinitionName valueObjectIdentifier? 'DEFINITIONS' moduleTag '::=' moduleBody {
                      mixin="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1NamedElementImpl"
                      implements="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1NamedElement"
-                     methods=[getName setName getNameIdentifier]
+                     methods=[getName setName getNameIdentifier getPresentation]
 }
-moduleDefinitionName ::= NAME
+moduleDefinitionName ::= moduleDefinitionNameTokenSet
 {
     methods=[getName]
 }
 private moduleTag ::= (['IMPLICIT' | 'EXPLICIT' | 'AUTOMATIC'] 'TAGS')?
 private moduleBody ::= 'BEGIN' importDefinition? moduleContent 'END'
-moduleContent ::= (classDefinition | objectClassDefinition | objectDefinition)*
+moduleContent ::= (classDefinition | objectClassDefinition | objectValueDefinition)*
 /**********************************************************************************************************************/
 /********************************* Module Imports *********************************************************************/
 /**********************************************************************************************************************/
 importDefinition ::= 'IMPORTS' importBody
 private importBody ::= importContent? ';'
 importContent ::= importElement+
-importElement ::= importElementTypes 'FROM' importElementFile valueObjectIdentifier? importElementName?
+importElement ::= importElementTypes 'FROM' importElementModule valueObjectIdentifier? importElementName?
 private importElementTypes ::= (importElementType ',')* importElementType
-importElementType ::= NAME
-importElementFile ::= NAME
+importElementType ::= allClassDefinitionRef
+importElementModule ::= importElementModuleTokenSet
 {
     mixin="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1NamedElementImpl"
     implements="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1NamedElement"
     methods=[getName setName getNameIdentifier getReference]
 }
-importElementName ::= NAME
+importElementName ::= importElementNameTokenSet
 {
     mixin="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1NamedElementImpl"
     implements="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1NamedElement"
@@ -59,29 +59,28 @@ importElementName ::= NAME
 /******************************* Class Definition *********************************************************************/
 /**********************************************************************************************************************/
 
-classDefinition ::= classDefinitionName classDefinitionExtension? '::=' tagDefinition? LIST_OF_TYPE? (nativeType | classDefinitionType) classBody?
+classDefinition ::= classDefinitionName objectClassParameterDefinition? '::=' tagDefinition? LIST_OF_TYPE? ((primitiveType) | (listType classBody) | (classDefinitionType)) constraintDefinition?
  {
     mixin="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1NamedElementImpl"
     implements="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1NamedElement"
     methods=[getName setName getNameIdentifier getPresentation]
 }
-classDefinitionName ::= NAME
+classDefinitionName ::= classDefinitionNameTokenSet
 {
     methods=[getName]
 }
-classDefinitionExtension ::= '{' objectClassDefinitionRef ':' objectClassDefinitionRefName '}'
 private classBody ::= '{' classContent? '}'
 classContent ::= (classDefinitionField ',')* classDefinitionField
 /**********************************************************************************************************************/
 /********************** Class Definition Field ************************************************************************/
 /**********************************************************************************************************************/
-classDefinitionField ::= classDefinitionFieldName tagDefinition? LIST_OF_TYPE? (nativeType | objectClassDefinitionType | classDefinitionType)
+classDefinitionField ::= classDefinitionFieldName tagDefinition? LIST_OF_TYPE? (primitiveType | objectClassDefinitionType | classDefinitionType) constraintDefinition?
 {
     mixin="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1NamedElementImpl"
     implements="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1NamedElement"
     methods=[getName setName getNameIdentifier getPresentation]
 }
-classDefinitionFieldName ::= NAME
+classDefinitionFieldName ::= classDefinitionFieldNameTokenSet
 {
     methods=[getName]
 }
@@ -90,43 +89,45 @@ classDefinitionFieldName ::= NAME
 /******************** Object Class Definition *************************************************************************/
 /**********************************************************************************************************************/
 
-objectClassDefinition ::= objectClassDefinitionName '::=' 'CLASS' objectClassBody
+objectClassDefinition ::= objectClassDefinitionName '::=' 'CLASS' objectClassBody objectClassConstructor?
 {
     mixin="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1NamedElementImpl"
     implements="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1NamedElement"
     methods=[getName setName getNameIdentifier getPresentation]
 }
-objectClassDefinitionName ::= NAME
+objectClassDefinitionName ::= objectClassDefinitionNameTokenSet
 {
     methods=[getName]
 }
 private objectClassBody ::= '{' objectClassContent? '}'
 objectClassContent ::= (objectClassDefinitionField ',')* objectClassDefinitionField
+private objectClassConstructor ::= 'WITH SYNTAX' '{' objectClassConstructorContent '}'
+objectClassConstructorContent ::= objectClassConstructorTokenSet
 /**********************************************************************************************************************/
 /*************** Object Class Definition Field ************************************************************************/
 /**********************************************************************************************************************/
-objectClassDefinitionField ::= '&' objectClassDefinitionFieldName LIST_OF_TYPE? (nativeType | classDefinitionType)? 'UNIQUE'? 'OPTIONAL'?
+objectClassDefinitionField ::= '&' objectClassDefinitionFieldName LIST_OF_TYPE? (primitiveType | classDefinitionType)? 'UNIQUE'? 'OPTIONAL'? constraintDefinition?
 {
     mixin="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1NamedElementImpl"
     implements="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1NamedElement"
     methods=[getName setName getNameIdentifier getPresentation]
 }
-objectClassDefinitionFieldName ::= NAME
+objectClassDefinitionFieldName ::= objectClassDefinitionFieldNameTokenSet
 {
     methods=[getName]
 }
 
 /**********************************************************************************************************************/
-/**************** Object Definition ***********************************************************************************/
+/**************** Object Value Definition *****************************************************************************/
 /**********************************************************************************************************************/
 
-objectDefinition ::= objectDefinitionName (nativeType | NAME) '::=' valueDefinition
+objectValueDefinition ::= objectValueDefinitionName (primitiveType | allClassDefinitionRef) '::=' fullValueDefinition
  {
     mixin="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1NamedElementImpl"
     implements="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1NamedElement"
     methods=[getName setName getNameIdentifier getPresentation]
 }
-objectDefinitionName ::= NAME
+objectValueDefinitionName ::= objectValueDefinitionNameTokenSet
 {
     methods=[getName]
 }
@@ -135,7 +136,7 @@ objectDefinitionName ::= NAME
 /******************** Tag Definition **********************************************************************************/
 /**********************************************************************************************************************/
 
-tagDefinition ::= '[' ('IMPLICIT' | 'EXPLICIT')? 'APPLICATION'? NUMBER ']'
+tagDefinition ::= '[' 'APPLICATION'? NUMBER ']' ('IMPLICIT' | 'EXPLICIT')?
 {
     methods=[getTagNumber getTaggingType getTagType]
 }
@@ -144,47 +145,137 @@ tagDefinition ::= '[' ('IMPLICIT' | 'EXPLICIT')? 'APPLICATION'? NUMBER ']'
 /**************** Value Definition ************************************************************************************/
 /**********************************************************************************************************************/
 
-valueDefinition ::= NUMBER | valueString | NAME | valueObjectIdentifier
+private smallValueDefinition ::= booleanValue | NUMBER | valueString | valueRef | valueObjectIdentifier
+private fullValueDefinition ::= smallValueDefinition | valueList | valueConstructor
 valueObjectIdentifier ::= '{' valueObjectIdentifierPart* '}'
-valueObjectIdentifierPart ::= NUMBER | NAME ('(' NUMBER ')')?
+valueObjectIdentifierPart ::= NUMBER | constantDefinitionValue | objectValueDefinitionRef
 {
     methods=[getName getNumber]
 }
-private valueString ::= '"' TEXT '"'
+valueString ::= '"' TEXT '"'
+private valueConstructor ::= '{' objectClassConstructorTokenSet '}'
+valueList ::= '{' (valueListLine ',')* valueListLine? '}'
+valueListLine::= classDefinitionFieldRef smallValueDefinition
+private booleanValue ::= 'TRUE' | 'FALSE'
+
+/**********************************************************************************************************************/
+/**************** Constraint Definition *******************************************************************************/
+/**********************************************************************************************************************/
+
+constraintDefinition ::= '(' constraintBody ')'
+private constraintBody ::= (constraintValue)*
+constraintValue ::= constraintValueSize
+constraintValueSize ::= 'SIZE' '(' constraintValueSizeSimple | constraintValueSizeRange | constraintValueSizeOr ')'
+private constraintValueSizeSimple ::= NUMBER | 'MIN' | 'MAX'
+private constraintValueSizeRange ::= constraintValueSizeSimple '..' constraintValueSizeSimple
+private constraintValueSizeOr ::= ((constraintValueSizeSimple | constraintValueSizeOr) '|')* (constraintValueSizeSimple | constraintValueSizeOr)
+constraintValueFrom ::= 'FROM' '(' constraintValueFromSimple | constraintValueFromRange | constraintValueFromOr ')'
+private constraintValueFromSimple ::= valueString
+private constraintValueFromRange ::= constraintValueFromSimple '..' constraintValueFromSimple
+private constraintValueFromOr ::= ((constraintValueFromSimple | constraintValueFromRange) '|')* (constraintValueFromSimple | constraintValueFromRange)
+
+
+/**********************************************************************************************************************/
+/**************** Constant Definition *********************************************************************************/
+/**********************************************************************************************************************/
+
+constantDefinition ::= '{' constantDefinitionBody '}'
+private constantDefinitionBody ::= (constantDefinitionValue ',')* constantDefinitionValue
+constantDefinitionValue ::= constantDefinitionValueName '(' smallValueDefinition ')'
+{
+    mixin="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1NamedElementImpl"
+    implements="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1NamedElement"
+    methods=[getName setName getNameIdentifier getPresentation]
+}
+constantDefinitionValueName ::= constantDefinitionValueNameTokenSet
+{
+    methods=[getName]
+}
 
 /**********************************************************************************************************************/
 /**************** Type Definition *************************************************************************************/
 /**********************************************************************************************************************/
 
-private nativeType ::= PRIMITIVE_TYPE | LIST_TYPE
-classDefinitionType ::= classDefinitionRef
+private primitiveType ::= PRIMITIVE_TYPE constantDefinition? 'OPTIONAL'? 'UNIQUE'? ('DEFAULT' smallValueDefinition)?
+private listType ::= LIST_TYPE
+classDefinitionType ::= classDefinitionRef ('{' (classDefinitionTypeArgument ',')* classDefinitionTypeArgument '}')?
+private classDefinitionTypeArgument ::= '{' parameterRef '}'
 objectClassDefinitionType ::= objectClassDefinitionRef '.' '&' objectClassDefinitionFieldRef objectClassDefinitionRefAttribute
-private objectClassDefinitionRefAttribute ::= '(' '{' objectClassDefinitionRefNameRef '}' ('{' '@' objectClassDefinitionRefOnFieldRef '}')? ')'
+private objectClassDefinitionRefAttribute ::= '(' '{' parameterRef '}' ('{' '@' classDefinitionFieldRef '}')? ')'
+
+/**********************************************************************************************************************/
+/**************** Parameter Definition ********************************************************************************/
+/**********************************************************************************************************************/
+
+objectClassParameterDefinition ::= '{' (objectClassParameter ',')* objectClassParameter '}'
+objectClassParameter ::= objectClassDefinitionRef ':' parameterName
+parameterName ::= parameterNameTokenSet
+{
+    mixin="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1NamedElementImpl"
+    implements="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1NamedElement"
+    methods=[getName setName getNameIdentifier getPresentation]
+}
 
 /**********************************************************************************************************************/
 /******************* Reference Definition *****************************************************************************/
 /**********************************************************************************************************************/
-classDefinitionRef ::= NAME
+classDefinitionRef ::= classDefinitionNameTokenSet
 {
     mixin="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1NamedElementImpl"
     implements="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1NamedElement"
     methods=[getName setName getNameIdentifier getReference]
 }
-classDefinitionFieldRef ::= NAME
-objectClassDefinitionRef ::= NAME
+classDefinitionFieldRef ::= classDefinitionFieldNameTokenSet
 {
     mixin="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1NamedElementImpl"
     implements="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1NamedElement"
     methods=[getName setName getNameIdentifier getReference]
 }
-objectClassDefinitionRefName ::= NAME
-objectClassDefinitionRefNameRef ::= NAME
-objectClassDefinitionRefOnFieldRef ::= NAME
-objectClassDefinitionFieldRef ::= NAME
+objectClassDefinitionRef ::= objectClassDefinitionNameTokenSet
 {
     mixin="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1NamedElementImpl"
     implements="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1NamedElement"
     methods=[getName setName getNameIdentifier getReference]
 }
-objectDefinitionRef ::= NAME
+parameterRef ::= parameterNameTokenSet
+{
+    mixin="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1NamedElementImpl"
+    implements="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1NamedElement"
+    methods=[getName setName getNameIdentifier getReference]
+}
+objectClassDefinitionFieldRef ::= objectClassDefinitionFieldNameTokenSet
+{
+    mixin="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1NamedElementImpl"
+    implements="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1NamedElement"
+    methods=[getName setName getNameIdentifier getReference]
+}
+objectValueDefinitionRef ::= objectValueDefinitionNameTokenSet
+constantDefinitionValueRef ::= constantDefinitionValueNameTokenSet
+allClassDefinitionRef ::= objectClassDefinitionNameTokenSet | classDefinitionNameTokenSet
+{
+    mixin="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1NamedElementImpl"
+    implements="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1NamedElement"
+    methods=[getName setName getNameIdentifier getReferences getClassDefinitionReference getObjectClassDefinitionReference]
+}
+valueRef ::= constantDefinitionValueNameTokenSet | objectValueDefinitionNameTokenSet
+{
+     mixin="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1NamedElementImpl"
+     implements="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1NamedElement"
+     methods=[getName setName getNameIdentifier getReferences getConstantReference getObjectValueDefinitionReference]
+}
 
+/**********************************************************************************************************************/
+/******************* Basics *******************************************************************************************/
+/**********************************************************************************************************************/
+
+private moduleDefinitionNameTokenSet ::= NAME_CAP
+private importElementModuleTokenSet ::= NAME_CAP | NAME_UPPER
+private importElementNameTokenSet ::= NAME_NO_CAP | NAME_LOWER
+private classDefinitionNameTokenSet ::= NAME_CAP | NAME_UPPER
+private classDefinitionFieldNameTokenSet ::= NAME_NO_CAP | NAME_LOWER
+private objectClassDefinitionNameTokenSet ::= NAME_UPPER
+private objectClassDefinitionFieldNameTokenSet ::= NAME_NO_CAP | NAME_CAP | NAME_LOWER
+private objectValueDefinitionNameTokenSet ::= NAME_NO_CAP | NAME_LOWER
+private objectClassConstructorTokenSet ::= (NAME_UPPER | NAME_NO_CAP | NAME_LOWER)+
+private constantDefinitionValueNameTokenSet ::= NAME_LOWER
+private parameterNameTokenSet ::= NAME_CAP | NAME_UPPER

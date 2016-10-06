@@ -20,9 +20,13 @@ CRLF=\n|\r|\r\n
 WHITE_SPACE=[\ \t\f]
 COMMENT_LINE="--"[^\r\n]*
 COMMENT_BLOCK="/*"[^"*/"]"*/"
-NAME=[a-zA-Z_]{1}[0-9a-zA-Z_\-]*
 NUMBER=[\-]?[0-9]*([\.][0-9]*)?
 TEXT=[^\"]*
+
+NAME_UPPER=[A-Z]{1}[A-Z0-9_\-]*
+NAME_LOWER=[a-z]{1}[a-z0-9_\-]*
+NAME_CAP=[A-Z]{1}[A-Za-z0-9_\-]*
+NAME_NO_CAP=[a-z]{1}[A-Za-z0-9_\-]*
 
 OPERATOR= "::="
 SEPARATOR="," | ";" | ":" | "."
@@ -36,7 +40,7 @@ BR_CURLY_CLOSE="}"
 BR_CORNER_OPEN="["
 BR_CORNER_CLOSE="]"
 
-KEYWORD="DEFINITIONS" | "IMPLICIT" | "EXPLICIT" | "AUTOMATIC" | "TAGS" | "BEGIN" | "END" | "APPLICATION" | "IMPORTS" | "FROM" | "CLASS" | "UNIQUE" | "OPTIONAL"
+KEYWORD="DEFINITIONS" | "IMPLICIT" | "EXPLICIT" | "AUTOMATIC" | "TAGS" | "BEGIN" | "END" | "APPLICATION" | "IMPORTS" | "FROM" | "CLASS" | "UNIQUE" | "OPTIONAL" | "TRUE" | "FALSE" | "DEFAULT" | "WITH SYNTAX"
 PRIMITIVE_TYPE="INTEGER" | "BIT STRING" | "BOOLEAN" | "OCTET STRING" | "OBJECT IDENTIFIER" | "PrintableString" | "IA5String" | "UTF8String" | "T61String" | "GeneralizedTime" | "UTCTime" | "VideoTexString"
 LIST_TYPE="SEQUENCE" | "SET"
 LIST_OF_TYPE="SEQUENCE OF" | "SET OF"
@@ -59,7 +63,11 @@ LIST_OF_TYPE="SEQUENCE OF" | "SET OF"
 <STRING> {
     {TEXT}                                      { return Asn1GenElementFactory.TEXT; }
 }
-{NAME}                                          { return Asn1GenElementFactory.NAME; }
+
+{NAME_UPPER}                                    { return Asn1GenElementFactory.NAME_UPPER; }
+{NAME_LOWER}                                    { return Asn1GenElementFactory.NAME_LOWER; }
+{NAME_CAP}                                      { return Asn1GenElementFactory.NAME_CAP; }
+{NAME_NO_CAP}                                   { return Asn1GenElementFactory.NAME_NO_CAP; }
 
 {BR_ROUND_OPEN}                                 { return Asn1CustomElementFactory.BRACES_ROUND_OPEN; }
 {BR_ROUND_CLOSE}                                { return Asn1CustomElementFactory.BRACES_ROUND_CLOSE; }

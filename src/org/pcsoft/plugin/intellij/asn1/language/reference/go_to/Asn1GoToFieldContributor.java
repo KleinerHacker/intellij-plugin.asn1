@@ -6,6 +6,7 @@ import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ClassDefinitionField;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ObjectClassDefinitionField;
+import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ObjectValueDefinition;
 import org.pcsoft.plugin.intellij.asn1.language.reference.Asn1ReferenceUtils;
 
 import java.util.ArrayList;
@@ -21,17 +22,24 @@ public class Asn1GoToFieldContributor implements ChooseByNameContributor {
     public String[] getNames(Project project, boolean b) {
         final List<String> list = new ArrayList<>();
 
-        final List<Asn1ClassDefinitionField> classDefinitionFieldList = Asn1ReferenceUtils.findClassDefinitionFields(project);
+        final List<Asn1ClassDefinitionField> classDefinitionFieldList = Asn1ReferenceUtils.findClassDefinitionFields(project, null);
         list.addAll(
                 classDefinitionFieldList.stream()
                         .map(Asn1ClassDefinitionField::getName)
                         .collect(Collectors.toList())
         );
 
-        final List<Asn1ObjectClassDefinitionField> objectClassDefinitionFieldList = Asn1ReferenceUtils.findObjectClassDefinitionFields(project);
+        final List<Asn1ObjectClassDefinitionField> objectClassDefinitionFieldList = Asn1ReferenceUtils.findObjectClassDefinitionFields(project, null);
         list.addAll(
                 objectClassDefinitionFieldList.stream()
                         .map(Asn1ObjectClassDefinitionField::getName)
+                        .collect(Collectors.toList())
+        );
+
+        final List<Asn1ObjectValueDefinition> objectValueDefinitionList = Asn1ReferenceUtils.findObjectValueDefinitions(project);
+        list.addAll(
+                objectValueDefinitionList.stream()
+                        .map(Asn1ObjectValueDefinition::getName)
                         .collect(Collectors.toList())
         );
 
@@ -43,16 +51,23 @@ public class Asn1GoToFieldContributor implements ChooseByNameContributor {
     public NavigationItem[] getItemsByName(String full, String entered, Project project, boolean b) {
         final List<NavigationItem> list = new ArrayList<>();
 
-        final List<Asn1ClassDefinitionField> classDefinitionFieldList = Asn1ReferenceUtils.findClassDefinitionFields(project, full);
+        final List<Asn1ClassDefinitionField> classDefinitionFieldList = Asn1ReferenceUtils.findClassDefinitionFields(project, null, true, full);
         list.addAll(
                 classDefinitionFieldList.stream()
                         .map(item -> (NavigationItem) item)
                         .collect(Collectors.toList())
         );
 
-        final List<Asn1ObjectClassDefinitionField> objectClassDefinitionFieldList = Asn1ReferenceUtils.findObjectClassDefinitionFields(project, full);
+        final List<Asn1ObjectClassDefinitionField> objectClassDefinitionFieldList = Asn1ReferenceUtils.findObjectClassDefinitionFields(project, null, true, full);
         list.addAll(
                 objectClassDefinitionFieldList.stream()
+                        .map(item -> (NavigationItem) item)
+                        .collect(Collectors.toList())
+        );
+
+        final List<Asn1ObjectValueDefinition> objectValueDefinitionList = Asn1ReferenceUtils.findObjectValueDefinitions(project, true, full);
+        list.addAll(
+                objectValueDefinitionList.stream()
                         .map(item -> (NavigationItem) item)
                         .collect(Collectors.toList())
         );

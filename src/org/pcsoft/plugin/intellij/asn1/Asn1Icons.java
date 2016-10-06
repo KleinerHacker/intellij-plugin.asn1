@@ -8,7 +8,7 @@ import javax.swing.Icon;
  *
  */
 public final class Asn1Icons {
-    public static Icon FILE = IconLoader.getIcon("/icons/file.png");
+    public static Icon FILE = IconLoader.getIcon("/icons/ic_file.png");
 
     private Asn1Icons() {
     }

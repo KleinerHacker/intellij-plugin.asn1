@@ -18,12 +18,12 @@ public class Asn1ObjectClassDefinitionReference extends Asn1Reference<Asn1Object
 
     @Override
     protected List<Asn1ObjectClassDefinition> findByKey(Project project, String key) {
-        return Asn1ReferenceUtils.findObjectClassDefinitions(project, key);
+        return Asn1ReferenceUtils.findObjectClassDefinitions(project, myElement, true, key);
     }
 
     @Override
     protected List<Asn1ObjectClassDefinition> findAll(Project project) {
-        return Asn1ReferenceUtils.findObjectClassDefinitions(project);
+        return Asn1ReferenceUtils.findObjectClassDefinitions(project, myElement);
     }
 
     @Override

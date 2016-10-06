@@ -10,9 +10,11 @@ import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ClassDefinition;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ObjectClassDefinition;
+import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ObjectClassParameter;
 import org.pcsoft.plugin.intellij.asn1.language.reference.Asn1ObjectClassDefinitionReference;
 import org.pcsoft.plugin.intellij.asn1.language.reference.Asn1ReferenceUtils;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -31,35 +33,44 @@ public class Asn1ExtensionLineMarkerProvider extends RelatedItemLineMarkerProvid
     }
 
     private void handleObjectClassDefinitionImplementation(@NotNull final Asn1ObjectClassDefinition objectClassDefinition, Collection<? super RelatedItemLineMarkerInfo> result) {
-        final List<Asn1ClassDefinition> classDefinitionList = Asn1ReferenceUtils.findClassDefinitions(objectClassDefinition.getProject());
+        final List<Asn1ClassDefinition> classDefinitionList = Asn1ReferenceUtils.findClassDefinitions(objectClassDefinition.getProject(), objectClassDefinition);
+
+        final List<PsiElement> targetList = new ArrayList<>();
+        for (final Asn1ClassDefinition classDefinition : classDefinitionList) {
+            if (classDefinition.getObjectClassParameterDefinition() == null)
+                continue;
+
+            targetList.addAll(
+                    classDefinition.getObjectClassParameterDefinition().getObjectClassParameterList().stream()
+                            .filter(item -> !StringUtils.isEmpty(item.getObjectClassDefinitionRef().getName()) && item.getObjectClassDefinitionRef().getName().equals(objectClassDefinition.getName()))
+                            .collect(Collectors.toList())
+            );
+        }
+
         result.add(
                 NavigationGutterIconBuilder.create(AllIcons.Gutter.OverridenMethod)
-                        .setTargets(
-                                classDefinitionList.stream()
-                                        .filter(classDefinition ->
-                                                classDefinition.getClassDefinitionExtension() != null && !StringUtils.isEmpty(objectClassDefinition.getName()) &&
-                                                        objectClassDefinition.getName().equals(classDefinition.getClassDefinitionExtension().getObjectClassDefinitionRef().getName()))
-                                        .collect(Collectors.toList())
-                        )
-                        .setTooltipText("Navigate to implementation(s)")
+                        .setTargets(targetList)
+                        .setTooltipText("Navigate to implementations")
                         .createLineMarkerInfo(objectClassDefinition)
         );
     }
 
     private void handleClassDefinitionExtension(@NotNull Asn1ClassDefinition classDefinition, Collection<? super RelatedItemLineMarkerInfo> result) {
-        if (classDefinition.getClassDefinitionExtension() == null)
+        if (classDefinition.getObjectClassParameterDefinition() == null)
             return;
 
-        final Asn1ObjectClassDefinitionReference reference = new Asn1ObjectClassDefinitionReference(classDefinition.getClassDefinitionExtension().getObjectClassDefinitionRef());
-        final ResolveResult[] multiResolve = reference.multiResolve(false);
+        for (final Asn1ObjectClassParameter extension : classDefinition.getObjectClassParameterDefinition().getObjectClassParameterList()) {
+            final Asn1ObjectClassDefinitionReference reference = new Asn1ObjectClassDefinitionReference(extension.getObjectClassDefinitionRef());
+            final ResolveResult[] multiResolve = reference.multiResolve(false);
 
-        for (final ResolveResult resolveResult : multiResolve) {
-            result.add(
-                    NavigationGutterIconBuilder.create(AllIcons.Gutter.OverridingMethod)
-                            .setTarget(resolveResult.getElement())
-                            .setTooltipText("Navigate to " + classDefinition.getClassDefinitionExtension().getObjectClassDefinitionRef().getName())
-                            .createLineMarkerInfo(classDefinition)
-            );
+            for (final ResolveResult resolveResult : multiResolve) {
+                result.add(
+                        NavigationGutterIconBuilder.create(AllIcons.Gutter.OverridingMethod)
+                                .setTarget(resolveResult.getElement())
+                                .setTooltipText("Navigate to " + extension.getObjectClassDefinitionRef().getName())
+                                .createLineMarkerInfo(classDefinition)
+                );
+            }
         }
     }
 }

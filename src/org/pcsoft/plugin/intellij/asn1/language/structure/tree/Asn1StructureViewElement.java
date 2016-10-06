@@ -8,10 +8,18 @@ import com.intellij.navigation.NavigationItem;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.util.PsiTreeUtil;
+import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.Asn1File;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.*;
+import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ClassDefinition;
+import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ClassDefinitionField;
+import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ModuleDefinition;
+import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ObjectClassDefinition;
+import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ObjectClassDefinitionField;
+import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ObjectValueDefinition;
 
+import javax.swing.Icon;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -42,6 +50,33 @@ public class Asn1StructureViewElement implements StructureViewTreeElement, Sorta
     @NotNull
     @Override
     public ItemPresentation getPresentation() {
+        if (element instanceof Asn1File) {
+            return new ItemPresentation() {
+                @Nullable
+                @Override
+                public String getPresentableText() {
+                    final Asn1ModuleDefinition moduleDefinition = PsiTreeUtil.getChildOfType(element, Asn1ModuleDefinition.class);
+                    if (moduleDefinition != null && !StringUtils.isEmpty(moduleDefinition.getName())) {
+                        return moduleDefinition.getName();
+                    }
+
+                    return ((Asn1File) element).getPresentation().getPresentableText();
+                }
+
+                @Nullable
+                @Override
+                public String getLocationString() {
+                    return ((Asn1File) element).getPresentation().getLocationString();
+                }
+
+                @Nullable
+                @Override
+                public Icon getIcon(boolean b) {
+                    return ((Asn1File) element).getPresentation().getIcon(b);
+                }
+            };
+        }
+
         return element instanceof NavigationItem ? ((NavigationItem) element).getPresentation() : null;
     }
 
@@ -65,7 +100,7 @@ public class Asn1StructureViewElement implements StructureViewTreeElement, Sorta
                             .collect(Collectors.toList())
             );
 
-            final Collection<Asn1ObjectDefinition> objectDefinitionList = PsiTreeUtil.findChildrenOfType(element, Asn1ObjectDefinition.class);
+            final Collection<Asn1ObjectValueDefinition> objectDefinitionList = PsiTreeUtil.findChildrenOfType(element, Asn1ObjectValueDefinition.class);
             list.addAll(
                     objectDefinitionList.stream()
                             .map(Asn1StructureViewElement::new)

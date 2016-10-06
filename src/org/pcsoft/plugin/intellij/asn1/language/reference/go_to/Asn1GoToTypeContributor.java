@@ -21,14 +21,14 @@ public class Asn1GoToTypeContributor implements ChooseByNameContributor {
     public String[] getNames(Project project, boolean b) {
         final List<String> list = new ArrayList<>();
 
-        final List<Asn1ClassDefinition> classDefinitionList = Asn1ReferenceUtils.findClassDefinitions(project);
+        final List<Asn1ClassDefinition> classDefinitionList = Asn1ReferenceUtils.findClassDefinitions(project, null);
         list.addAll(
                 classDefinitionList.stream()
                         .map(Asn1ClassDefinition::getName)
                         .collect(Collectors.toList())
         );
 
-        final List<Asn1ObjectClassDefinition> objectClassDefinitions = Asn1ReferenceUtils.findObjectClassDefinitions(project);
+        final List<Asn1ObjectClassDefinition> objectClassDefinitions = Asn1ReferenceUtils.findObjectClassDefinitions(project, null);
         list.addAll(
                 objectClassDefinitions.stream()
                         .map(Asn1ObjectClassDefinition::getName)
@@ -43,14 +43,14 @@ public class Asn1GoToTypeContributor implements ChooseByNameContributor {
     public NavigationItem[] getItemsByName(String full, String entered, Project project, boolean b) {
         final List<NavigationItem> list = new ArrayList<>();
 
-        final List<Asn1ClassDefinition> classDefinitionList = Asn1ReferenceUtils.findClassDefinitions(project, full);
+        final List<Asn1ClassDefinition> classDefinitionList = Asn1ReferenceUtils.findClassDefinitions(project, null, true, full);
         list.addAll(
                 classDefinitionList.stream()
                 .map(item -> (NavigationItem) item)
                 .collect(Collectors.toList())
         );
 
-        final List<Asn1ObjectClassDefinition> objectClassDefinitions = Asn1ReferenceUtils.findObjectClassDefinitions(project, full);
+        final List<Asn1ObjectClassDefinition> objectClassDefinitions = Asn1ReferenceUtils.findObjectClassDefinitions(project, null, true, full);
         list.addAll(
                 objectClassDefinitions.stream()
                         .map(item -> (NavigationItem) item)

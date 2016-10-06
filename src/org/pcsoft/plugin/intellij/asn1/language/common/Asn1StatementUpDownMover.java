@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 import org.pcsoft.plugin.intellij.asn1.language.Asn1Language;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ClassDefinition;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ObjectClassDefinition;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ObjectDefinition;
+import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ObjectValueDefinition;
 
 /**
  * Created by pfeifchr on 04.10.2016.
@@ -40,8 +40,8 @@ public class Asn1StatementUpDownMover extends StatementUpDownMover {
         if (elementRange1 == null || elementRange2 == null || elementRange2.second == null)
             return;
 
-        if (elementRange1.second instanceof Asn1ClassDefinition || elementRange1.second instanceof Asn1ObjectClassDefinition || elementRange1.second instanceof Asn1ObjectDefinition) {
-            if (elementRange2.second instanceof Asn1ClassDefinition || elementRange2.second instanceof Asn1ObjectClassDefinition || elementRange2.second instanceof Asn1ObjectDefinition) {
+        if (elementRange1.second instanceof Asn1ClassDefinition || elementRange1.second instanceof Asn1ObjectClassDefinition || elementRange1.second instanceof Asn1ObjectValueDefinition) {
+            if (elementRange2.second instanceof Asn1ClassDefinition || elementRange2.second instanceof Asn1ObjectClassDefinition || elementRange2.second instanceof Asn1ObjectValueDefinition) {
                 if (down) {
                     info.toMove2 = new LineRange(elementRange2.second.getNextSibling());
                 } else {

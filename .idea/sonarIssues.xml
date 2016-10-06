@@ -18,6 +18,197 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/../../Cryptoplattform/cryptoserver_new/source/bundle/src/main/config/jce-provider.xml">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Cryptoplattform/cryptoserver_new/source/bundle/src/main/config/jce-provider_keyserver.xml">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Cryptoplattform/cryptoserver_new/source/bundle/src/main/config/jce-provider_signserver.xml">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Cryptoplattform/cryptoserver_new/source/common/src/test/java/de/bdr/persotec/crypserv/common/PasswordUtilsTest.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Cryptoplattform/cryptoserver_new/source/ui/jfx/src/main/java/de/bdr/persotec/crypserv/ui/jfx/component/key/profile/KeyProfilePane.java">
+          <value>
+            <set>
+              <SonarIssue>
+                <option name="isNew" value="false" />
+                <option name="key" value="AVcOhbc1EQ77G5RhYLii" />
+                <option name="line" value="22" />
+                <option name="message" value="Remove this unused &quot;controller&quot; private field." />
+                <option name="ruleKey" value="squid:S1068" />
+                <option name="severity" value="MAJOR" />
+              </SonarIssue>
+            </set>
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Cryptoplattform/cryptoserver_new/source/ui/jfx/src/main/java/de/bdr/persotec/crypserv/ui/jfx/component/key/profile/KeyProfilePaneViewModel.java">
+          <value>
+            <set>
+              <SonarIssue>
+                <option name="isNew" value="false" />
+                <option name="key" value="AVcOhbc-EQ77G5RhYLim" />
+                <option name="line" value="44" />
+                <option name="message" value="Remove this call from a constructor to the overridable &quot;getRsaKeyLength&quot; method." />
+                <option name="ruleKey" value="squid:S1699" />
+                <option name="severity" value="MAJOR" />
+              </SonarIssue>
+              <SonarIssue>
+                <option name="isNew" value="false" />
+                <option name="key" value="AVcOhbc-EQ77G5RhYLip" />
+                <option name="line" value="50" />
+                <option name="message" value="Remove this call from a constructor to the overridable &quot;getAesKeyLength&quot; method." />
+                <option name="ruleKey" value="squid:S1699" />
+                <option name="severity" value="MAJOR" />
+              </SonarIssue>
+              <SonarIssue>
+                <option name="isNew" value="false" />
+                <option name="key" value="AVcOhbc_EQ77G5RhYLir" />
+                <option name="line" value="52" />
+                <option name="message" value="Define and throw a dedicated exception instead of using a generic one." />
+                <option name="ruleKey" value="squid:S00112" />
+                <option name="severity" value="CRITICAL" />
+              </SonarIssue>
+              <SonarIssue>
+                <option name="isNew" value="false" />
+                <option name="key" value="AVcOhbc9EQ77G5RhYLij" />
+                <option name="message" value="1 duplicated blocks of code must be removed." />
+                <option name="ruleKey" value="common-java:DuplicatedBlocks" />
+                <option name="severity" value="MAJOR" />
+              </SonarIssue>
+              <SonarIssue>
+                <option name="isNew" value="false" />
+                <option name="key" value="AVcOhbc-EQ77G5RhYLin" />
+                <option name="line" value="46" />
+                <option name="message" value="Remove this call from a constructor to the overridable &quot;getEcNamedCurve&quot; method." />
+                <option name="ruleKey" value="squid:S1699" />
+                <option name="severity" value="MAJOR" />
+              </SonarIssue>
+              <SonarIssue>
+                <option name="isNew" value="false" />
+                <option name="key" value="AVcOhbc-EQ77G5RhYLio" />
+                <option name="line" value="48" />
+                <option name="message" value="Remove this call from a constructor to the overridable &quot;getDesKeyLength&quot; method." />
+                <option name="ruleKey" value="squid:S1699" />
+                <option name="severity" value="MAJOR" />
+              </SonarIssue>
+              <SonarIssue>
+                <option name="isNew" value="false" />
+                <option name="key" value="AVZFDuXym6u5wNyxt3oJ" />
+                <option name="line" value="70" />
+                <option name="message" value="Assign this magic number 2 to a well-named constant, and use the constant instead." />
+                <option name="ruleKey" value="squid:S109" />
+                <option name="severity" value="MINOR" />
+              </SonarIssue>
+            </set>
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Cryptoplattform/cryptoserver_new/source/ui/jfx/src/main/java/de/bdr/persotec/crypserv/ui/jfx/dialog/certificate/signature/request/CertificateRequestCreatorDialogView.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Cryptoplattform/cryptoserver_new/source/ui/jfx/src/main/java/de/bdr/persotec/crypserv/ui/jfx/dialog/certificate/signature/request/CertificateRequestCreatorDialogViewModel.java">
+          <value>
+            <set>
+              <SonarIssue>
+                <option name="isNew" value="false" />
+                <option name="key" value="AVcOhbkJEQ77G5RhYLl-" />
+                <option name="line" value="3" />
+                <option name="message" value="Replace this usage of Sun classes by ones from the Java API." />
+                <option name="ruleKey" value="squid:S1191" />
+                <option name="severity" value="MAJOR" />
+              </SonarIssue>
+            </set>
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Cryptoplattform/cryptoserver_new/source/ui/jfx/src/main/java/de/bdr/persotec/crypserv/ui/jfx/type/CVCertificate.java">
+          <value>
+            <set>
+              <SonarIssue>
+                <option name="isNew" value="false" />
+                <option name="key" value="AVcOhbwXEQ77G5RhYLuu" />
+                <option name="line" value="31" />
+                <option name="message" value="Declare &quot;validityPeriodEnd&quot; on a separate line." />
+                <option name="ruleKey" value="squid:S1659" />
+                <option name="severity" value="MINOR" />
+              </SonarIssue>
+              <SonarIssue>
+                <option name="isNew" value="false" />
+                <option name="key" value="AVcOhbwZEQ77G5RhYLu1" />
+                <option name="line" value="225" />
+                <option name="message" value="Missing curly brace." />
+                <option name="ruleKey" value="squid:S00121" />
+                <option name="severity" value="MAJOR" />
+              </SonarIssue>
+              <SonarIssue>
+                <option name="isNew" value="false" />
+                <option name="key" value="AVcOhbwZEQ77G5RhYLu2" />
+                <option name="line" value="226" />
+                <option name="message" value="Missing curly brace." />
+                <option name="ruleKey" value="squid:S00121" />
+                <option name="severity" value="MAJOR" />
+              </SonarIssue>
+              <SonarIssue>
+                <option name="isNew" value="false" />
+                <option name="key" value="AVcOhbwXEQ77G5RhYLut" />
+                <option name="message" value="4 duplicated blocks of code must be removed." />
+                <option name="ruleKey" value="common-java:DuplicatedBlocks" />
+                <option name="severity" value="MAJOR" />
+              </SonarIssue>
+              <SonarIssue>
+                <option name="isNew" value="false" />
+                <option name="key" value="AVcOhbwaEQ77G5RhYLu4" />
+                <option name="line" value="225" />
+                <option name="message" value="At most one statement is allowed per line, but 2 statements were found on this line." />
+                <option name="ruleKey" value="squid:S00122" />
+                <option name="severity" value="MINOR" />
+              </SonarIssue>
+              <SonarIssue>
+                <option name="isNew" value="false" />
+                <option name="key" value="AVcOhbwZEQ77G5RhYLu3" />
+                <option name="line" value="226" />
+                <option name="message" value="At most one statement is allowed per line, but 2 statements were found on this line." />
+                <option name="ruleKey" value="squid:S00122" />
+                <option name="severity" value="MINOR" />
+              </SonarIssue>
+            </set>
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Cryptoplattform/cryptoserver_new/source/ui/jfx/src/main/java/de/bdr/persotec/crypserv/ui/jfx/type/SignatureCertificate.java">
+          <value>
+            <set>
+              <SonarIssue>
+                <option name="isNew" value="false" />
+                <option name="key" value="AVcOhbyxEQ77G5RhYLwr" />
+                <option name="line" value="20" />
+                <option name="message" value="Override this superclass' &quot;equals&quot; method." />
+                <option name="ruleKey" value="squid:S2160" />
+                <option name="severity" value="MAJOR" />
+              </SonarIssue>
+            </set>
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Cryptoplattform/cryptoserver_new/source/ui/jfx/src/main/resources/de/bdr/persotec/crypserv/ui/jfx/dialog/certificate/signature/request/CertificateRequestCreatorDialogView.fxml">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Cryptoplattform/cryptoserver_new/source/ui/jfx/src/main/resources/languages/view.properties">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/../../IdXPress/source/Server/api/pom.xml">
           <value>
             <set />
@@ -44,6 +235,21 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/../asn1-framework/source/core/src/main/java/de/bdr/framework/asn1/core/coding/ber/util/BERNumberCodingUtils.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/gen/org/pcsoft/plugin/intellij/asn1/language/parser/lexer/Asn1Lexer.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/gen/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/Asn1ClassDefinitionFieldImpl.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/gen/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/Asn1ModuleDefinitionImpl.java">
           <value>
             <set />
           </value>
@@ -93,7 +299,32 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/contributor/Asn1ImportKeywordCompletionContributor.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/contributor/Asn1KeywordCompletionContributor.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/contributor/Asn1ModuleKeywordCompletionContributor.java">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/contributor/Asn1NativeTypeCompletionContributor.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/contributor/Asn1TagKeywordCompletionContributor.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/contributor/Asn1TypeKeywordCompletionContributor.java">
           <value>
             <set />
           </value>
@@ -114,6 +345,31 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/folding/Asn1TypeFolding.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/highlighting/Asn1ColorSettingsPage.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/highlighting/Asn1HighlighterScheme.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/highlighting/annotator/Asn1FieldHighlightingAnnotator.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/highlighting/annotator/Asn1ReferenceAnnotator.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/highlighting/syntax/Asn1SyntaxHighlighter.java">
           <value>
             <set />
           </value>
@@ -213,7 +469,22 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/parser/psi/Asn1File.java">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/Asn1ElementUtils.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/Asn1FileSystemItem.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/Asn1FileSystemItemImpl.java">
           <value>
             <set />
           </value>
@@ -238,6 +509,21 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/manipulator/Asn1AllClassDefinitionRefManipulator.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/manipulator/Asn1ClassDefinitionFieldManipulator.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/manipulator/Asn1ClassDefinitionFieldRefManipulator.java">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/manipulator/Asn1ClassDefinitionRefClassManipulator.java">
           <value>
             <set />
@@ -249,6 +535,21 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/manipulator/Asn1ClassDefinitionRefObjectClassManipulator.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/manipulator/Asn1ConstantDefinitionValueManipulator.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/manipulator/Asn1ImportElementFileManipulator.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/manipulator/Asn1ImportElementModuleManipulator.java">
           <value>
             <set />
           </value>
@@ -269,6 +570,41 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/manipulator/Asn1ObjectClassDefinitionRefManipulator.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/manipulator/Asn1ObjectValueClassRefManipulator.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/manipulator/Asn1ObjectValueClassRefRefManipulator.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/manipulator/Asn1ObjectValueDefinitionManipulator.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/manipulator/Asn1ParameterManipulator.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/manipulator/Asn1ParameterNameManipulator.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/manipulator/Asn1ParameterRefManipulator.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/manipulator/Asn1ValueRefManipulator.java">
           <value>
             <set />
           </value>
@@ -438,12 +774,32 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/reference/Asn1ClassDefinitionFieldReference.java">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/reference/Asn1ClassDefinitionReference.java">
           <value>
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/reference/Asn1ConstantDefinitionValueReference.java">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/reference/Asn1FileReference.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/reference/Asn1ModuleDefinitionReference.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/reference/Asn1ModuleReference.java">
           <value>
             <set />
           </value>
@@ -463,6 +819,16 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/reference/Asn1ObjectValueDefinitionReference.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/reference/Asn1ParameterReference.java">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/reference/Asn1Reference.java">
           <value>
             <set />
@@ -473,12 +839,42 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/reference/go_to/Asn1GoToConstantContributor.java">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/reference/go_to/Asn1GoToFieldContributor.java">
           <value>
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/reference/go_to/Asn1GoToModuleContributor.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/reference/go_to/Asn1GoToParameterContributor.java">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/reference/go_to/Asn1GoToTypeContributor.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/reference/usage/Asn1FindUsageHandlerFactory.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/reference/usage/Asn1FindUsageProvider.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/reference/usage/Asn1UsageFilteringRuleProvider.java">
           <value>
             <set />
           </value>
