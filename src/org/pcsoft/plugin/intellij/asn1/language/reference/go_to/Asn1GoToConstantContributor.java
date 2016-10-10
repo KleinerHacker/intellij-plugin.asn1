@@ -5,6 +5,7 @@ import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ConstantDefinitionValue;
+import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1EnumeratedDefinitionElement;
 import org.pcsoft.plugin.intellij.asn1.language.reference.Asn1ReferenceUtils;
 
 import java.util.ArrayList;
@@ -27,6 +28,13 @@ public class Asn1GoToConstantContributor implements ChooseByNameContributor {
                         .collect(Collectors.toList())
         );
 
+        final List<Asn1EnumeratedDefinitionElement> enumeratedDefinitionElements = Asn1ReferenceUtils.findEnumeratedDefinitionElements(project, null);
+        list.addAll(
+                enumeratedDefinitionElements.stream()
+                        .map(Asn1EnumeratedDefinitionElement::getName)
+                        .collect(Collectors.toList())
+        );
+
         return list.toArray(new String[list.size()]);
     }
 
@@ -38,6 +46,13 @@ public class Asn1GoToConstantContributor implements ChooseByNameContributor {
         final List<Asn1ConstantDefinitionValue> classDefinitionFieldList = Asn1ReferenceUtils.findConstantValues(project, null, true, full);
         list.addAll(
                 classDefinitionFieldList.stream()
+                        .map(item -> (NavigationItem) item)
+                        .collect(Collectors.toList())
+        );
+
+        final List<Asn1EnumeratedDefinitionElement> enumeratedDefinitionElements = Asn1ReferenceUtils.findEnumeratedDefinitionElements(project, null, true, full);
+        list.addAll(
+                enumeratedDefinitionElements.stream()
                         .map(item -> (NavigationItem) item)
                         .collect(Collectors.toList())
         );

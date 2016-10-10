@@ -24,6 +24,8 @@ public interface Asn1HighlighterScheme {
     TextAttributesKey STRING = TextAttributesKey.createTextAttributesKey("ASN1_STRING", DefaultLanguageHighlighterColors.STRING);
     TextAttributesKey FIELD = TextAttributesKey.createTextAttributesKey("ASN1_FIELD", DefaultLanguageHighlighterColors.INSTANCE_FIELD);
     TextAttributesKey FIELD_REFERENCE = TextAttributesKey.createTextAttributesKey("ASN1_FIELD_REFERENCE", DefaultLanguageHighlighterColors.STATIC_FIELD);
+    TextAttributesKey OBJECT_VALUE = TextAttributesKey.createTextAttributesKey("ASN1_OBJECT_VALUE", DefaultLanguageHighlighterColors.INSTANCE_METHOD);
+    TextAttributesKey OBJECT_VALUE_REFERENCE = TextAttributesKey.createTextAttributesKey("ASN1_OBJECT_VALUE_REFERENCE", DefaultLanguageHighlighterColors.STATIC_METHOD);
     TextAttributesKey PARAMETER = TextAttributesKey.createTextAttributesKey("ASN1_PARAMETER", DefaultLanguageHighlighterColors.PARAMETER);
     TextAttributesKey CONSTANT = TextAttributesKey.createTextAttributesKey("ASN1_CONSTANT", DefaultLanguageHighlighterColors.CONSTANT);
     TextAttributesKey UNKNOWN_REFERENCE = TextAttributesKey.createTextAttributesKey("ASN1_UNKNOWN_REFERENCE", new TextAttributes(JBColor.RED, null, null, null, Font.BOLD));

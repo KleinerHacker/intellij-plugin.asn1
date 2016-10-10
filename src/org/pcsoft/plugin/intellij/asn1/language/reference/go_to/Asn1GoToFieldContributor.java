@@ -36,7 +36,7 @@ public class Asn1GoToFieldContributor implements ChooseByNameContributor {
                         .collect(Collectors.toList())
         );
 
-        final List<Asn1ObjectValueDefinition> objectValueDefinitionList = Asn1ReferenceUtils.findObjectValueDefinitions(project);
+        final List<Asn1ObjectValueDefinition> objectValueDefinitionList = Asn1ReferenceUtils.findObjectValueDefinitions(project, null);
         list.addAll(
                 objectValueDefinitionList.stream()
                         .map(Asn1ObjectValueDefinition::getName)
@@ -65,7 +65,7 @@ public class Asn1GoToFieldContributor implements ChooseByNameContributor {
                         .collect(Collectors.toList())
         );
 
-        final List<Asn1ObjectValueDefinition> objectValueDefinitionList = Asn1ReferenceUtils.findObjectValueDefinitions(project, true, full);
+        final List<Asn1ObjectValueDefinition> objectValueDefinitionList = Asn1ReferenceUtils.findObjectValueDefinitions(project, null, true, full);
         list.addAll(
                 objectValueDefinitionList.stream()
                         .map(item -> (NavigationItem) item)

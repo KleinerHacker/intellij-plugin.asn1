@@ -6,6 +6,7 @@ package org.pcsoft.plugin.intellij.asn1.type;
 public enum ListType {
     SEQUENCE("SEQUENCE"),
     SET("SET"),
+    CHOICE("CHOICE")
     ;
 
     private final String name;

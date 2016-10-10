@@ -16,8 +16,9 @@ import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ConstantD
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ModuleDefinition;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ObjectClassDefinition;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ObjectClassDefinitionField;
+import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ObjectSetParameter;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ObjectValueDefinition;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ParameterName;
+import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1TypeParameter;
 import org.pcsoft.plugin.intellij.asn1.language.parser.token.Asn1CustomElementFactory;
 import org.pcsoft.plugin.intellij.asn1.language.parser.token.Asn1GenElementFactory;
 
@@ -66,7 +67,7 @@ public class Asn1FindUsageProvider implements FindUsagesProvider {
             return "Object Class Definition";
         } else if (psiElement instanceof Asn1ObjectValueDefinition) {
             return "Object Value Definition";
-        } else if (psiElement instanceof Asn1ParameterName) {
+        } else if (psiElement instanceof Asn1ObjectSetParameter || psiElement instanceof Asn1TypeParameter) {
             return "Parameter";
         } else if (psiElement instanceof Asn1ConstantDefinitionValue) {
             return "Constant";
@@ -80,11 +81,11 @@ public class Asn1FindUsageProvider implements FindUsagesProvider {
     @NotNull
     @Override
     public String getNodeText(@NotNull PsiElement psiElement, boolean b) {
-//        if (psiElement instanceof PsiNamedElement) {
-//            final PsiNamedElement namedElement = (PsiNamedElement) psiElement;
-//            return namedElement.getName() == null ? "" : namedElement.getName();
-//        }
+        if (psiElement instanceof PsiNamedElement) {
+            final PsiNamedElement namedElement = (PsiNamedElement) psiElement;
+            return namedElement.getName() == null ? "" : namedElement.getName();
+        }
 
-        return "abc";
+        return "";
     }
 }

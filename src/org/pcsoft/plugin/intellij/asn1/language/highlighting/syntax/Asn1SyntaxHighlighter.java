@@ -36,8 +36,7 @@ public class Asn1SyntaxHighlighter extends SyntaxHighlighterBase {
             return new TextAttributesKey[]{Asn1HighlighterScheme.BAD_CHARACTER};
         } else if (iElementType.equals(Asn1CustomElementFactory.KEYWORD)) {
             return new TextAttributesKey[]{Asn1HighlighterScheme.KEYWORD};
-        } else if (iElementType.equals(Asn1GenElementFactory.PRIMITIVE_TYPE) || iElementType.equals(Asn1GenElementFactory.LIST_TYPE) ||
-                iElementType.equals(Asn1GenElementFactory.LIST_OF_TYPE)) {
+        } else if (iElementType.equals(Asn1GenElementFactory.PRIMITIVE_TYPE) || iElementType.equals(Asn1GenElementFactory.LIST_TYPE)) {
             return new TextAttributesKey[]{NATIVE_TYPE};
         } else if (iElementType.equals(Asn1GenElementFactory.NUMBER)) {
             return new TextAttributesKey[]{Asn1HighlighterScheme.NUMBER};

@@ -1,0 +1,37 @@
+MyTestModule2 DEFINITIONS ::=
+BEGIN
+
+My2Class1 ::= INTEGER
+My2Class2 ::= [APPLICATION 10] SEQUENCE {
+    myValue1 INTEGER,
+    myValue2 [10] My2Class1,
+    myValue3 My2Enum DEFAULT val1
+}
+My2Class3{TypeClass, TypeClass:Param} ::= SEQUENCE {
+    myField1 MY-2-OBJ-CLASS-1.&id({Param}),
+    myField2 MY-2-OBJ-CLASS-1.&Type({Param}{@myField1})
+}
+My2Class4 ::= My2Class3{MY-2-OBJ-CLASS-1, {My2Set}}
+
+MY-2-OBJ-CLASS-1 ::= CLASS {
+    &id INTEGER,
+    &Type OPTIONAL
+}
+
+My2Set MY-2-OBJ-CLASS-1 ::= {
+
+}
+
+My2Enum ::= ENUMERATED {
+    val1,
+    val2
+}
+
+my2Value1 INTEGER ::= 10
+my2Value2 My2Class2 ::= {
+    myValue1 10,
+    myValue2 my2Value2,
+    myValue3 val2
+}
+
+END

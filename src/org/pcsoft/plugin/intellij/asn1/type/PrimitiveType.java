@@ -13,9 +13,11 @@ public enum PrimitiveType {
     IA5_STRING("IA5String", ValueType.STRING),
     T61String("T61_STRING", ValueType.STRING),
     UTF8String("UTF8String", ValueType.STRING),
-    TELETEX_STRING("TeleTexString", ValueType.STRING),
+    NumericString("NumericString", ValueType.STRING),
+    VIDEOTEX_STRING("VideoTexString", ValueType.STRING),
     GENERALIZED_TIME("GeneralizedTime", ValueType.DATE_TIME),
     UTC_TIME("UTCTime", ValueType.DATE_TIME),
+    ANY("ANY", ValueType.VALUE, ValueType.BOOLEAN, ValueType.BYTES, ValueType.DATE_TIME, ValueType.INTEGER_NUMBER, ValueType.OBJECT_IDENTIFIER, ValueType.STRING)
     ;
 
     private final String name;

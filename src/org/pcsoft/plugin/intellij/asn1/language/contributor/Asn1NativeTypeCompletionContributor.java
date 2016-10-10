@@ -17,7 +17,6 @@ import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ObjectCla
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1TagDefinition;
 import org.pcsoft.plugin.intellij.asn1.language.parser.token.Asn1CustomElementFactory;
 import org.pcsoft.plugin.intellij.asn1.language.parser.token.Asn1GenElementFactory;
-import org.pcsoft.plugin.intellij.asn1.type.ListOfType;
 import org.pcsoft.plugin.intellij.asn1.type.ListType;
 import org.pcsoft.plugin.intellij.asn1.type.PrimitiveType;
 
@@ -37,7 +36,6 @@ public class Asn1NativeTypeCompletionContributor extends CompletionContributor {
                 PlatformPatterns.or(
                         PlatformPatterns.psiElement().afterLeaf(PlatformPatterns.psiElement(Asn1CustomElementFactory.BRACES_CORNER_CLOSE)).withParent(Asn1TagDefinition.class).withLanguage(Asn1Language.INSTANCE),
                         PlatformPatterns.psiElement().afterLeaf("::=").withLanguage(Asn1Language.INSTANCE),
-                        PlatformPatterns.psiElement().afterLeaf(PlatformPatterns.psiElement(Asn1GenElementFactory.LIST_OF_TYPE)).withLanguage(Asn1Language.INSTANCE),
                         PlatformPatterns.psiElement().afterLeaf(PlatformPatterns.psiElement(Asn1GenElementFactory.NAME_CAP).withParent(Asn1ClassDefinitionField.class)).withLanguage(Asn1Language.INSTANCE),
                         PlatformPatterns.psiElement().afterLeaf(PlatformPatterns.psiElement(Asn1GenElementFactory.NAME_UPPER).withParent(Asn1ObjectClassDefinitionField.class)).withLanguage(Asn1Language.INSTANCE)
                 ),
@@ -60,36 +58,13 @@ public class Asn1NativeTypeCompletionContributor extends CompletionContributor {
                 CompletionType.BASIC,
                 PlatformPatterns.or(
                         PlatformPatterns.psiElement().afterLeaf(PlatformPatterns.psiElement(Asn1CustomElementFactory.BRACES_CORNER_CLOSE).withParent(Asn1TagDefinition.class).withParent(Asn1ClassDefinition.class)).withLanguage(Asn1Language.INSTANCE),
-                        PlatformPatterns.psiElement().afterLeaf("::=").withLanguage(Asn1Language.INSTANCE),
-                        PlatformPatterns.psiElement().afterLeaf(PlatformPatterns.psiElement(Asn1GenElementFactory.LIST_OF_TYPE).withParent(Asn1ClassDefinition.class)).withLanguage(Asn1Language.INSTANCE)
+                        PlatformPatterns.psiElement().afterLeaf("::=").withLanguage(Asn1Language.INSTANCE)
                 ),
                 new CompletionProvider<CompletionParameters>() {
                     @Override
                     protected void addCompletions(@NotNull CompletionParameters completionParameters, ProcessingContext processingContext, @NotNull CompletionResultSet completionResultSet) {
                         completionResultSet.addAllElements(
                                 Stream.of(ListType.values())
-                                        .map(item -> LookupElementBuilder.create(item.getName())
-                                                .withBoldness(Asn1HighlighterScheme.KEYWORD.getDefaultAttributes().getFontType() == Font.BOLD)
-                                                .withItemTextForeground(Asn1HighlighterScheme.KEYWORD.getDefaultAttributes().getForegroundColor())
-                                        )
-                                        .collect(Collectors.toList())
-                        );
-                    }
-                }
-        );
-        extend(
-                CompletionType.BASIC,
-                PlatformPatterns.or(
-                        PlatformPatterns.psiElement().afterLeaf(PlatformPatterns.psiElement(Asn1CustomElementFactory.BRACES_CORNER_CLOSE)).withParent(Asn1TagDefinition.class).withLanguage(Asn1Language.INSTANCE),
-                        PlatformPatterns.psiElement().afterLeaf("::=").withLanguage(Asn1Language.INSTANCE),
-                        PlatformPatterns.psiElement().afterLeaf(PlatformPatterns.psiElement(Asn1GenElementFactory.NAME_CAP).withParent(Asn1ClassDefinitionField.class)).withLanguage(Asn1Language.INSTANCE),
-                        PlatformPatterns.psiElement().afterLeaf(PlatformPatterns.psiElement(Asn1GenElementFactory.NAME_UPPER).withParent(Asn1ObjectClassDefinitionField.class)).withLanguage(Asn1Language.INSTANCE)
-                ),
-                new CompletionProvider<CompletionParameters>() {
-                    @Override
-                    protected void addCompletions(@NotNull CompletionParameters completionParameters, ProcessingContext processingContext, @NotNull CompletionResultSet completionResultSet) {
-                        completionResultSet.addAllElements(
-                                Stream.of(ListOfType.values())
                                         .map(item -> LookupElementBuilder.create(item.getName())
                                                 .withBoldness(Asn1HighlighterScheme.KEYWORD.getDefaultAttributes().getFontType() == Font.BOLD)
                                                 .withItemTextForeground(Asn1HighlighterScheme.KEYWORD.getDefaultAttributes().getForegroundColor())

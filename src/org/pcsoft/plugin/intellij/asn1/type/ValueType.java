@@ -7,7 +7,6 @@ public enum ValueType {
     STRING,
     BOOLEAN,
     INTEGER_NUMBER,
-    DECIMAL_NUMBER,
     OBJECT_IDENTIFIER,
     BYTES,
     DATE_TIME,

@@ -5,7 +5,9 @@ import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ClassDefinition;
+import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1EnumeratedDefinition;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ObjectClassDefinition;
+import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ObjectSetDefinition;
 import org.pcsoft.plugin.intellij.asn1.language.reference.Asn1ReferenceUtils;
 
 import java.util.ArrayList;
@@ -35,6 +37,20 @@ public class Asn1GoToTypeContributor implements ChooseByNameContributor {
                         .collect(Collectors.toList())
         );
 
+        final List<Asn1ObjectSetDefinition> objectSetDefinitions = Asn1ReferenceUtils.findObjectSetDefinitions(project, null);
+        list.addAll(
+                objectSetDefinitions.stream()
+                        .map(Asn1ObjectSetDefinition::getName)
+                        .collect(Collectors.toList())
+        );
+
+        final List<Asn1EnumeratedDefinition> enumeratedDefinitions = Asn1ReferenceUtils.findEnumeratedDefinitions(project, null);
+        list.addAll(
+                enumeratedDefinitions.stream()
+                        .map(Asn1EnumeratedDefinition::getName)
+                        .collect(Collectors.toList())
+        );
+
         return list.toArray(new String[list.size()]);
     }
 
@@ -53,6 +69,20 @@ public class Asn1GoToTypeContributor implements ChooseByNameContributor {
         final List<Asn1ObjectClassDefinition> objectClassDefinitions = Asn1ReferenceUtils.findObjectClassDefinitions(project, null, true, full);
         list.addAll(
                 objectClassDefinitions.stream()
+                        .map(item -> (NavigationItem) item)
+                        .collect(Collectors.toList())
+        );
+
+        final List<Asn1ObjectSetDefinition> objectSetDefinitions = Asn1ReferenceUtils.findObjectSetDefinitions(project, null, true, full);
+        list.addAll(
+                objectSetDefinitions.stream()
+                        .map(item -> (NavigationItem) item)
+                        .collect(Collectors.toList())
+        );
+
+        final List<Asn1EnumeratedDefinition> enumeratedDefinitions = Asn1ReferenceUtils.findEnumeratedDefinitions(project, null, true, full);
+        list.addAll(
+                enumeratedDefinitions.stream()
                         .map(item -> (NavigationItem) item)
                         .collect(Collectors.toList())
         );

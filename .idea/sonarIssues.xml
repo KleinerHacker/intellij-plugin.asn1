@@ -33,9 +33,157 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/../../Cryptoplattform/cryptoserver_new/source/bundle/src/main/info/README-PASSWORD-ENCRYPTION-de.txt">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Cryptoplattform/cryptoserver_new/source/bundle/src/main/info/README-PASSWORD-ENCRYPTION-en.txt">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Cryptoplattform/cryptoserver_new/source/common/src/main/java/de/bdr/persotec/crypserv/common/PasswordUtils.java">
+          <value>
+            <set>
+              <SonarIssue>
+                <option name="isNew" value="false" />
+                <option name="key" value="AVcOhb4oEQ77G5RhYL1Z" />
+                <option name="line" value="36" />
+                <option name="message" value="Define a constant instead of duplicating this literal &quot;UTF-8&quot; 3 times." />
+                <option name="ruleKey" value="squid:S1192" />
+                <option name="severity" value="MINOR" />
+              </SonarIssue>
+              <SonarIssue>
+                <option name="isNew" value="false" />
+                <option name="key" value="AVcOhb4oEQ77G5RhYL1d" />
+                <option name="line" value="81" />
+                <option name="message" value="Catch a list of specific exception subtypes instead." />
+                <option name="ruleKey" value="squid:S2221" />
+                <option name="severity" value="CRITICAL" />
+              </SonarIssue>
+              <SonarIssue>
+                <option name="isNew" value="false" />
+                <option name="key" value="AVcOhb4oEQ77G5RhYL1c" />
+                <option name="line" value="65" />
+                <option name="message" value="Catch a list of specific exception subtypes instead." />
+                <option name="ruleKey" value="squid:S2221" />
+                <option name="severity" value="CRITICAL" />
+              </SonarIssue>
+              <SonarIssue>
+                <option name="isNew" value="false" />
+                <option name="key" value="AVcOhb4oEQ77G5RhYL1a" />
+                <option name="line" value="90" />
+                <option name="message" value="Move this constructor to comply with Java Code Conventions." />
+                <option name="ruleKey" value="squid:S1213" />
+                <option name="severity" value="MINOR" />
+              </SonarIssue>
+              <SonarIssue>
+                <option name="isNew" value="false" />
+                <option name="key" value="AVcOhb4pEQ77G5RhYL1e" />
+                <option name="line" value="24" />
+                <option name="message" value="Define and throw a dedicated exception instead of using a generic one." />
+                <option name="ruleKey" value="squid:S00112" />
+                <option name="severity" value="CRITICAL" />
+              </SonarIssue>
+              <SonarIssue>
+                <option name="isNew" value="false" />
+                <option name="key" value="AVcOhb4oEQ77G5RhYL1b" />
+                <option name="line" value="23" />
+                <option name="message" value="Catch a list of specific exception subtypes instead." />
+                <option name="ruleKey" value="squid:S2221" />
+                <option name="severity" value="CRITICAL" />
+              </SonarIssue>
+            </set>
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Cryptoplattform/cryptoserver_new/source/common/src/main/java/de/bdr/persotec/crypserv/common/conversion/PasswordEncryptionConverter.java">
+          <value>
+            <set>
+              <SonarIssue>
+                <option name="isNew" value="false" />
+                <option name="key" value="AVcOhb6fEQ77G5RhYL2f" />
+                <option name="line" value="40" />
+                <option name="message" value="Move this constructor to comply with Java Code Conventions." />
+                <option name="ruleKey" value="squid:S1213" />
+                <option name="severity" value="MINOR" />
+              </SonarIssue>
+              <SonarIssue>
+                <option name="isNew" value="false" />
+                <option name="key" value="AVcOhb6fEQ77G5RhYL2g" />
+                <option name="line" value="20" />
+                <option name="message" value="Define and throw a dedicated exception instead of using a generic one." />
+                <option name="ruleKey" value="squid:S00112" />
+                <option name="severity" value="CRITICAL" />
+              </SonarIssue>
+              <SonarIssue>
+                <option name="isNew" value="false" />
+                <option name="key" value="AVcOhb6gEQ77G5RhYL2h" />
+                <option name="line" value="33" />
+                <option name="message" value="Define and throw a dedicated exception instead of using a generic one." />
+                <option name="ruleKey" value="squid:S00112" />
+                <option name="severity" value="CRITICAL" />
+              </SonarIssue>
+            </set>
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/../../Cryptoplattform/cryptoserver_new/source/common/src/test/java/de/bdr/persotec/crypserv/common/PasswordUtilsTest.java">
           <value>
             <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Cryptoplattform/cryptoserver_new/source/tooling/pw-enc/src/main/java/de/bdr/persotec/crypserv/tooling/pw_enc/Runner.java">
+          <value>
+            <set>
+              <SonarIssue>
+                <option name="isNew" value="false" />
+                <option name="key" value="AVcOhb2NEQ77G5RhYLzC" />
+                <option name="line" value="40" />
+                <option name="message" value="Replace this usage of System.out or System.err by a logger." />
+                <option name="ruleKey" value="squid:S106" />
+                <option name="severity" value="MAJOR" />
+              </SonarIssue>
+              <SonarIssue>
+                <option name="isNew" value="false" />
+                <option name="key" value="AVcOhb2OEQ77G5RhYLzG" />
+                <option name="line" value="44" />
+                <option name="message" value="Replace this usage of System.out or System.err by a logger." />
+                <option name="ruleKey" value="squid:S106" />
+                <option name="severity" value="MAJOR" />
+              </SonarIssue>
+              <SonarIssue>
+                <option name="isNew" value="false" />
+                <option name="key" value="AVcOhb2OEQ77G5RhYLzF" />
+                <option name="line" value="43" />
+                <option name="message" value="Replace this usage of System.out or System.err by a logger." />
+                <option name="ruleKey" value="squid:S106" />
+                <option name="severity" value="MAJOR" />
+              </SonarIssue>
+              <SonarIssue>
+                <option name="isNew" value="false" />
+                <option name="key" value="AVcOhb2NEQ77G5RhYLzD" />
+                <option name="line" value="41" />
+                <option name="message" value="Replace this usage of System.out or System.err by a logger." />
+                <option name="ruleKey" value="squid:S106" />
+                <option name="severity" value="MAJOR" />
+              </SonarIssue>
+              <SonarIssue>
+                <option name="isNew" value="false" />
+                <option name="key" value="AVcOhb2NEQ77G5RhYLzE" />
+                <option name="line" value="42" />
+                <option name="message" value="Replace this usage of System.out or System.err by a logger." />
+                <option name="ruleKey" value="squid:S106" />
+                <option name="severity" value="MAJOR" />
+              </SonarIssue>
+              <SonarIssue>
+                <option name="isNew" value="false" />
+                <option name="key" value="AVcOhb2PEQ77G5RhYLzN" />
+                <option name="line" value="1" />
+                <option name="message" value="Rename this package name to match the regular expression '^[a-z]+(\.[a-z][a-z0-9]*)*$'." />
+                <option name="ruleKey" value="squid:S00120" />
+                <option name="severity" value="MINOR" />
+              </SonarIssue>
+            </set>
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/../../Cryptoplattform/cryptoserver_new/source/ui/jfx/src/main/java/de/bdr/persotec/crypserv/ui/jfx/component/key/profile/KeyProfilePane.java">
@@ -249,7 +397,27 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/gen/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/Asn1ConstantDefinitionValueNameImpl.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/gen/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/Asn1ElementDefinitionRefImpl.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/gen/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/Asn1ImportElementModuleImpl.java">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/gen/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/Asn1ModuleDefinitionImpl.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/gen/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/Asn1ModuleDefinitionNameImpl.java">
           <value>
             <set />
           </value>
@@ -524,6 +692,11 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/manipulator/Asn1ClassDefinitionObjectSetArgumentRefManipulator.java">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/manipulator/Asn1ClassDefinitionRefClassManipulator.java">
           <value>
             <set />
@@ -539,7 +712,37 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/manipulator/Asn1ClassDefinitionTypeArgumentRefManipulator.java">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/manipulator/Asn1ConstantDefinitionValueManipulator.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/manipulator/Asn1ElementDefinitionObjectSetArgumentRefManipulator.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/manipulator/Asn1ElementDefinitionRefManipulator.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/manipulator/Asn1ElementDefinitionTypeArgumentRefManipulator.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/manipulator/Asn1EnumeratedDefinitionElementManipulator.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/manipulator/Asn1EnumeratedDefinitionManipulator.java">
           <value>
             <set />
           </value>
@@ -550,6 +753,11 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/manipulator/Asn1ImportElementModuleManipulator.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/manipulator/Asn1ImportElementTypeRefManipulator.java">
           <value>
             <set />
           </value>
@@ -570,6 +778,31 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/manipulator/Asn1ObjectClassDefinitionRefManipulator.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/manipulator/Asn1ObjectClassFieldTypeRefManipulator.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/manipulator/Asn1ObjectSetDefinitionManipulator.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/manipulator/Asn1ObjectSetParameterManipulator.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/manipulator/Asn1ObjectSetParameterNameManipulator.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/manipulator/Asn1ObjectSetParameterTypeRefManipulator.java">
           <value>
             <set />
           </value>
@@ -600,6 +833,11 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/manipulator/Asn1ParameterRefManipulator.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/manipulator/Asn1TypeParameterManipulator.java">
           <value>
             <set />
           </value>
@@ -789,6 +1027,16 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/reference/Asn1EnumeratedDefinitionElementReference.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/reference/Asn1EnumeratedDefinitionReference.java">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/reference/Asn1FileReference.java">
           <value>
             <set />
@@ -819,6 +1067,21 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/reference/Asn1ObjectSetDefinitionReference.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/reference/Asn1ObjectSetParameterNameReference.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/reference/Asn1ObjectSetParameterReference.java">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/reference/Asn1ObjectValueDefinitionReference.java">
           <value>
             <set />
@@ -835,6 +1098,11 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/reference/Asn1ReferenceUtils.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/reference/Asn1TypeParameterReference.java">
           <value>
             <set />
           </value>
@@ -904,6 +1172,11 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/structure/folding/Asn1ModuleOIDFolding.java">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/structure/folding/Asn1TypeFolding.java">
           <value>
             <set />
@@ -950,6 +1223,26 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/token/Asn1TokenType.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/type/ListType.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/type/PrimitiveType.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/type/ValueType.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$APPLICATION_CONFIG_DIR$/scratches/scratch_1.java">
           <value>
             <set />
           </value>

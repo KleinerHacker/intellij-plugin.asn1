@@ -8,7 +8,6 @@ import com.intellij.psi.PsiReference;
 import com.intellij.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.Nullable;
 import org.pcsoft.plugin.intellij.asn1.Asn1Icons;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1AllClassDefinitionRef;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ClassDefinition;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ClassDefinitionField;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ClassDefinitionFieldName;
@@ -17,8 +16,14 @@ import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ClassDefi
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ClassDefinitionRef;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ConstantDefinitionValue;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ConstantDefinitionValueName;
+import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ElementDefinitionObjectSetArgumentRef;
+import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ElementDefinitionRef;
+import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ElementDefinitionTypeArgumentRef;
+import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1EnumeratedDefinition;
+import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1EnumeratedDefinitionElement;
+import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1EnumeratedDefinitionName;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ImportElementModule;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ImportElementName;
+import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ImportElementTypeRef;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ModuleDefinition;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ModuleDefinitionName;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ObjectClassDefinition;
@@ -27,12 +32,16 @@ import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ObjectCla
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ObjectClassDefinitionFieldRef;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ObjectClassDefinitionName;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ObjectClassDefinitionRef;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ObjectClassParameter;
+import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ObjectSetDefinition;
+import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ObjectSetDefinitionName;
+import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ObjectSetParameter;
+import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ObjectSetParameterTypeRef;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ObjectValueDefinition;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ObjectValueDefinitionName;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ParameterName;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ParameterRef;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1TagDefinition;
+import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1TypeParameter;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ValueObjectIdentifierPart;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ValueRef;
 import org.pcsoft.plugin.intellij.asn1.language.parser.token.Asn1CustomElementFactory;
@@ -40,11 +49,15 @@ import org.pcsoft.plugin.intellij.asn1.language.parser.token.Asn1GenElementFacto
 import org.pcsoft.plugin.intellij.asn1.language.reference.Asn1ClassDefinitionFieldReference;
 import org.pcsoft.plugin.intellij.asn1.language.reference.Asn1ClassDefinitionReference;
 import org.pcsoft.plugin.intellij.asn1.language.reference.Asn1ConstantDefinitionValueReference;
+import org.pcsoft.plugin.intellij.asn1.language.reference.Asn1EnumeratedDefinitionElementReference;
+import org.pcsoft.plugin.intellij.asn1.language.reference.Asn1EnumeratedDefinitionReference;
 import org.pcsoft.plugin.intellij.asn1.language.reference.Asn1ModuleDefinitionReference;
 import org.pcsoft.plugin.intellij.asn1.language.reference.Asn1ObjectClassDefinitionFieldReference;
 import org.pcsoft.plugin.intellij.asn1.language.reference.Asn1ObjectClassDefinitionReference;
+import org.pcsoft.plugin.intellij.asn1.language.reference.Asn1ObjectSetDefinitionReference;
+import org.pcsoft.plugin.intellij.asn1.language.reference.Asn1ObjectSetParameterReference;
 import org.pcsoft.plugin.intellij.asn1.language.reference.Asn1ObjectValueDefinitionReference;
-import org.pcsoft.plugin.intellij.asn1.language.reference.Asn1ParameterReference;
+import org.pcsoft.plugin.intellij.asn1.language.reference.Asn1TypeParameterReference;
 import org.pcsoft.plugin.intellij.asn1.type.Asn1TagType;
 import org.pcsoft.plugin.intellij.asn1.type.Asn1TaggingType;
 
@@ -65,6 +78,9 @@ public interface Asn1ElementUtils {
     }
 
     static ASTNode getNameNode(final PsiElement element) {
+        if (element == null || element.getNode() == null)
+            return null;
+
         ASTNode astNode = element.getNode().findChildByType(Asn1GenElementFactory.NAME_UPPER);
         if (astNode == null) {
             astNode = element.getNode().findChildByType(Asn1GenElementFactory.NAME_LOWER);
@@ -162,29 +178,60 @@ public interface Asn1ElementUtils {
     }
     //endregion
 
-    //region Import Element Name
-    static String getName(final Asn1ImportElementName importElementName) {
-        return getNameNodeText(importElementName);
+    //region Import Element Type Reference
+    static String getName(final Asn1ImportElementTypeRef importElementTypeRef) {
+        return getNameNodeText(importElementTypeRef);
     }
 
-    static PsiElement setName(final Asn1ImportElementName importElementName, final String newName) {
-        final ASTNode astNode = getNameNode(importElementName);
+    static PsiElement setName(final Asn1ImportElementTypeRef importElementTypeRef, final String newName) {
+        final ASTNode astNode = getNameNode(importElementTypeRef);
         if (astNode != null) {
             //TODO
         }
 
-        return importElementName;
+        return importElementTypeRef;
     }
 
-    static PsiElement getNameIdentifier(final Asn1ImportElementName importElementName) {
-        final ASTNode astNode = getNameNode(importElementName);
+    static PsiElement getNameIdentifier(final Asn1ImportElementTypeRef importElementTypeRef) {
+        final ASTNode astNode = getNameNode(importElementTypeRef);
         if (astNode != null) {
             return astNode.getPsi();
         } else {
             return null;
         }
     }
+
+    static PsiReference[] getReferences(final Asn1ImportElementTypeRef importElementTypeRef) {
+        return new PsiReference[]{
+                new Asn1ClassDefinitionReference(importElementTypeRef),
+                new Asn1ObjectClassDefinitionReference(importElementTypeRef),
+                new Asn1ObjectValueDefinitionReference(importElementTypeRef),
+                new Asn1ObjectSetDefinitionReference(importElementTypeRef),
+                new Asn1EnumeratedDefinitionReference(importElementTypeRef)
+        };
+    }
+
+    static PsiReference getClassDefinitionReference(final Asn1ImportElementTypeRef importElementTypeRef) {
+        return new Asn1ClassDefinitionReference(importElementTypeRef);
+    }
+
+    static PsiReference getObjectClassDefinitionReference(final Asn1ImportElementTypeRef importElementTypeRef) {
+        return new Asn1ObjectClassDefinitionReference(importElementTypeRef);
+    }
+
+    static PsiReference getObjectValueDefinitionReference(final Asn1ImportElementTypeRef importElementTypeRef) {
+        return new Asn1ObjectValueDefinitionReference(importElementTypeRef);
+    }
+
+    static PsiReference getObjectSetDefinitionReference(final Asn1ImportElementTypeRef importElementTypeRef) {
+        return new Asn1ObjectSetDefinitionReference(importElementTypeRef);
+    }
+
+    static PsiReference getEnumeratedDefinitionReference(final Asn1ImportElementTypeRef importElementTypeRef) {
+        return new Asn1EnumeratedDefinitionReference(importElementTypeRef);
+    }
     //endregion
+
     //endregion
 
     //region Element - Class Definition
@@ -553,22 +600,24 @@ public interface Asn1ElementUtils {
         return objectValueDefinitionName.getText();
     }
 
-    //region All Class Reference
-    static String getName(final Asn1AllClassDefinitionRef allClassDefinitionRef) {
-        return getNameNodeText(allClassDefinitionRef);
+    //endregion
+
+    //region Element - Object Set Definition
+    static String getName(final Asn1ObjectSetDefinition objectSetDefinition) {
+        return getNameNodeText(objectSetDefinition.getObjectSetDefinitionName());
     }
 
-    static PsiElement setName(final Asn1AllClassDefinitionRef allClassDefinitionRef, final String newName) {
-        final ASTNode astNode = getNameNode(allClassDefinitionRef);
+    static PsiElement setName(final Asn1ObjectSetDefinition objectSetDefinition, final String newName) {
+        final ASTNode astNode = getNameNode(objectSetDefinition.getObjectSetDefinitionName());
         if (astNode != null) {
             //TODO
         }
 
-        return allClassDefinitionRef;
+        return objectSetDefinition;
     }
 
-    static PsiElement getNameIdentifier(final Asn1AllClassDefinitionRef allClassDefinitionRef) {
-        final ASTNode astNode = getNameNode(allClassDefinitionRef);
+    static PsiElement getNameIdentifier(final Asn1ObjectSetDefinition objectSetDefinition) {
+        final ASTNode astNode = getNameNode(objectSetDefinition.getObjectSetDefinitionName());
         if (astNode != null) {
             return astNode.getPsi();
         } else {
@@ -576,21 +625,132 @@ public interface Asn1ElementUtils {
         }
     }
 
-    static PsiReference[] getReferences(final Asn1AllClassDefinitionRef allClassDefinitionRef) {
-        return new PsiReference[]{
-                new Asn1ClassDefinitionReference(allClassDefinitionRef),
-                new Asn1ObjectClassDefinitionReference(allClassDefinitionRef)
+    static ItemPresentation getPresentation(final Asn1ObjectSetDefinition objectSetDefinition) {
+        return new ItemPresentation() {
+            @Nullable
+            @Override
+            public String getPresentableText() {
+                return objectSetDefinition.getName();
+            }
+
+            @Nullable
+            @Override
+            public String getLocationString() {
+                final Asn1ModuleDefinition moduleDefinition = PsiTreeUtil.getParentOfType(objectSetDefinition, Asn1ModuleDefinition.class);
+                return moduleDefinition != null ? moduleDefinition.getName() : objectSetDefinition.getContainingFile() != null ? objectSetDefinition.getContainingFile().getName() : null;
+            }
+
+            @Nullable
+            @Override
+            public Icon getIcon(boolean b) {
+                return AllIcons.Nodes.Advice;
+            }
         };
     }
 
-    static PsiReference getClassDefinitionReference(final Asn1AllClassDefinitionRef classDefinitionRef) {
-        return new Asn1ClassDefinitionReference(classDefinitionRef);
+    static String getName(final Asn1ObjectSetDefinitionName objectSetDefinitionName) {
+        return objectSetDefinitionName.getText();
     }
 
-    static PsiReference getObjectClassDefinitionReference(final Asn1AllClassDefinitionRef allClassDefinitionRef) {
-        return new Asn1ObjectClassDefinitionReference(allClassDefinitionRef);
+    //endregion
+
+    //region Element - Enumerated Definition
+    static String getName(final Asn1EnumeratedDefinition enumeratedDefinition) {
+        return getNameNodeText(enumeratedDefinition.getEnumeratedDefinitionName());
+    }
+
+    static PsiElement setName(final Asn1EnumeratedDefinition enumeratedDefinition, final String newName) {
+        final ASTNode astNode = getNameNode(enumeratedDefinition.getEnumeratedDefinitionName());
+        if (astNode != null) {
+            //TODO
+        }
+
+        return enumeratedDefinition;
+    }
+
+    static PsiElement getNameIdentifier(final Asn1EnumeratedDefinition enumeratedDefinition) {
+        final ASTNode astNode = getNameNode(enumeratedDefinition.getEnumeratedDefinitionName());
+        if (astNode != null) {
+            return astNode.getPsi();
+        } else {
+            return null;
+        }
+    }
+
+    static ItemPresentation getPresentation(final Asn1EnumeratedDefinition enumeratedDefinition) {
+        return new ItemPresentation() {
+            @Nullable
+            @Override
+            public String getPresentableText() {
+                return enumeratedDefinition.getName();
+            }
+
+            @Nullable
+            @Override
+            public String getLocationString() {
+                final Asn1ModuleDefinition moduleDefinition = PsiTreeUtil.getParentOfType(enumeratedDefinition, Asn1ModuleDefinition.class);
+                return moduleDefinition != null ? moduleDefinition.getName() : enumeratedDefinition.getContainingFile() != null ? enumeratedDefinition.getContainingFile().getName() : null;
+            }
+
+            @Nullable
+            @Override
+            public Icon getIcon(boolean b) {
+                return AllIcons.Nodes.Enum;
+            }
+        };
+    }
+
+    static String getName(final Asn1EnumeratedDefinitionName enumeratedDefinitionName) {
+        return enumeratedDefinitionName.getText();
+    }
+
+    //region Elements
+    static String getName(final Asn1EnumeratedDefinitionElement enumeratedDefinitionElement) {
+        return getNameNodeText(enumeratedDefinitionElement);
+    }
+
+    static PsiElement setName(final Asn1EnumeratedDefinitionElement enumeratedDefinitionElement, final String newName) {
+        final ASTNode astNode = getNameNode(enumeratedDefinitionElement);
+        if (astNode != null) {
+            //TODO
+        }
+
+        return enumeratedDefinitionElement;
+    }
+
+    static PsiElement getNameIdentifier(final Asn1EnumeratedDefinitionElement enumeratedDefinitionElement) {
+        final ASTNode astNode = getNameNode(enumeratedDefinitionElement);
+        if (astNode != null) {
+            return astNode.getPsi();
+        } else {
+            return null;
+        }
+    }
+
+    static ItemPresentation getPresentation(final Asn1EnumeratedDefinitionElement enumeratedDefinitionElement) {
+        return new ItemPresentation() {
+            @Nullable
+            @Override
+            public String getPresentableText() {
+                return enumeratedDefinitionElement.getName();
+            }
+
+            @Nullable
+            @Override
+            public String getLocationString() {
+                final Asn1EnumeratedDefinition enumeratedDefinition = PsiTreeUtil.getParentOfType(enumeratedDefinitionElement, Asn1EnumeratedDefinition.class);
+                return enumeratedDefinition != null ? enumeratedDefinition.getName() : null;
+            }
+
+            @Nullable
+            @Override
+            public Icon getIcon(boolean b) {
+                return AllIcons.Nodes.Enum;
+            }
+        };
     }
     //endregion
+
     //endregion
 
     //region Element - Tag Definition
@@ -675,7 +835,8 @@ public interface Asn1ElementUtils {
     static PsiReference[] getReferences(final Asn1ValueRef valueRef) {
         return new PsiReference[]{
                 new Asn1ConstantDefinitionValueReference(valueRef),
-                new Asn1ObjectValueDefinitionReference(valueRef)
+                new Asn1ObjectValueDefinitionReference(valueRef),
+                new Asn1EnumeratedDefinitionElementReference(valueRef)
         };
     }
 
@@ -686,25 +847,29 @@ public interface Asn1ElementUtils {
     static PsiReference getObjectValueDefinitionReference(final Asn1ValueRef valueRef) {
         return new Asn1ObjectValueDefinitionReference(valueRef);
     }
+
+    static PsiReference getEnumeratedDefinitionElementReference(final Asn1ValueRef valueRef) {
+        return new Asn1EnumeratedDefinitionElementReference(valueRef);
+    }
     //endregion
     //endregion
 
     //region Parameter
-    static String getName(final Asn1ParameterName parameter) {
-        return getNameNodeText(parameter);
+    static String getName(final Asn1ParameterName parameterName) {
+        return getNameNodeText(parameterName);
     }
 
-    static PsiElement setName(final Asn1ParameterName parameter, final String newName) {
-        final ASTNode astNode = getNameNode(parameter);
+    static PsiElement setName(final Asn1ObjectSetParameter objectSetParameter, final String newName) {
+        final ASTNode astNode = getNameNode(objectSetParameter.getParameterName());
         if (astNode != null) {
             //TODO
         }
 
-        return parameter;
+        return objectSetParameter;
     }
 
-    static PsiElement getNameIdentifier(final Asn1ParameterName parameter) {
-        final ASTNode astNode = getNameNode(parameter);
+    static PsiElement getNameIdentifier(final Asn1ObjectSetParameter objectSetParameter) {
+        final ASTNode astNode = getNameNode(objectSetParameter.getParameterName());
         if (astNode != null) {
             return astNode.getPsi();
         } else {
@@ -712,25 +877,24 @@ public interface Asn1ElementUtils {
         }
     }
 
-    static ItemPresentation getPresentation(final Asn1ParameterName parameter) {
+    static String getName(final Asn1ObjectSetParameter objectSetParameter) {
+        return objectSetParameter.getParameterName().getName();
+    }
+
+    static ItemPresentation getPresentation(final Asn1ObjectSetParameter objectSetParameter) {
         return new ItemPresentation() {
             @Nullable
             @Override
             public String getPresentableText() {
-                return parameter.getName();
+                return objectSetParameter.getName();
             }
 
             @Nullable
             @Override
             public String getLocationString() {
-                final Asn1ObjectClassParameter objectClassParameter = PsiTreeUtil.getParentOfType(parameter, Asn1ObjectClassParameter.class);
-                if (objectClassParameter != null) {
-                    final Asn1ClassDefinition classDefinition = PsiTreeUtil.getParentOfType(objectClassParameter, Asn1ClassDefinition.class);
-                    if (classDefinition != null) {
-                        return objectClassParameter.getObjectClassDefinitionRef().getName() + " in " + classDefinition.getName();
-                    } else {
-                        return objectClassParameter.getObjectClassDefinitionRef().getName();
-                    }
+                final Asn1ClassDefinition classDefinition = PsiTreeUtil.getParentOfType(objectSetParameter, Asn1ClassDefinition.class);
+                if (classDefinition != null) {
+                    return classDefinition.getName();
                 }
 
                 return null;
@@ -743,6 +907,99 @@ public interface Asn1ElementUtils {
             }
         };
     }
+
+    static PsiElement setName(final Asn1TypeParameter typeParameter, final String newName) {
+        final ASTNode astNode = getNameNode(typeParameter.getParameterName());
+        if (astNode != null) {
+            //TODO
+        }
+
+        return typeParameter;
+    }
+
+    static PsiElement getNameIdentifier(final Asn1TypeParameter typeParameter) {
+        final ASTNode astNode = getNameNode(typeParameter.getParameterName());
+        if (astNode != null) {
+            return astNode.getPsi();
+        } else {
+            return null;
+        }
+    }
+
+    static String getName(final Asn1TypeParameter typeParameter) {
+        return typeParameter.getParameterName().getName();
+    }
+
+    static ItemPresentation getPresentation(final Asn1TypeParameter typeParameter) {
+        return new ItemPresentation() {
+            @Nullable
+            @Override
+            public String getPresentableText() {
+                return typeParameter.getName();
+            }
+
+            @Nullable
+            @Override
+            public String getLocationString() {
+                final Asn1ClassDefinition classDefinition = PsiTreeUtil.getParentOfType(typeParameter, Asn1ClassDefinition.class);
+                if (classDefinition != null) {
+                    return classDefinition.getName();
+                }
+
+                return null;
+            }
+
+            @Nullable
+            @Override
+            public Icon getIcon(boolean b) {
+                return AllIcons.Nodes.Advice;
+            }
+        };
+    }
+
+    //region Reference - Parameter Type
+    static PsiElement setName(final Asn1ObjectSetParameterTypeRef objectSetParameterTypeRef, final String newName) {
+        final ASTNode astNode = getNameNode(objectSetParameterTypeRef);
+        if (astNode != null) {
+            //TODO
+        }
+
+        return objectSetParameterTypeRef;
+    }
+
+    static PsiElement getNameIdentifier(final Asn1ObjectSetParameterTypeRef objectSetParameterTypeRef) {
+        final ASTNode astNode = getNameNode(objectSetParameterTypeRef);
+        if (astNode != null) {
+            return astNode.getPsi();
+        } else {
+            return null;
+        }
+    }
+
+    static String getName(final Asn1ObjectSetParameterTypeRef objectSetParameterTypeRef) {
+        return objectSetParameterTypeRef.getText();
+    }
+
+    static PsiReference[] getReferences(final Asn1ObjectSetParameterTypeRef objectSetParameterTypeRef) {
+        return new PsiReference[]{
+                new Asn1TypeParameterReference(objectSetParameterTypeRef),
+                new Asn1ClassDefinitionReference(objectSetParameterTypeRef),
+                new Asn1ObjectClassDefinitionReference(objectSetParameterTypeRef)
+        };
+    }
+
+    static PsiReference getTypeParameterReference(final Asn1ObjectSetParameterTypeRef objectSetParameterTypeRef) {
+        return new Asn1TypeParameterReference(objectSetParameterTypeRef);
+    }
+
+    static PsiReference getClassDefinitionReference(final Asn1ObjectSetParameterTypeRef objectSetParameterTypeRef) {
+        return new Asn1ClassDefinitionReference(objectSetParameterTypeRef);
+    }
+
+    static PsiReference getObjectClassDefinitionReference(final Asn1ObjectSetParameterTypeRef objectSetParameterTypeRef) {
+        return new Asn1ObjectClassDefinitionReference(objectSetParameterTypeRef);
+    }
+    //endregion
 
     //region Reference - Parameter
     static String getName(final Asn1ParameterRef parameterRef) {
@@ -768,7 +1025,92 @@ public interface Asn1ElementUtils {
     }
 
     static PsiReference getReference(final Asn1ParameterRef parameterRef) {
-        return new Asn1ParameterReference(parameterRef);
+        return new Asn1ObjectSetParameterReference(parameterRef);
+    }
+    //endregion
+    //endregion
+
+    //region Argument Reference
+    //region Object Set
+    static String getName(final Asn1ElementDefinitionObjectSetArgumentRef elementDefinitionObjectSetArgumentRef) {
+        return getNameNodeText(elementDefinitionObjectSetArgumentRef);
+    }
+
+    static PsiElement setName(final Asn1ElementDefinitionObjectSetArgumentRef elementDefinitionObjectSetArgumentRef, final String newName) {
+        final ASTNode astNode = getNameNode(elementDefinitionObjectSetArgumentRef);
+        if (astNode != null) {
+            //TODO
+        }
+
+        return elementDefinitionObjectSetArgumentRef;
+    }
+
+    static PsiElement getNameIdentifier(final Asn1ElementDefinitionObjectSetArgumentRef elementDefinitionObjectSetArgumentRef) {
+        final ASTNode astNode = getNameNode(elementDefinitionObjectSetArgumentRef);
+        if (astNode != null) {
+            return astNode.getPsi();
+        } else {
+            return null;
+        }
+    }
+
+    static PsiReference[] getReferences(final Asn1ElementDefinitionObjectSetArgumentRef elementDefinitionObjectSetArgumentRef) {
+        return new PsiReference[]{
+                new Asn1ObjectSetParameterReference(elementDefinitionObjectSetArgumentRef),
+                new Asn1ObjectSetDefinitionReference(elementDefinitionObjectSetArgumentRef),
+        };
+    }
+
+    static PsiReference getObjectSetParameterReference(final Asn1ElementDefinitionObjectSetArgumentRef elementDefinitionObjectSetArgumentRef) {
+        return new Asn1ObjectSetParameterReference(elementDefinitionObjectSetArgumentRef);
+    }
+
+    static PsiReference getObjectSetDefinitionReference(final Asn1ElementDefinitionObjectSetArgumentRef elementDefinitionObjectSetArgumentRef) {
+        return new Asn1ObjectSetDefinitionReference(elementDefinitionObjectSetArgumentRef);
+    }
+    //endregion
+
+    //region Type
+    static String getName(final Asn1ElementDefinitionTypeArgumentRef elementDefinitionTypeArgumentRef) {
+        return getNameNodeText(elementDefinitionTypeArgumentRef);
+    }
+
+    static PsiElement setName(final Asn1ElementDefinitionTypeArgumentRef elementDefinitionTypeArgumentRef, final String newName) {
+        final ASTNode astNode = getNameNode(elementDefinitionTypeArgumentRef);
+        if (astNode != null) {
+            //TODO
+        }
+
+        return elementDefinitionTypeArgumentRef;
+    }
+
+    static PsiElement getNameIdentifier(final Asn1ElementDefinitionTypeArgumentRef elementDefinitionTypeArgumentRef) {
+        final ASTNode astNode = getNameNode(elementDefinitionTypeArgumentRef);
+        if (astNode != null) {
+            return astNode.getPsi();
+        } else {
+            return null;
+        }
+    }
+
+    static PsiReference[] getReferences(final Asn1ElementDefinitionTypeArgumentRef elementDefinitionTypeArgumentRef) {
+        return new PsiReference[]{
+                new Asn1TypeParameterReference(elementDefinitionTypeArgumentRef),
+                new Asn1ObjectClassDefinitionReference(elementDefinitionTypeArgumentRef),
+                new Asn1ClassDefinitionReference(elementDefinitionTypeArgumentRef)
+        };
+    }
+
+    static PsiReference getTypeParameterReference(final Asn1ElementDefinitionTypeArgumentRef elementDefinitionTypeArgumentRef) {
+        return new Asn1TypeParameterReference(elementDefinitionTypeArgumentRef);
+    }
+
+    static PsiReference getObjectClassDefinitionReference(final Asn1ElementDefinitionTypeArgumentRef elementDefinitionTypeArgumentRef) {
+        return new Asn1ObjectClassDefinitionReference(elementDefinitionTypeArgumentRef);
+    }
+
+    static PsiReference getClassDefinitionReference(final Asn1ElementDefinitionTypeArgumentRef elementDefinitionTypeArgumentRef) {
+        return new Asn1ClassDefinitionReference(elementDefinitionTypeArgumentRef);
     }
     //endregion
     //endregion
@@ -820,6 +1162,50 @@ public interface Asn1ElementUtils {
 
     static String getName(final Asn1ConstantDefinitionValueName constantDefinitionValueName) {
         return getNameNodeText(constantDefinitionValueName);
+    }
+    //endregion
+
+    //region Element Definition
+    static String getName(final Asn1ElementDefinitionRef elementDefinitionRef) {
+        return getNameNodeText(elementDefinitionRef);
+    }
+
+    static PsiElement setName(final Asn1ElementDefinitionRef elementDefinitionRef, final String newName) {
+        final ASTNode astNode = getNameNode(elementDefinitionRef);
+        if (astNode != null) {
+            //TODO
+        }
+
+        return elementDefinitionRef;
+    }
+
+    static PsiElement getNameIdentifier(final Asn1ElementDefinitionRef elementDefinitionRef) {
+        final ASTNode astNode = getNameNode(elementDefinitionRef);
+        if (astNode != null) {
+            return astNode.getPsi();
+        } else {
+            return null;
+        }
+    }
+
+    static PsiReference[] getReferences(final Asn1ElementDefinitionRef elementDefinitionRef) {
+        return new PsiReference[]{
+                new Asn1ObjectClassDefinitionReference(elementDefinitionRef),
+                new Asn1ClassDefinitionReference(elementDefinitionRef),
+                new Asn1EnumeratedDefinitionReference(elementDefinitionRef)
+        };
+    }
+
+    static PsiReference getObjectClassDefinitionReference(final Asn1ElementDefinitionRef elementDefinitionRef) {
+        return new Asn1ObjectClassDefinitionReference(elementDefinitionRef);
+    }
+
+    static PsiReference getClassDefinitionReference(final Asn1ElementDefinitionRef elementDefinitionRef) {
+        return new Asn1ClassDefinitionReference(elementDefinitionRef);
+    }
+
+    static PsiReference getEnumeratedReference(final Asn1ElementDefinitionRef elementDefinitionRef) {
+        return new Asn1EnumeratedDefinitionReference(elementDefinitionRef);
     }
     //endregion
 }

@@ -1,0 +1,42 @@
+MyTestModule1 DEFINITIONS ::=
+BEGIN
+
+IMPORTS
+My2Class1 FROM MyTestModule2
+;
+
+MyClass1 ::= INTEGER
+MyClass2 ::= [APPLICATION 10] SEQUENCE {
+    myValue1 INTEGER,
+    myValue2 [10] MyClass1,
+    myValue3 MyEnum DEFAULT val1
+}
+MyClass3{TypeClass, TypeClass:Param} ::= SEQUENCE {
+    myField1 MY-OBJ-CLASS-1.&id({Param}),
+    myField2 MY-OBJ-CLASS-1.&Type({Param}{@myField1})
+}
+MyClass4 ::= MyClass3{MY-OBJ-CLASS-1, {MySet}}
+MyClass5 ::= My2Class1
+
+MY-OBJ-CLASS-1 ::= CLASS {
+    &id INTEGER,
+    &Type OPTIONAL
+}
+
+MySet MY-OBJ-CLASS-1 ::= {
+
+}
+
+MyEnum ::= ENUMERATED {
+    val1,
+    val2
+}
+
+myValue1 INTEGER ::= 10
+myValue2 MyClass2 ::= {
+    myValue1 10,
+    myValue2 myValue2,
+    myValue3 val2
+}
+
+END
