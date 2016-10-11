@@ -18,15 +18,16 @@ import org.pcsoft.plugin.intellij.asn1.language.parser.psi.Asn1File;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ClassDefinition;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ClassDefinitionField;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ConstantDefinitionValue;
+import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ElementDefinitionType;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1EnumeratedDefinition;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1EnumeratedDefinitionElement;
+import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1FullQualifiedObjectClassDefinitionFieldRef;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ImportElement;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ImportElementType;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ModuleDefinition;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ObjectClassDefinition;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ObjectClassDefinitionConstructor;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ObjectClassDefinitionField;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ObjectClassFieldType;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ObjectSetDefinition;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ObjectSetParameter;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ObjectValueDefinition;
@@ -503,7 +504,7 @@ public final class Asn1ReferenceUtils {
             }
         } else {
             if (!handleObjectClassDefinitionFieldInConstructor(currentElement, checkFull, key, list)) {
-                handleObjectClassDefinitionFieldInObjectClassFieldType(currentElement, checkFull, key, list);
+                handleFullQualifiedObjectClassDefinitionField(currentElement, checkFull, key, list);
             }
         }
 
@@ -527,21 +528,55 @@ public final class Asn1ReferenceUtils {
         return objectClassDefinitionConstructor != null;
     }
 
-    private static boolean handleObjectClassDefinitionFieldInObjectClassFieldType(@NotNull PsiElement currentElement, boolean checkFull, @Nullable String key,
+    private static boolean handleFullQualifiedObjectClassDefinitionField(@NotNull PsiElement currentElement, boolean checkFull, @Nullable String key,
                                                                                   @NotNull List<Asn1ObjectClassDefinitionField> list) {
-        final Asn1ObjectClassFieldType objectClassFieldType = PsiTreeUtil.getParentOfType(currentElement, Asn1ObjectClassFieldType.class);
-        if (objectClassFieldType != null) {
-            final PsiElement foundElement = objectClassFieldType.getObjectClassDefinitionRef().getReference().resolve();
-            if (foundElement != null && foundElement instanceof Asn1ObjectClassDefinition && ((Asn1ObjectClassDefinition) foundElement).getObjectClassDefinitionContent() != null) {
+        final Asn1FullQualifiedObjectClassDefinitionFieldRef fullQualifiedObjectClassDefinitionFieldRef = PsiTreeUtil.getParentOfType(currentElement, Asn1FullQualifiedObjectClassDefinitionFieldRef.class);
+        if (fullQualifiedObjectClassDefinitionFieldRef != null) {
+            if (!handleFullQualifiedObjectClassDefinitionFieldWithObjectClassDefinitionQualifier(fullQualifiedObjectClassDefinitionFieldRef, checkFull, key, list)) {
+                handleFullQualifiedObjectClassDefinitionFieldWithObjectValueDefinitionQualifier(fullQualifiedObjectClassDefinitionFieldRef, checkFull, key, list);
+            }
+        }
+
+        return fullQualifiedObjectClassDefinitionFieldRef != null;
+    }
+
+    private static boolean handleFullQualifiedObjectClassDefinitionFieldWithObjectClassDefinitionQualifier(@NotNull Asn1FullQualifiedObjectClassDefinitionFieldRef fullQualifiedObjectClassDefinitionFieldRef,
+                                                                                                           boolean checkFull, @Nullable String key,
+                                                                                                           @NotNull List<Asn1ObjectClassDefinitionField> list) {
+        final Asn1ObjectClassDefinition objectClassDefinition = (Asn1ObjectClassDefinition)
+                fullQualifiedObjectClassDefinitionFieldRef.getFullQualifiedObjectClassDefinitionFieldQualifierRef().getObjectClassDefinitionReference().resolve();
+
+        if (objectClassDefinition != null && objectClassDefinition.getObjectClassDefinitionContent() != null) {
+            list.addAll(
+                    objectClassDefinition.getObjectClassDefinitionContent().getObjectClassDefinitionFieldList().stream()
+                            .filter(item -> checkString(key, item.getName(), checkFull))
+                            .collect(Collectors.toList())
+            );
+        }
+
+        return objectClassDefinition != null;
+    }
+
+    private static boolean handleFullQualifiedObjectClassDefinitionFieldWithObjectValueDefinitionQualifier(@NotNull Asn1FullQualifiedObjectClassDefinitionFieldRef fullQualifiedObjectClassDefinitionFieldRef,
+                                                                                                           boolean checkFull, @Nullable String key,
+                                                                                                           @NotNull List<Asn1ObjectClassDefinitionField> list) {
+        final Asn1ObjectValueDefinition objectValueDefinition = (Asn1ObjectValueDefinition)
+                fullQualifiedObjectClassDefinitionFieldRef.getFullQualifiedObjectClassDefinitionFieldQualifierRef().getObjectValueDefinitionReference().resolve();
+
+        if (objectValueDefinition != null && objectValueDefinition.getElementDefinitionType() != null) {
+            final Asn1ObjectClassDefinition objectClassDefinition = (Asn1ObjectClassDefinition)
+                    objectValueDefinition.getElementDefinitionType().getElementDefinitionRef().getObjectClassDefinitionReference().resolve();
+
+            if (objectClassDefinition != null && objectClassDefinition.getObjectClassDefinitionContent() != null) {
                 list.addAll(
-                        ((Asn1ObjectClassDefinition) foundElement).getObjectClassDefinitionContent().getObjectClassDefinitionFieldList().stream()
+                        objectClassDefinition.getObjectClassDefinitionContent().getObjectClassDefinitionFieldList().stream()
                                 .filter(item -> checkString(key, item.getName(), checkFull))
                                 .collect(Collectors.toList())
                 );
             }
         }
 
-        return objectClassFieldType != null;
+        return objectValueDefinition != null;
     }
     //endregion
 
@@ -871,15 +906,36 @@ public final class Asn1ReferenceUtils {
 
     private static boolean handleConstantValueInClassDefinitionField(@NotNull PsiElement currentElement, boolean checkFull, @Nullable String key, @NotNull List<Asn1ConstantDefinitionValue> list) {
         final Asn1ClassDefinitionField classDefinitionField = PsiTreeUtil.getParentOfType(currentElement, Asn1ClassDefinitionField.class);
-        if (classDefinitionField != null && classDefinitionField.getConstantDefinitionContent() != null) {
-            list.addAll(
-                    classDefinitionField.getConstantDefinitionContent().getConstantDefinitionValueList().stream()
-                            .filter(item -> checkString(key, item.getName(), checkFull))
-                            .collect(Collectors.toList())
-            );
+        if (classDefinitionField != null) {
+            if (classDefinitionField.getConstantDefinitionContent() != null) {
+                list.addAll(
+                        classDefinitionField.getConstantDefinitionContent().getConstantDefinitionValueList().stream()
+                                .filter(item -> checkString(key, item.getName(), checkFull))
+                                .collect(Collectors.toList())
+                );
+            }
+            if (classDefinitionField.getElementDefinitionType() != null) {
+                handleConstantValueWithNextClassDefinition(classDefinitionField.getElementDefinitionType(), checkFull, key, list);
+            }
         }
 
         return classDefinitionField != null;
+    }
+
+    private static void handleConstantValueWithNextClassDefinition(@NotNull Asn1ElementDefinitionType elementDefinitionType, boolean checkFull, @Nullable String key, @NotNull List<Asn1ConstantDefinitionValue> list) {
+        final Asn1ClassDefinition classDefinition = (Asn1ClassDefinition) elementDefinitionType.getElementDefinitionRef().getClassDefinitionReference().resolve();
+        if (classDefinition != null) {
+            if (classDefinition.getConstantDefinitionContent() != null) {
+                list.addAll(
+                        classDefinition.getConstantDefinitionContent().getConstantDefinitionValueList().stream()
+                                .filter(item -> checkString(key, item.getName(), checkFull))
+                                .collect(Collectors.toList())
+                );
+            }
+            if (classDefinition.getElementDefinitionType() != null) {
+                handleConstantValueWithNextClassDefinition(classDefinition.getElementDefinitionType(), checkFull, key, list);
+            }
+        }
     }
     //endregion
 

@@ -25,7 +25,7 @@ public class Asn1TagKeywordCompletionContributor extends CompletionContributor {
         extend(
                 CompletionType.BASIC,
                 PlatformPatterns.or(
-                        PlatformPatterns.psiElement().afterLeaf(PlatformPatterns.psiElement(Asn1CustomElementFactory.BRACES_CORNER_OPEN).withParent(Asn1TagDefinition.class)).withLanguage(Asn1Language.INSTANCE)
+                        PlatformPatterns.psiElement().afterLeaf(PlatformPatterns.psiElement(Asn1CustomElementFactory.BRACES_CORNER_OPEN)).withParent(Asn1TagDefinition.class).withLanguage(Asn1Language.INSTANCE)
                 ),
                 new CompletionProvider<CompletionParameters>() {
                     @Override

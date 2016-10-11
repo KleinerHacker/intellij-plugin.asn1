@@ -18,8 +18,8 @@ import org.pcsoft.plugin.intellij.asn1.language.parser.token.Asn1CustomElementFa
 
 CRLF=\n|\r|\r\n
 WHITE_SPACE=[\ \t\f]
-COMMENT_LINE="--"[^\r\n]*
-COMMENT_BLOCK="/*"[^"*/"]"*/"
+COMMENT_LINE="--".*("--"|{CRLF})
+COMMENT_BLOCK="/*".*"*/"
 NUMBER=[\-]?[0-9]*
 TEXT=[^\"]*
 
@@ -40,7 +40,7 @@ BR_CURLY_CLOSE="}"
 BR_CORNER_OPEN="["
 BR_CORNER_CLOSE="]"
 
-KEYWORD="DEFINITIONS" | "IMPLICIT" | "EXPLICIT" | "AUTOMATIC" | "TAGS" | "BEGIN" | "END" | "APPLICATION" | "IMPORTS" | "FROM" | "CLASS" | "UNIQUE" | "OPTIONAL" | "TRUE" | "FALSE" | "DEFAULT" | "WITH SYNTAX" | "MIN" | "MAX" | "SIZE" | "OF" | "DEFINED BY" | "ANY" | "EXPORTS" | "ALL"
+KEYWORD="DEFINITIONS" | "IMPLICIT" | "EXPLICIT" | "AUTOMATIC" | "TAGS" | "BEGIN" | "END" | "APPLICATION" | "IMPORTS" | "FROM" | "CLASS" | "UNIQUE" | "OPTIONAL" | "TRUE" | "FALSE" | "DEFAULT" | "WITH SYNTAX" | "MIN" | "MAX" | "SIZE" | "OF" | "DEFINED BY" | "ANY" | "EXPORTS" | "ALL" | "WITH COMPONENTS" | "PRESENT" | "ABSENT" | "INSTANCE OF"
 PRIMITIVE_TYPE="INTEGER" | ("BIT" {WHITE_SPACE}+ "STRING") | "BOOLEAN" | ("OCTET" {WHITE_SPACE}+ "STRING") | ("OBJECT" {WHITE_SPACE}+ "IDENTIFIER") | "PrintableString" | "IA5String" | "UTF8String" | "T61String" | "GeneralizedTime" | "UTCTime" | "VideoTexString" | "NumericString" | "TeletexString" | "NULL"
 LIST_TYPE="SEQUENCE" | "SET" | "CHOICE" | "ENUMERATED"
 

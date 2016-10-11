@@ -132,6 +132,11 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/../../Cryptoplattform/cryptoserver_new/source/resources/wildfly-10.0.0.Final/standalone/configuration/jce-provider.xml">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/../../Cryptoplattform/cryptoserver_new/source/tooling/pw-enc/src/main/java/de/bdr/persotec/crypserv/tooling/pw_enc/Runner.java">
           <value>
             <set>
@@ -205,6 +210,14 @@
             <set>
               <SonarIssue>
                 <option name="isNew" value="false" />
+                <option name="key" value="AVcOhbc-EQ77G5RhYLip" />
+                <option name="line" value="50" />
+                <option name="message" value="Remove this call from a constructor to the overridable &quot;getAesKeyLength&quot; method." />
+                <option name="ruleKey" value="squid:S1699" />
+                <option name="severity" value="MAJOR" />
+              </SonarIssue>
+              <SonarIssue>
+                <option name="isNew" value="false" />
                 <option name="key" value="AVcOhbc-EQ77G5RhYLim" />
                 <option name="line" value="44" />
                 <option name="message" value="Remove this call from a constructor to the overridable &quot;getRsaKeyLength&quot; method." />
@@ -213,10 +226,9 @@
               </SonarIssue>
               <SonarIssue>
                 <option name="isNew" value="false" />
-                <option name="key" value="AVcOhbc-EQ77G5RhYLip" />
-                <option name="line" value="50" />
-                <option name="message" value="Remove this call from a constructor to the overridable &quot;getAesKeyLength&quot; method." />
-                <option name="ruleKey" value="squid:S1699" />
+                <option name="key" value="AVcOhbc9EQ77G5RhYLij" />
+                <option name="message" value="1 duplicated blocks of code must be removed." />
+                <option name="ruleKey" value="common-java:DuplicatedBlocks" />
                 <option name="severity" value="MAJOR" />
               </SonarIssue>
               <SonarIssue>
@@ -226,13 +238,6 @@
                 <option name="message" value="Define and throw a dedicated exception instead of using a generic one." />
                 <option name="ruleKey" value="squid:S00112" />
                 <option name="severity" value="CRITICAL" />
-              </SonarIssue>
-              <SonarIssue>
-                <option name="isNew" value="false" />
-                <option name="key" value="AVcOhbc9EQ77G5RhYLij" />
-                <option name="message" value="1 duplicated blocks of code must be removed." />
-                <option name="ruleKey" value="common-java:DuplicatedBlocks" />
-                <option name="severity" value="MAJOR" />
               </SonarIssue>
               <SonarIssue>
                 <option name="isNew" value="false" />
@@ -309,18 +314,18 @@
               </SonarIssue>
               <SonarIssue>
                 <option name="isNew" value="false" />
-                <option name="key" value="AVcOhbwXEQ77G5RhYLut" />
-                <option name="message" value="4 duplicated blocks of code must be removed." />
-                <option name="ruleKey" value="common-java:DuplicatedBlocks" />
-                <option name="severity" value="MAJOR" />
-              </SonarIssue>
-              <SonarIssue>
-                <option name="isNew" value="false" />
                 <option name="key" value="AVcOhbwaEQ77G5RhYLu4" />
                 <option name="line" value="225" />
                 <option name="message" value="At most one statement is allowed per line, but 2 statements were found on this line." />
                 <option name="ruleKey" value="squid:S00122" />
                 <option name="severity" value="MINOR" />
+              </SonarIssue>
+              <SonarIssue>
+                <option name="isNew" value="false" />
+                <option name="key" value="AVcOhbwXEQ77G5RhYLut" />
+                <option name="message" value="4 duplicated blocks of code must be removed." />
+                <option name="ruleKey" value="common-java:DuplicatedBlocks" />
+                <option name="severity" value="MAJOR" />
               </SonarIssue>
               <SonarIssue>
                 <option name="isNew" value="false" />
@@ -383,6 +388,11 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/../asn1-framework/source/core/src/main/java/de/bdr/framework/asn1/core/coding/ber/util/BERNumberCodingUtils.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/gen/org/pcsoft/plugin/intellij/asn1/language/parser/Asn1Parser.java">
           <value>
             <set />
           </value>
@@ -743,6 +753,26 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/manipulator/Asn1EnumeratedDefinitionManipulator.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/manipulator/Asn1FullQualifiedObjectClassDefinitionFieldElementRefManipulator.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/manipulator/Asn1FullQualifiedObjectClassDefinitionFieldQualifierRefManipulator.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/manipulator/Asn1FullQualifiedObjectClassDefinitionFieldRefManipulator.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/manipulator/Asn1FullQualifiedObjectClassDefinitionRefManipulator.java">
           <value>
             <set />
           </value>

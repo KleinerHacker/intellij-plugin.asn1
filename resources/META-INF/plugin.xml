@@ -117,6 +117,9 @@
         <lang.elementManipulator
                 implementationClass="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.manipulator.Asn1ElementDefinitionRefManipulator"
                 forClass="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ElementDefinitionRef"/>
+        <lang.elementManipulator
+                implementationClass="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.manipulator.Asn1FullQualifiedObjectClassDefinitionFieldQualifierRefManipulator"
+                forClass="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1FullQualifiedObjectClassDefinitionFieldQualifierRef"/>
 
         <completion.contributor language="asn1" implementationClass="org.pcsoft.plugin.intellij.asn1.language.contributor.Asn1NativeTypeCompletionContributor"/>
         <completion.contributor language="asn1" implementationClass="org.pcsoft.plugin.intellij.asn1.language.contributor.Asn1ModuleKeywordCompletionContributor"/>

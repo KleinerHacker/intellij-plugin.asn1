@@ -61,7 +61,7 @@ exportContent ::= (NAME_NO_CAP | NAME_CAP | NAME_LOWER | NAME_UPPER)*
 /******************************* Class Definition *********************************************************************/
 /**********************************************************************************************************************/
 
-classDefinition ::= classDefinitionName parameterDefinition? '::=' tagDefinition? (nativeType | elementDefinitionType) constraintBody? classDefinitionBody? modifiers
+classDefinition ::= classDefinitionName parameterDefinition? '::='  tagDefinition? (nativeType | elementDefinitionType)  constraintDefinition? classDefinitionBody? constraintDefinition? modifiers
 {
     mixin="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1NamedElementImpl"
     implements="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1NamedElement"
@@ -76,7 +76,7 @@ classDefinitionContent ::= (classDefinitionField ',')* (classDefinitionField | f
 /**********************************************************************************************************************/
 /********************** Class Definition Field ************************************************************************/
 /**********************************************************************************************************************/
-classDefinitionField ::= classDefinitionFieldName tagDefinition? (nativeType | objectClassFieldType | elementDefinitionType) constraintBody? classDefinitionFieldBody? modifiers
+classDefinitionField ::= classDefinitionFieldName tagDefinition? (nativeType | objectClassDefinitionFieldType | elementDefinitionType) constraintDefinition? classDefinitionFieldBody? constraintDefinition? modifiers
 {
     mixin="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1NamedElementImpl"
     implements="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1NamedElement"
@@ -86,7 +86,7 @@ classDefinitionFieldName ::= classDefinitionFieldNameTokenSet
 {
     methods=[getName]
 }
-private classDefinitionFieldBody ::= '{' constantDefinitionContent '}'
+private classDefinitionFieldBody ::= '{' (classDefinitionContent | constantDefinitionContent) '}'
 
 /**********************************************************************************************************************/
 /******************** Object Class Definition *************************************************************************/
@@ -112,13 +112,14 @@ objectClassDefinitionConstructorContent ::= ( ('&' objectClassDefinitionFieldRef
 
 objectClassDefinitionConstructorCall ::= '{' objectClassDefinitionConstructorCallContent '}'
 objectClassDefinitionConstructorCallContent ::= (objectClassDefinitionConstructorCallContentType | objectClassDefinitionConstructorCallContentValue)+
-private objectClassDefinitionConstructorCallContentType ::= (anyType | nativeType | objectClassDefinitionConstructorCallArgumentRef) constraintBody?
+private objectClassDefinitionConstructorCallContentType ::= (anyType | (nativeType objectClassDefinitionConstructorCallContentTypeContent?) | objectClassDefinitionConstructorCallArgumentRef) constraintDefinition?
 private objectClassDefinitionConstructorCallContentValue ::= smallValueDefinition
 objectClassDefinitionConstructorCallArgumentRef ::= classDefinitionNameTokenSet | objectValueDefinitionNameTokenSet | objectSetDefinitionNameTokenSet
+private objectClassDefinitionConstructorCallContentTypeContent ::= '{' (classDefinitionContent | constantDefinitionContent) '}'
 /**********************************************************************************************************************/
 /*************** Object Class Definition Field ************************************************************************/
 /**********************************************************************************************************************/
-objectClassDefinitionField ::= '&' objectClassDefinitionFieldName (nativeType | elementDefinitionType)? constraintBody? objectClassDefinitionFieldBody? modifiers
+objectClassDefinitionField ::= '&' objectClassDefinitionFieldName (nativeType | elementDefinitionType)? constraintDefinition? objectClassDefinitionFieldBody? modifiers
 {
     mixin="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1NamedElementImpl"
     implements="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1NamedElement"
@@ -128,13 +129,13 @@ objectClassDefinitionFieldName ::= objectClassDefinitionFieldNameTokenSet
 {
     methods=[getName]
 }
-private objectClassDefinitionFieldBody ::= '{' constantDefinitionContent '}'
+private objectClassDefinitionFieldBody ::= '{' (classDefinitionContent | constantDefinitionContent) '}'
 
 /**********************************************************************************************************************/
 /**************** Object Value Definition *****************************************************************************/
 /**********************************************************************************************************************/
 
-objectValueDefinition ::= objectValueDefinitionName (nativeType | elementDefinitionType) '::=' fullValueDefinition
+objectValueDefinition ::= objectValueDefinitionName (nativeType | fullQualifiedObjectClassDefinitionFieldRef | elementDefinitionType) '::=' fullValueDefinition
 {
     mixin="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1NamedElementImpl"
     implements="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1NamedElement"
@@ -162,7 +163,7 @@ objectSetDefinitionName ::= objectSetDefinitionNameTokenSet
 private objectSetDefinitionBody ::= '{' objectSetDefinitionContent? '}'
 objectSetDefinitionContent ::= ((objectSetDefinitionContentList | "...") ',')* (objectSetDefinitionContentList | "...")
 private objectSetDefinitionContentList ::= ((objectSetDefinitionContentElement | '...') '|')* (objectSetDefinitionContentElement | "...")
-private objectSetDefinitionContentElement ::= objectClassDefinitionConstructorCall | objectValueDefinitionRef
+private objectSetDefinitionContentElement ::= objectClassDefinitionConstructorCall | fullQualifiedObjectClassDefinitionFieldRef | objectValueDefinitionRef
 
 /**********************************************************************************************************************/
 /**************** Enumerated Definition *******************************************************************************/
@@ -216,9 +217,10 @@ private booleanValue ::= 'TRUE' | 'FALSE'
 /**************** Constraint Definition *******************************************************************************/
 /**********************************************************************************************************************/
 
-private constraintBody ::= ('(' (constraintValueDirect | constraintContent) ')') | constraintContent
-private constraintContent ::= (constraintValue)+
-constraintValue ::= constraintValueSize | constraintValueFrom
+constraintDefinition ::= ('(' (constraintInBraces '|')* (constraintInBraces (',' '...')?) ')') | (constraintContentWithKeyword (',' '...')?)
+private constraintInBraces ::= constraintContentWithValue | constraintContentWithKeyword | constraintDefinition
+private constraintContentWithKeyword ::= constraintValueSize | constraintValueFrom | constraintValueComponent
+private constraintContentWithValue ::= constraintValueDirect
 
 constraintValueSize ::= 'SIZE' '(' constraintValueSizeContent ')'
 private constraintValueSizeValueSet ::= NUMBER | 'MIN' | 'MAX' | valueRef
@@ -230,7 +232,12 @@ private constraintValueFromContent ::= constraintValueFromValueSet ('..' constra
 
 constraintValueDirect ::= constraintValueDirectContent
 private constraintValueDirectValueSet ::= valueRef | NUMBER | 'MIN' | 'MAX'
-private constraintValueDirectContent ::= constraintValueDirectValueSet ('..' constraintValueDirectValueSet)? ('|' constraintValueDirectContent)?
+private constraintValueDirectContent ::= constraintValueDirectValueSet ('..' constraintValueDirectValueSet)?
+
+constraintValueComponent ::= 'WITH COMPONENTS' '{' constraintValueComponentContent '}'
+private constraintValueComponentContent ::= (constraintValueComponentContentField ',')* constraintValueComponentContentField
+private constraintValueComponentContentField ::= '...' | (classDefinitionFieldRef constraintValueComponentContentModifier)
+private constraintValueComponentContentModifier ::= 'PRESENT' | 'ABSENT'
 
 
 /**********************************************************************************************************************/
@@ -253,10 +260,11 @@ constantDefinitionValueName ::= constantDefinitionValueNameTokenSet
 /**************** Type Definition *************************************************************************************/
 /**********************************************************************************************************************/
 
-nativeType ::= primitiveType | listType | anyType
+nativeType ::= primitiveType | listType | anyType | instanceOfType
 private primitiveType ::= PRIMITIVE_TYPE
-private listType ::= LIST_TYPE (constraintBody? 'OF' (nativeType | elementDefinitionType))?
+private listType ::= LIST_TYPE (constraintDefinition? 'OF' (nativeType | elementDefinitionType))?
 private anyType ::= 'ANY' ('DEFINED BY' classDefinitionFieldRef)?
+private instanceOfType ::= 'INSTANCE OF' (primitiveType | listType | anyType | elementDefinitionType)
 
 elementDefinitionType ::= elementDefinitionRef ('{' (elementDefinitionArgument ',')* elementDefinitionArgument '}')?
 private elementDefinitionArgument ::= '{' (elementDefinitionObjectSetArgumentRef | '...') '}' | elementDefinitionTypeArgumentRef | '...'
@@ -273,8 +281,8 @@ elementDefinitionTypeArgumentRef ::= parameterNameTokenSet | objectClassDefiniti
     methods=[getName setName getNameIdentifier getReferences getTypeParameterReference getObjectClassDefinitionReference getClassDefinitionReference]
 }
 
-objectClassFieldType ::= objectClassDefinitionRef '.' '&' objectClassDefinitionFieldRef objectClassDefinitionRefAttribute?
-private objectClassDefinitionRefAttribute ::= '(' '{' parameterRef '}' ('{' '@' classDefinitionFieldRef '}')? ')'
+objectClassDefinitionFieldType ::= fullQualifiedObjectClassDefinitionFieldRef objectClassDefinitionRefAttribute?
+private objectClassDefinitionRefAttribute ::= '(' '{' elementDefinitionObjectSetArgumentRef '}' ('{' '@' classDefinitionFieldRef '}')? ')'
 
 /**********************************************************************************************************************/
 /**************** Parameter Definition ********************************************************************************/
@@ -339,6 +347,13 @@ objectClassDefinitionFieldRef ::= objectClassDefinitionFieldNameTokenSet
     mixin="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1NamedElementImpl"
     implements="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1NamedElement"
     methods=[getName setName getNameIdentifier getReference]
+}
+fullQualifiedObjectClassDefinitionFieldRef ::= fullQualifiedObjectClassDefinitionFieldQualifierRef '.' '&' objectClassDefinitionFieldRef
+fullQualifiedObjectClassDefinitionFieldQualifierRef ::= objectClassDefinitionNameTokenSet | objectValueDefinitionNameTokenSet
+{
+    mixin="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1NamedElementImpl"
+    implements="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1NamedElement"
+    methods=[getName setName getNameIdentifier getReferences getObjectClassDefinitionReference getObjectValueDefinitionReference]
 }
 objectValueDefinitionRef ::= objectValueDefinitionNameTokenSet
 constantDefinitionValueRef ::= constantDefinitionValueNameTokenSet

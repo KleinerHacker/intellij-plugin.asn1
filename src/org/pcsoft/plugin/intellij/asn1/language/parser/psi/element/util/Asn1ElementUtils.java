@@ -22,6 +22,7 @@ import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ElementDe
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1EnumeratedDefinition;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1EnumeratedDefinitionElement;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1EnumeratedDefinitionName;
+import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1FullQualifiedObjectClassDefinitionFieldQualifierRef;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ImportElementModule;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ImportElementTypeRef;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ModuleDefinition;
@@ -471,7 +472,7 @@ public interface Asn1ElementUtils {
     //endregion
     //endregion
 
-    //region Element - Object Clasd Definition Field
+    //region Element - Object Class Definition Field
     static String getName(final Asn1ObjectClassDefinitionField objectClassDefinitionField) {
         return getNameNodeText(objectClassDefinitionField.getObjectClassDefinitionFieldName());
     }
@@ -546,6 +547,45 @@ public interface Asn1ElementUtils {
 
     static PsiReference getReference(final Asn1ObjectClassDefinitionFieldRef objectClassDefinitionFieldRef) {
         return new Asn1ObjectClassDefinitionFieldReference(objectClassDefinitionFieldRef);
+    }
+    //endregion
+
+    //region Reference (Full Qualified) - Object Class Definition Field
+    static String getName(final Asn1FullQualifiedObjectClassDefinitionFieldQualifierRef fullQualifiedObjectClassDefinitionFieldQualifierRef) {
+        return getNameNodeText(fullQualifiedObjectClassDefinitionFieldQualifierRef);
+    }
+
+    static PsiElement setName(final Asn1FullQualifiedObjectClassDefinitionFieldQualifierRef fullQualifiedObjectClassDefinitionFieldQualifierRef, final String newName) {
+        final ASTNode astNode = getNameNode(fullQualifiedObjectClassDefinitionFieldQualifierRef);
+        if (astNode != null) {
+            //TODO
+        }
+
+        return fullQualifiedObjectClassDefinitionFieldQualifierRef;
+    }
+
+    static PsiElement getNameIdentifier(final Asn1FullQualifiedObjectClassDefinitionFieldQualifierRef fullQualifiedObjectClassDefinitionFieldQualifierRef) {
+        final ASTNode astNode = getNameNode(fullQualifiedObjectClassDefinitionFieldQualifierRef);
+        if (astNode != null) {
+            return astNode.getPsi();
+        } else {
+            return null;
+        }
+    }
+
+    static PsiReference[] getReferences(final Asn1FullQualifiedObjectClassDefinitionFieldQualifierRef fullQualifiedObjectClassDefinitionFieldQualifierRef) {
+        return new PsiReference[]{
+                new Asn1ObjectClassDefinitionReference(fullQualifiedObjectClassDefinitionFieldQualifierRef),
+                new Asn1ObjectValueDefinitionReference(fullQualifiedObjectClassDefinitionFieldQualifierRef)
+        };
+    }
+
+    static PsiReference getObjectClassDefinitionReference(final Asn1FullQualifiedObjectClassDefinitionFieldQualifierRef fullQualifiedObjectClassDefinitionFieldQualifierRef) {
+        return new Asn1ObjectClassDefinitionReference(fullQualifiedObjectClassDefinitionFieldQualifierRef);
+    }
+
+    static PsiReference getObjectValueDefinitionReference(final Asn1FullQualifiedObjectClassDefinitionFieldQualifierRef fullQualifiedObjectClassDefinitionFieldQualifierRef) {
+        return new Asn1ObjectValueDefinitionReference(fullQualifiedObjectClassDefinitionFieldQualifierRef);
     }
     //endregion
     //endregion
