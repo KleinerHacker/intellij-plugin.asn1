@@ -12,8 +12,6 @@ import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.Asn1File;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ClassDefinition;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ClassDefinitionField;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1EnumeratedDefinition;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1EnumeratedDefinitionElement;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ModuleDefinition;
@@ -21,6 +19,8 @@ import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ObjectCla
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ObjectClassDefinitionField;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ObjectSetDefinition;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ObjectValueDefinition;
+import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1TypeDefinition;
+import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1TypeDefinitionField;
 
 import javax.swing.Icon;
 import java.util.ArrayList;
@@ -89,9 +89,9 @@ public class Asn1StructureViewElement implements StructureViewTreeElement, Sorta
         if (element instanceof Asn1File) {
             final List<TreeElement> list = new ArrayList<>();
 
-            final Collection<Asn1ClassDefinition> classDefinitionList = PsiTreeUtil.findChildrenOfType(element, Asn1ClassDefinition.class);
+            final Collection<Asn1TypeDefinition> typeDefinitionList = PsiTreeUtil.findChildrenOfType(element, Asn1TypeDefinition.class);
             list.addAll(
-                    classDefinitionList.stream()
+                    typeDefinitionList.stream()
                             .map(Asn1StructureViewElement::new)
                             .collect(Collectors.toList())
             );
@@ -125,9 +125,9 @@ public class Asn1StructureViewElement implements StructureViewTreeElement, Sorta
             );
 
             return list.toArray(new TreeElement[list.size()]);
-        } else if (element instanceof Asn1ClassDefinition) {
-            final Collection<Asn1ClassDefinitionField> classFieldDefinitionList = PsiTreeUtil.findChildrenOfType(element, Asn1ClassDefinitionField.class);
-            return classFieldDefinitionList.stream()
+        } else if (element instanceof Asn1TypeDefinition) {
+            final Collection<Asn1TypeDefinitionField> typeDefinitionFieldList = PsiTreeUtil.findChildrenOfType(element, Asn1TypeDefinitionField.class);
+            return typeDefinitionFieldList.stream()
                     .map(Asn1StructureViewElement::new)
                     .toArray(TreeElement[]::new);
         } else if (element instanceof Asn1ObjectClassDefinition) {

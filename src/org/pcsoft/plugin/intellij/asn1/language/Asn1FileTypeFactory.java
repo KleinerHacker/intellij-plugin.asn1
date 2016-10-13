@@ -10,6 +10,6 @@ import org.jetbrains.annotations.NotNull;
 public class Asn1FileTypeFactory extends FileTypeFactory {
     @Override
     public void createFileTypes(@NotNull FileTypeConsumer fileTypeConsumer) {
-        fileTypeConsumer.consume(Asn1FileType.INSTANCE, "asn1");
+        fileTypeConsumer.consume(Asn1FileType.INSTANCE, "asn");
     }
 }

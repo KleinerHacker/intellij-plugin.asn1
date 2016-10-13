@@ -11,7 +11,7 @@ import com.intellij.util.ProcessingContext;
 import org.jetbrains.annotations.NotNull;
 import org.pcsoft.plugin.intellij.asn1.language.Asn1Language;
 import org.pcsoft.plugin.intellij.asn1.language.highlighting.Asn1HighlighterScheme;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ImportElementType;
+import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ImportExportSymbol;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ModuleDefinition;
 import org.pcsoft.plugin.intellij.asn1.language.parser.token.Asn1GenElementFactory;
 
@@ -26,13 +26,16 @@ public class Asn1ImportKeywordCompletionContributor extends CompletionContributo
         extend(
                 CompletionType.BASIC,
                 PlatformPatterns.or(
-                        PlatformPatterns.psiElement().withParent(Asn1ModuleDefinition.class).withLanguage(Asn1Language.INSTANCE)
+                        PlatformPatterns.psiElement().inside(Asn1ModuleDefinition.class).withLanguage(Asn1Language.INSTANCE)
                 ),
                 new CompletionProvider<CompletionParameters>() {
                     @Override
                     protected void addCompletions(@NotNull CompletionParameters completionParameters, ProcessingContext processingContext, @NotNull CompletionResultSet completionResultSet) {
                         completionResultSet.addAllElements(Arrays.asList(
                                 LookupElementBuilder.create("IMPORTS")
+                                        .withItemTextForeground(Asn1HighlighterScheme.KEYWORD.getDefaultAttributes().getForegroundColor())
+                                        .withBoldness(Asn1HighlighterScheme.KEYWORD.getDefaultAttributes().getFontType() == Font.BOLD),
+                                LookupElementBuilder.create("EXPORTS")
                                         .withItemTextForeground(Asn1HighlighterScheme.KEYWORD.getDefaultAttributes().getForegroundColor())
                                         .withBoldness(Asn1HighlighterScheme.KEYWORD.getDefaultAttributes().getFontType() == Font.BOLD)
                         ));
@@ -42,8 +45,8 @@ public class Asn1ImportKeywordCompletionContributor extends CompletionContributo
         extend(
                 CompletionType.BASIC,
                 PlatformPatterns.or(
-                        PlatformPatterns.psiElement().afterLeaf(PlatformPatterns.psiElement(Asn1GenElementFactory.NAME_CAP).withParent(Asn1ImportElementType.class)).withLanguage(Asn1Language.INSTANCE),
-                        PlatformPatterns.psiElement().afterLeaf(PlatformPatterns.psiElement(Asn1GenElementFactory.NAME_UPPER).withParent(Asn1ImportElementType.class)).withLanguage(Asn1Language.INSTANCE)
+                        PlatformPatterns.psiElement().afterLeaf(PlatformPatterns.psiElement(Asn1GenElementFactory.NAME_CAP).withParent(Asn1ImportExportSymbol.class)).withLanguage(Asn1Language.INSTANCE),
+                        PlatformPatterns.psiElement().afterLeaf(PlatformPatterns.psiElement(Asn1GenElementFactory.NAME_UPPER).withParent(Asn1ImportExportSymbol.class)).withLanguage(Asn1Language.INSTANCE)
                 ),
                 new CompletionProvider<CompletionParameters>() {
                     @Override

@@ -11,9 +11,9 @@ import com.intellij.util.ProcessingContext;
 import org.jetbrains.annotations.NotNull;
 import org.pcsoft.plugin.intellij.asn1.language.Asn1Language;
 import org.pcsoft.plugin.intellij.asn1.language.highlighting.Asn1HighlighterScheme;
+import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1DefinitiveObjectIdentifier;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ModuleDefinition;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ModuleDefinitionName;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ValueObjectIdentifier;
+import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ModuleIdentifier;
 import org.pcsoft.plugin.intellij.asn1.language.parser.token.Asn1CustomElementFactory;
 import org.pcsoft.plugin.intellij.asn1.language.parser.token.Asn1GenElementFactory;
 
@@ -28,9 +28,9 @@ public class Asn1ModuleKeywordCompletionContributor extends CompletionContributo
         extend(
                 CompletionType.BASIC,
                 PlatformPatterns.or(
-                        PlatformPatterns.psiElement().afterLeaf(PlatformPatterns.psiElement(Asn1CustomElementFactory.BRACES_CURLY_CLOSE).withParent(Asn1ValueObjectIdentifier.class)).withLanguage(Asn1Language.INSTANCE),
-                        PlatformPatterns.psiElement().afterLeaf(PlatformPatterns.psiElement(Asn1GenElementFactory.NAME_CAP).withParent(Asn1ModuleDefinitionName.class)).withLanguage(Asn1Language.INSTANCE),
-                        PlatformPatterns.psiElement().afterLeaf(PlatformPatterns.psiElement(Asn1GenElementFactory.NAME_UPPER).withParent(Asn1ModuleDefinitionName.class)).withLanguage(Asn1Language.INSTANCE)
+                        PlatformPatterns.psiElement().afterLeaf(PlatformPatterns.psiElement(Asn1CustomElementFactory.BRACES_CURLY_CLOSE).withParent(Asn1DefinitiveObjectIdentifier.class)).withLanguage(Asn1Language.INSTANCE),
+                        PlatformPatterns.psiElement().afterLeaf(PlatformPatterns.psiElement(Asn1GenElementFactory.NAME_CAP).withParent(Asn1ModuleIdentifier.class)).withLanguage(Asn1Language.INSTANCE),
+                        PlatformPatterns.psiElement().afterLeaf(PlatformPatterns.psiElement(Asn1GenElementFactory.NAME_UPPER).withParent(Asn1ModuleIdentifier.class)).withLanguage(Asn1Language.INSTANCE)
                 ),
                 new CompletionProvider<CompletionParameters>() {
                     @Override

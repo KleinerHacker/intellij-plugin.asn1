@@ -4,10 +4,10 @@ import com.intellij.navigation.ChooseByNameContributor;
 import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ClassDefinition;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1EnumeratedDefinition;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ObjectClassDefinition;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ObjectSetDefinition;
+import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1TypeDefinition;
 import org.pcsoft.plugin.intellij.asn1.language.reference.Asn1ReferenceUtils;
 
 import java.util.ArrayList;
@@ -23,10 +23,10 @@ public class Asn1GoToTypeContributor implements ChooseByNameContributor {
     public String[] getNames(Project project, boolean b) {
         final List<String> list = new ArrayList<>();
 
-        final List<Asn1ClassDefinition> classDefinitionList = Asn1ReferenceUtils.findClassDefinitions(project, null);
+        final List<Asn1TypeDefinition> typeDefinitionList = Asn1ReferenceUtils.findTypeDefinitions(project, null);
         list.addAll(
-                classDefinitionList.stream()
-                        .map(Asn1ClassDefinition::getName)
+                typeDefinitionList.stream()
+                        .map(Asn1TypeDefinition::getName)
                         .collect(Collectors.toList())
         );
 
@@ -59,9 +59,9 @@ public class Asn1GoToTypeContributor implements ChooseByNameContributor {
     public NavigationItem[] getItemsByName(String full, String entered, Project project, boolean b) {
         final List<NavigationItem> list = new ArrayList<>();
 
-        final List<Asn1ClassDefinition> classDefinitionList = Asn1ReferenceUtils.findClassDefinitions(project, null, true, full);
+        final List<Asn1TypeDefinition> typeDefinitionList = Asn1ReferenceUtils.findTypeDefinitions(project, null, true, full);
         list.addAll(
-                classDefinitionList.stream()
+                typeDefinitionList.stream()
                 .map(item -> (NavigationItem) item)
                 .collect(Collectors.toList())
         );

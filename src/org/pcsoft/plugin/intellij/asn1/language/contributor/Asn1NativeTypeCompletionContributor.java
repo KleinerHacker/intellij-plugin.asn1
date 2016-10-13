@@ -11,10 +11,10 @@ import com.intellij.util.ProcessingContext;
 import org.jetbrains.annotations.NotNull;
 import org.pcsoft.plugin.intellij.asn1.language.Asn1Language;
 import org.pcsoft.plugin.intellij.asn1.language.highlighting.Asn1HighlighterScheme;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ClassDefinition;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ClassDefinitionField;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ObjectClassDefinitionField;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1TagDefinition;
+import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1TypeDefinition;
+import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1TypeDefinitionField;
 import org.pcsoft.plugin.intellij.asn1.language.parser.token.Asn1CustomElementFactory;
 import org.pcsoft.plugin.intellij.asn1.language.parser.token.Asn1GenElementFactory;
 import org.pcsoft.plugin.intellij.asn1.type.ListType;
@@ -36,7 +36,7 @@ public class Asn1NativeTypeCompletionContributor extends CompletionContributor {
                 PlatformPatterns.or(
                         PlatformPatterns.psiElement().afterLeaf(PlatformPatterns.psiElement(Asn1CustomElementFactory.BRACES_CORNER_CLOSE)).withParent(Asn1TagDefinition.class).withLanguage(Asn1Language.INSTANCE),
                         PlatformPatterns.psiElement().afterLeaf("::=").withLanguage(Asn1Language.INSTANCE),
-                        PlatformPatterns.psiElement().afterLeaf(PlatformPatterns.psiElement(Asn1GenElementFactory.NAME_CAP).withParent(Asn1ClassDefinitionField.class)).withLanguage(Asn1Language.INSTANCE),
+                        PlatformPatterns.psiElement().afterLeaf(PlatformPatterns.psiElement(Asn1GenElementFactory.NAME_CAP).withParent(Asn1TypeDefinitionField.class)).withLanguage(Asn1Language.INSTANCE),
                         PlatformPatterns.psiElement().afterLeaf(PlatformPatterns.psiElement(Asn1GenElementFactory.NAME_UPPER).withParent(Asn1ObjectClassDefinitionField.class)).withLanguage(Asn1Language.INSTANCE)
                 ),
                 new CompletionProvider<CompletionParameters>() {
@@ -57,7 +57,7 @@ public class Asn1NativeTypeCompletionContributor extends CompletionContributor {
         extend(
                 CompletionType.BASIC,
                 PlatformPatterns.or(
-                        PlatformPatterns.psiElement().afterLeaf(PlatformPatterns.psiElement(Asn1CustomElementFactory.BRACES_CORNER_CLOSE).withParent(Asn1TagDefinition.class).withParent(Asn1ClassDefinition.class)).withLanguage(Asn1Language.INSTANCE),
+                        PlatformPatterns.psiElement().afterLeaf(PlatformPatterns.psiElement(Asn1CustomElementFactory.BRACES_CORNER_CLOSE).withParent(Asn1TagDefinition.class).withParent(Asn1TypeDefinition.class)).withLanguage(Asn1Language.INSTANCE),
                         PlatformPatterns.psiElement().afterLeaf("::=").withLanguage(Asn1Language.INSTANCE)
                 ),
                 new CompletionProvider<CompletionParameters>() {

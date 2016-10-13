@@ -41,6 +41,8 @@
         <colorSettingsPage implementation="org.pcsoft.plugin.intellij.asn1.language.highlighting.Asn1ColorSettingsPage"/>
         <annotator language="asn1" implementationClass="org.pcsoft.plugin.intellij.asn1.language.highlighting.annotator.Asn1FieldHighlightingAnnotator"/>
         <annotator language="asn1" implementationClass="org.pcsoft.plugin.intellij.asn1.language.highlighting.annotator.Asn1ReferenceAnnotator"/>
+        <!-- Error Highlighting -->
+        <annotator language="asn1" implementationClass="org.pcsoft.plugin.intellij.asn1.language.highlighting.annotator.Asn1ModuleIdentifierAnnotator"/>
         <!-- Referencing -->
         <gotoClassContributor implementation="org.pcsoft.plugin.intellij.asn1.language.reference.go_to.Asn1GoToTypeContributor"/>
         <gotoClassContributor implementation="org.pcsoft.plugin.intellij.asn1.language.reference.go_to.Asn1GoToModuleContributor"/>
@@ -51,12 +53,12 @@
         <findUsagesHandlerFactory implementation="org.pcsoft.plugin.intellij.asn1.language.reference.usage.Asn1FindUsageHandlerFactory"/>
 
         <!-- Renaming -->
-        <lang.elementManipulator implementationClass="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.manipulator.Asn1ImportElementModuleManipulator"
-                                 forClass="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ImportElementModule"/>
-        <lang.elementManipulator implementationClass="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.manipulator.Asn1ClassDefinitionManipulator"
-                                 forClass="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ClassDefinition"/>
-        <lang.elementManipulator implementationClass="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.manipulator.Asn1ClassDefinitionRefManipulator"
-                                 forClass="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ClassDefinitionRef"/>
+        <lang.elementManipulator implementationClass="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.manipulator.Asn1ModuleRefManipulator"
+                                 forClass="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ModuleRef"/>
+        <lang.elementManipulator implementationClass="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.manipulator.Asn1TypeDefinitionManipulator"
+                                 forClass="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1TypeDefinition"/>
+        <lang.elementManipulator implementationClass="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.manipulator.Asn1TypeDefinitionRefManipulator"
+                                 forClass="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1TypeDefinitionRef"/>
         <lang.elementManipulator
                 implementationClass="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.manipulator.Asn1ObjectClassDefinitionManipulator"
                 forClass="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ObjectClassDefinition"/>
@@ -82,11 +84,11 @@
                 implementationClass="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.manipulator.Asn1ParameterRefManipulator"
                 forClass="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ParameterRef"/>
         <lang.elementManipulator
-                implementationClass="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.manipulator.Asn1ClassDefinitionFieldManipulator"
-                forClass="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ClassDefinitionField"/>
+                implementationClass="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.manipulator.Asn1TypeDefinitionFieldManipulator"
+                forClass="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1TypeDefinitionField"/>
         <lang.elementManipulator
-                implementationClass="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.manipulator.Asn1ClassDefinitionFieldRefManipulator"
-                forClass="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ClassDefinitionFieldRef"/>
+                implementationClass="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.manipulator.Asn1TypeDefinitionFieldRefManipulator"
+                forClass="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1TypeDefinitionFieldRef"/>
         <lang.elementManipulator
                 implementationClass="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.manipulator.Asn1ValueRefManipulator"
                 forClass="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ValueRef"/>
@@ -97,8 +99,8 @@
                 implementationClass="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.manipulator.Asn1ConstantDefinitionValueManipulator"
                 forClass="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ConstantDefinitionValue"/>
         <lang.elementManipulator
-                implementationClass="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.manipulator.Asn1ImportElementTypeRefManipulator"
-                forClass="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ImportElementTypeRef"/>
+                implementationClass="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.manipulator.Asn1ImportExportSymbolRefManipulator"
+                forClass="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ImportExportSymbolRef"/>
         <lang.elementManipulator
                 implementationClass="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.manipulator.Asn1ElementDefinitionTypeArgumentRefManipulator"
                 forClass="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ElementDefinitionTypeArgumentRef"/>

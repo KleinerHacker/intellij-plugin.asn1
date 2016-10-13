@@ -26,10 +26,10 @@ public class Asn1ModuleOIDFolding extends FoldingBuilderEx {
 
         final Asn1ModuleDefinition moduleDefinition = PsiTreeUtil.findChildOfType(psiElement, Asn1ModuleDefinition.class);
         if (moduleDefinition != null) {
-            if (moduleDefinition.getValueObjectIdentifier() != null) {
-                list.add(new FoldingDescriptor(moduleDefinition.getValueObjectIdentifier(), new TextRange(
-                        moduleDefinition.getValueObjectIdentifier().getTextRange().getStartOffset() + 1,
-                        moduleDefinition.getValueObjectIdentifier().getTextRange().getEndOffset() - 1
+            if (moduleDefinition.getModuleIdentifier().getDefinitiveObjectIdentifier() != null) {
+                list.add(new FoldingDescriptor(moduleDefinition.getModuleIdentifier().getDefinitiveObjectIdentifier(), new TextRange(
+                        moduleDefinition.getModuleIdentifier().getDefinitiveObjectIdentifier().getTextRange().getStartOffset() + 1,
+                        moduleDefinition.getModuleIdentifier().getDefinitiveObjectIdentifier().getTextRange().getEndOffset() - 1
                 )));
             }
         }

@@ -422,6 +422,16 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/gen/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/Asn1ImportExportSymbolRef.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/gen/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/Asn1ImportExportSymbolRefImpl.java">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/gen/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/Asn1ModuleDefinitionImpl.java">
           <value>
             <set />
@@ -538,6 +548,11 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/highlighting/annotator/Asn1FieldHighlightingAnnotator.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/highlighting/annotator/Asn1ModuleIdentifierAnnotator.java">
           <value>
             <set />
           </value>
@@ -792,6 +807,16 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/manipulator/Asn1ImportExportSymbolRefManipulator.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/manipulator/Asn1ModuleRefManipulator.java">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/manipulator/Asn1ObjectClassDefinitionFieldManipulator.java">
           <value>
             <set />
@@ -863,6 +888,26 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/manipulator/Asn1ParameterRefManipulator.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/manipulator/Asn1TypeDefinitionFieldManipulator.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/manipulator/Asn1TypeDefinitionFieldRefManipulator.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/manipulator/Asn1TypeDefinitionManipulator.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/manipulator/Asn1TypeDefinitionRefManipulator.java">
           <value>
             <set />
           </value>
@@ -1128,6 +1173,16 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/reference/Asn1ReferenceUtils.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/reference/Asn1TypeDefinitionFieldReference.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/reference/Asn1TypeDefinitionReference.java">
           <value>
             <set />
           </value>

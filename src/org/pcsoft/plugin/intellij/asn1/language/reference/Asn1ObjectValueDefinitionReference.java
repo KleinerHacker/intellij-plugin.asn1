@@ -5,8 +5,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.util.PsiTreeUtil;
 import org.pcsoft.plugin.intellij.asn1.language.Asn1Language;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ClassDefinition;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ObjectValueDefinition;
+import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1TypeDefinition;
 
 import java.util.List;
 
@@ -35,10 +35,10 @@ public class Asn1ObjectValueDefinitionReference extends Asn1Reference<Asn1Object
 
     @Override
     protected LookupElementBuilder buildItem(Asn1ObjectValueDefinition value) {
-        final Asn1ClassDefinition classDefinition = PsiTreeUtil.getParentOfType(value, Asn1ClassDefinition.class);
+        final Asn1TypeDefinition typeDefinition = PsiTreeUtil.getParentOfType(value, Asn1TypeDefinition.class);
 
         return LookupElementBuilder.create(value)
                 .withIcon(value.getPresentation().getIcon(false))
-                .withTypeText(classDefinition != null ? classDefinition.getName() : null);
+                .withTypeText(typeDefinition != null ? typeDefinition.getName() : null);
     }
 }

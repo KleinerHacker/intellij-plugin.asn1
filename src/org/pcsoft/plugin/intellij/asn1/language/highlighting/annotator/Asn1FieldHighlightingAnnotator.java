@@ -6,8 +6,6 @@ import com.intellij.lang.annotation.Annotator;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
 import org.pcsoft.plugin.intellij.asn1.language.highlighting.Asn1HighlighterScheme;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ClassDefinitionFieldName;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ClassDefinitionFieldRef;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ConstantDefinitionValueName;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ConstantDefinitionValueRef;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1EnumeratedDefinitionElement;
@@ -17,6 +15,8 @@ import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ObjectSet
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ObjectValueDefinitionName;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ObjectValueDefinitionRef;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ParameterRef;
+import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1TypeDefinitionFieldRef;
+import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1TypeFieldIdentifier;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1TypeParameter;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ValueRef;
 
@@ -26,10 +26,10 @@ import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ValueRef;
 public class Asn1FieldHighlightingAnnotator implements Annotator {
     @Override
     public void annotate(@NotNull PsiElement psiElement, @NotNull AnnotationHolder annotationHolder) {
-        if (psiElement instanceof Asn1ClassDefinitionFieldName || psiElement instanceof Asn1ObjectClassDefinitionFieldName || psiElement instanceof Asn1EnumeratedDefinitionElement) {
+        if (psiElement instanceof Asn1TypeFieldIdentifier || psiElement instanceof Asn1ObjectClassDefinitionFieldName || psiElement instanceof Asn1EnumeratedDefinitionElement) {
             final Annotation infoAnnotation = annotationHolder.createInfoAnnotation(psiElement.getNode(), null);
             infoAnnotation.setTextAttributes(Asn1HighlighterScheme.FIELD);
-        } else if (psiElement instanceof Asn1ObjectClassDefinitionFieldRef || psiElement instanceof Asn1ClassDefinitionFieldRef) {
+        } else if (psiElement instanceof Asn1ObjectClassDefinitionFieldRef || psiElement instanceof Asn1TypeDefinitionFieldRef) {
             final Annotation infoAnnotation = annotationHolder.createInfoAnnotation(psiElement.getNode(), null);
             infoAnnotation.setTextAttributes(Asn1HighlighterScheme.FIELD_REFERENCE);
         } else if (psiElement instanceof Asn1ObjectValueDefinitionName) {

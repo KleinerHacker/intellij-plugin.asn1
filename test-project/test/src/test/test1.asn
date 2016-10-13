@@ -2,7 +2,7 @@ MyTestModule1 DEFINITIONS ::=
 BEGIN
 
 IMPORTS
-My2Class1 FROM MyTestModule2
+My2Class1 FROM MyTestModule2 myValue1
 ;
 
 MyClass1 ::= INTEGER

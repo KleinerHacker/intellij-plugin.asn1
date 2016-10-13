@@ -21,7 +21,7 @@ public abstract class Asn1Reference<T extends PsiNamedElement> extends PsiRefere
 
     public Asn1Reference(PsiNamedElement element) {
         super(element);
-        key = element.getText();
+        key = element.getName();
     }
 
     @NotNull

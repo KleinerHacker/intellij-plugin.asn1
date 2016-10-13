@@ -9,13 +9,13 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ClassDefinition;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ClassDefinitionContent;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1EnumeratedDefinition;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ObjectClassDefinition;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ObjectClassDefinitionField;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ObjectSetDefinition;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ObjectValueDefinition;
+import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1TypeDefinition;
+import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1TypeDefinitionContent;
 import org.pcsoft.plugin.intellij.asn1.language.parser.token.Asn1CustomElementFactory;
 
 import java.util.ArrayList;
@@ -45,10 +45,10 @@ public class Asn1TypeFolding extends FoldingBuilderEx {
     private List<FoldingDescriptor> handleClassDefinition(@NotNull PsiElement psiElement) {
         final List<FoldingDescriptor> list = new ArrayList<>();
 
-        final Collection<Asn1ClassDefinition> classDefinitions = PsiTreeUtil.findChildrenOfType(psiElement, Asn1ClassDefinition.class);
+        final Collection<Asn1TypeDefinition> typeDefinitions = PsiTreeUtil.findChildrenOfType(psiElement, Asn1TypeDefinition.class);
         list.addAll(
-                classDefinitions.stream()
-                        .filter(classDefinition -> classDefinition.getClassDefinitionContent() != null)
+                typeDefinitions.stream()
+                        .filter(classDefinition -> classDefinition.getTypeDefinitionContent() != null)
                         .filter(classDefinition -> classDefinition.getNode().findChildByType(Asn1CustomElementFactory.BRACES_CURLY_OPEN) != null &&
                                 classDefinition.getNode().findChildByType(Asn1CustomElementFactory.BRACES_CURLY_CLOSE) != null)
                         .filter(classDefinition ->
@@ -65,9 +65,9 @@ public class Asn1TypeFolding extends FoldingBuilderEx {
                         ).collect(Collectors.toList())
         );
 
-        classDefinitions.stream()
-                .filter(classDefinition -> classDefinition.getClassDefinitionContent() != null)
-                .map(Asn1ClassDefinition::getClassDefinitionContent)
+        typeDefinitions.stream()
+                .filter(classDefinition -> classDefinition.getTypeDefinitionContent() != null)
+                .map(Asn1TypeDefinition::getTypeDefinitionContent)
                 .forEach(item -> handleAnonymousClassDefinition(item, list));
 
         return list;
@@ -123,8 +123,8 @@ public class Asn1TypeFolding extends FoldingBuilderEx {
                 .map(Asn1ObjectClassDefinition::getObjectClassDefinitionContent)
                 .forEach(objectClassDefinitionContent ->
                         objectClassDefinitionContent.getObjectClassDefinitionFieldList().stream()
-                                .filter(objectClassDefinitionField -> objectClassDefinitionField.getClassDefinitionContent() != null)
-                                .map(Asn1ObjectClassDefinitionField::getClassDefinitionContent)
+                                .filter(objectClassDefinitionField -> objectClassDefinitionField.getTypeDefinitionContent() != null)
+                                .map(Asn1ObjectClassDefinitionField::getTypeDefinitionContent)
                                 .forEach(classDefinitionContent -> handleAnonymousClassDefinition(classDefinitionContent, list))
                 );
 
@@ -137,19 +137,19 @@ public class Asn1TypeFolding extends FoldingBuilderEx {
         final Collection<Asn1ObjectValueDefinition> objectValueDefinitions = PsiTreeUtil.findChildrenOfType(psiElement, Asn1ObjectValueDefinition.class);
         list.addAll(
                 objectValueDefinitions.stream()
-                        .filter(objectValueDefinition -> objectValueDefinition.getValueList() != null)
-                        .filter(objectValueDefinition -> objectValueDefinition.getValueList().getNode().findChildByType(Asn1CustomElementFactory.BRACES_CURLY_OPEN) != null &&
-                                objectValueDefinition.getValueList().getNode().findChildByType(Asn1CustomElementFactory.BRACES_CURLY_CLOSE) != null)
+                        .filter(objectValueDefinition -> objectValueDefinition.getDefinitiveType() != null)
+                        .filter(objectValueDefinition -> objectValueDefinition.getDefinitiveType().getNode().findChildByType(Asn1CustomElementFactory.BRACES_CURLY_OPEN) != null &&
+                                objectValueDefinition.getDefinitiveType().getNode().findChildByType(Asn1CustomElementFactory.BRACES_CURLY_CLOSE) != null)
                         .filter(objectValueDefinition ->
                                 !new TextRange(
-                                        objectValueDefinition.getValueList().getNode().findChildByType(Asn1CustomElementFactory.BRACES_CURLY_OPEN).getStartOffset() + 1,
-                                        objectValueDefinition.getValueList().getNode().findChildByType(Asn1CustomElementFactory.BRACES_CURLY_CLOSE).getStartOffset()
+                                        objectValueDefinition.getDefinitiveType().getNode().findChildByType(Asn1CustomElementFactory.BRACES_CURLY_OPEN).getStartOffset() + 1,
+                                        objectValueDefinition.getDefinitiveType().getNode().findChildByType(Asn1CustomElementFactory.BRACES_CURLY_CLOSE).getStartOffset()
                                 ).isEmpty()
                         )
                         .map(objectValueDefinition ->
                                 new FoldingDescriptor(objectValueDefinition, new TextRange(
-                                        objectValueDefinition.getValueList().getNode().findChildByType(Asn1CustomElementFactory.BRACES_CURLY_OPEN).getStartOffset() + 1,
-                                        objectValueDefinition.getValueList().getNode().findChildByType(Asn1CustomElementFactory.BRACES_CURLY_CLOSE).getStartOffset()
+                                        objectValueDefinition.getDefinitiveType().getNode().findChildByType(Asn1CustomElementFactory.BRACES_CURLY_OPEN).getStartOffset() + 1,
+                                        objectValueDefinition.getDefinitiveType().getNode().findChildByType(Asn1CustomElementFactory.BRACES_CURLY_CLOSE).getStartOffset()
                                 ))
                         )
                         .collect(Collectors.toList())
@@ -179,8 +179,8 @@ public class Asn1TypeFolding extends FoldingBuilderEx {
         objectValueDefinitions.stream()
                 .filter(objectValueDefinition -> objectValueDefinition.getObjectClassDefinitionConstructorCall() != null)
                 .map(Asn1ObjectValueDefinition::getObjectClassDefinitionConstructorCall)
-                .filter(objectClassDefinitionConstructorCall -> !objectClassDefinitionConstructorCall.getObjectClassDefinitionConstructorCallContent().getClassDefinitionContentList().isEmpty())
-                .map(objectClassDefinitionConstructorCall -> objectClassDefinitionConstructorCall.getObjectClassDefinitionConstructorCallContent().getClassDefinitionContentList())
+                .filter(objectClassDefinitionConstructorCall -> !objectClassDefinitionConstructorCall.getObjectClassDefinitionConstructorCallContent().getTypeDefinitionContentList().isEmpty())
+                .map(objectClassDefinitionConstructorCall -> objectClassDefinitionConstructorCall.getObjectClassDefinitionConstructorCallContent().getTypeDefinitionContentList())
                 .forEach(classDefinitionContentList ->
                         classDefinitionContentList.forEach(classDefinitionContent -> handleAnonymousClassDefinition(classDefinitionContent, list))
                 );
@@ -240,10 +240,10 @@ public class Asn1TypeFolding extends FoldingBuilderEx {
         return list;
     }
 
-    private void handleAnonymousClassDefinition(@NotNull Asn1ClassDefinitionContent classDefinitionContent, @NotNull List<FoldingDescriptor> list) {
+    private void handleAnonymousClassDefinition(@NotNull Asn1TypeDefinitionContent typeDefinitionContent, @NotNull List<FoldingDescriptor> list) {
         list.addAll(
-                classDefinitionContent.getClassDefinitionFieldList().stream()
-                        .filter(item -> item.getClassDefinitionContent() != null)
+                typeDefinitionContent.getTypeDefinitionFieldList().stream()
+                        .filter(item -> item.getTypeDefinitionContent() != null)
                         .filter(item -> item.getNode().findChildByType(Asn1CustomElementFactory.BRACES_CURLY_OPEN) != null &&
                                 item.getNode().findChildByType(Asn1CustomElementFactory.BRACES_CURLY_CLOSE) != null)
                         .filter(item ->
