@@ -1,9 +1,0 @@
-<templateSet group="ASN1">
-    <template name="#cdef" value="#$$$CLASS$ ::= $$$TYPE$" shortcut="TAB" description="Class Definition" toReformat="false" toShortenFQNames="true">
-        <variable name="CLASS" expression="" defaultValue="MyClass" alwaysStopAt="true"/>
-        <variable name="TYPE" expression="" defaultValue="BOOLEAN" alwaysStopAt="true"/>
-        <context>
-            <option name="ASN1" value="true"/>
-        </context>
-    </template>
-</templateSet>

@@ -5,7 +5,7 @@ IMPORTS
 My2Class1 FROM MyTestModule2 myValue1
 ;
 
-MyClass1 ::= INTEGER
+MyClass1 ::= INTEGER WITH COMPONENT SIZE(1..100)
 MyClass2 ::= [APPLICATION 10] SEQUENCE {
     myValue1 INTEGER,
     myValue2 [10] MyClass1,

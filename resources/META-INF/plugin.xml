@@ -24,41 +24,66 @@
     <extensions defaultExtensionNs="com.intellij">
         <!-- Basics -->
         <fileTypeFactory implementation="org.pcsoft.plugin.intellij.asn1.language.Asn1FileTypeFactory"/>
-        <lang.parserDefinition language="asn1" implementationClass="org.pcsoft.plugin.intellij.asn1.language.parser.Asn1ParserDefinition"/>
+        <lang.parserDefinition language="asn1"
+                               implementationClass="org.pcsoft.plugin.intellij.asn1.language.parser.Asn1ParserDefinition"/>
         <!-- Common -->
-        <lang.braceMatcher implementationClass="org.pcsoft.plugin.intellij.asn1.language.common.Asn1BracesMatcher" language="asn1"/>
-        <lang.quoteHandler language="asn1" implementationClass="org.pcsoft.plugin.intellij.asn1.language.common.Asn1QuoteHandler"/>
-        <lang.commenter language="asn1" implementationClass="org.pcsoft.plugin.intellij.asn1.language.common.ASN1Commenter"/>
+        <lang.braceMatcher implementationClass="org.pcsoft.plugin.intellij.asn1.language.common.Asn1BracesMatcher"
+                           language="asn1"/>
+        <lang.quoteHandler language="asn1"
+                           implementationClass="org.pcsoft.plugin.intellij.asn1.language.common.Asn1QuoteHandler"/>
+        <lang.commenter language="asn1"
+                        implementationClass="org.pcsoft.plugin.intellij.asn1.language.common.ASN1Commenter"/>
         <!-- Structure -->
-        <lang.psiStructureViewFactory language="asn1" implementationClass="org.pcsoft.plugin.intellij.asn1.language.structure.tree.Asn1StructureViewFactory"/>
-        <lang.foldingBuilder language="asn1" implementationClass="org.pcsoft.plugin.intellij.asn1.language.structure.folding.Asn1TypeFolding"/>
-        <lang.foldingBuilder language="asn1" implementationClass="org.pcsoft.plugin.intellij.asn1.language.structure.folding.Asn1ModuleOIDFolding"/>
-        <lang.foldingBuilder language="asn1" implementationClass="org.pcsoft.plugin.intellij.asn1.language.structure.folding.Asn1ImportFolding"/>
-        <statementUpDownMover implementation="org.pcsoft.plugin.intellij.asn1.language.common.Asn1StatementUpDownMover"/>
+        <lang.psiStructureViewFactory language="asn1"
+                                      implementationClass="org.pcsoft.plugin.intellij.asn1.language.structure.tree.Asn1StructureViewFactory"/>
+        <lang.foldingBuilder language="asn1"
+                             implementationClass="org.pcsoft.plugin.intellij.asn1.language.structure.folding.Asn1TypeFolding"/>
+        <lang.foldingBuilder language="asn1"
+                             implementationClass="org.pcsoft.plugin.intellij.asn1.language.structure.folding.Asn1ModuleOIDFolding"/>
+        <lang.foldingBuilder language="asn1"
+                             implementationClass="org.pcsoft.plugin.intellij.asn1.language.structure.folding.Asn1ImportFolding"/>
+        <statementUpDownMover
+                implementation="org.pcsoft.plugin.intellij.asn1.language.common.Asn1StatementUpDownMover"/>
+        <treeStructureProvider
+                implementation="org.pcsoft.plugin.intellij.asn1.language.structure.tree.Asn1StructureProvider"/>
         <!-- Highlighting -->
         <lang.syntaxHighlighterFactory language="asn1"
                                        implementationClass="org.pcsoft.plugin.intellij.asn1.language.highlighting.syntax.Asn1SyntaxHighlighterFactory"/>
-        <colorSettingsPage implementation="org.pcsoft.plugin.intellij.asn1.language.highlighting.Asn1ColorSettingsPage"/>
-        <annotator language="asn1" implementationClass="org.pcsoft.plugin.intellij.asn1.language.highlighting.annotator.Asn1FieldHighlightingAnnotator"/>
-        <annotator language="asn1" implementationClass="org.pcsoft.plugin.intellij.asn1.language.highlighting.annotator.Asn1ReferenceAnnotator"/>
+        <colorSettingsPage
+                implementation="org.pcsoft.plugin.intellij.asn1.language.highlighting.Asn1ColorSettingsPage"/>
+        <annotator language="asn1"
+                   implementationClass="org.pcsoft.plugin.intellij.asn1.language.highlighting.annotator.Asn1FieldHighlightingAnnotator"/>
+        <annotator language="asn1"
+                   implementationClass="org.pcsoft.plugin.intellij.asn1.language.highlighting.annotator.Asn1ReferenceAnnotator"/>
         <!-- Error Highlighting -->
-        <annotator language="asn1" implementationClass="org.pcsoft.plugin.intellij.asn1.language.highlighting.annotator.Asn1ModuleIdentifierAnnotator"/>
+        <annotator language="asn1"
+                   implementationClass="org.pcsoft.plugin.intellij.asn1.language.highlighting.annotator.Asn1ModuleIdentifierAnnotator"/>
         <!-- Referencing -->
-        <gotoClassContributor implementation="org.pcsoft.plugin.intellij.asn1.language.reference.go_to.Asn1GoToTypeContributor"/>
-        <gotoClassContributor implementation="org.pcsoft.plugin.intellij.asn1.language.reference.go_to.Asn1GoToModuleContributor"/>
-        <gotoSymbolContributor implementation="org.pcsoft.plugin.intellij.asn1.language.reference.go_to.Asn1GoToFieldContributor"/>
-        <gotoSymbolContributor implementation="org.pcsoft.plugin.intellij.asn1.language.reference.go_to.Asn1GoToParameterContributor"/>
-        <gotoSymbolContributor implementation="org.pcsoft.plugin.intellij.asn1.language.reference.go_to.Asn1GoToConstantContributor"/>
-        <lang.findUsagesProvider language="asn1" implementationClass="org.pcsoft.plugin.intellij.asn1.language.reference.usage.Asn1FindUsageProvider"/>
-        <findUsagesHandlerFactory implementation="org.pcsoft.plugin.intellij.asn1.language.reference.usage.Asn1FindUsageHandlerFactory"/>
+        <gotoClassContributor
+                implementation="org.pcsoft.plugin.intellij.asn1.language.reference.go_to.Asn1GoToTypeContributor"/>
+        <gotoClassContributor
+                implementation="org.pcsoft.plugin.intellij.asn1.language.reference.go_to.Asn1GoToModuleContributor"/>
+        <gotoSymbolContributor
+                implementation="org.pcsoft.plugin.intellij.asn1.language.reference.go_to.Asn1GoToFieldContributor"/>
+        <gotoSymbolContributor
+                implementation="org.pcsoft.plugin.intellij.asn1.language.reference.go_to.Asn1GoToParameterContributor"/>
+        <gotoSymbolContributor
+                implementation="org.pcsoft.plugin.intellij.asn1.language.reference.go_to.Asn1GoToConstantContributor"/>
+        <lang.findUsagesProvider language="asn1"
+                                 implementationClass="org.pcsoft.plugin.intellij.asn1.language.reference.usage.Asn1FindUsageProvider"/>
+        <findUsagesHandlerFactory
+                implementation="org.pcsoft.plugin.intellij.asn1.language.reference.usage.Asn1FindUsageHandlerFactory"/>
 
         <!-- Renaming -->
-        <lang.elementManipulator implementationClass="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.manipulator.Asn1ModuleRefManipulator"
-                                 forClass="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ModuleRef"/>
-        <lang.elementManipulator implementationClass="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.manipulator.Asn1TypeDefinitionManipulator"
-                                 forClass="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1TypeDefinition"/>
-        <lang.elementManipulator implementationClass="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.manipulator.Asn1TypeDefinitionRefManipulator"
-                                 forClass="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1TypeDefinitionRef"/>
+        <lang.elementManipulator
+                implementationClass="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.manipulator.Asn1ModuleRefManipulator"
+                forClass="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ModuleRef"/>
+        <lang.elementManipulator
+                implementationClass="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.manipulator.Asn1TypeDefinitionManipulator"
+                forClass="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1TypeDefinition"/>
+        <lang.elementManipulator
+                implementationClass="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.manipulator.Asn1TypeDefinitionRefManipulator"
+                forClass="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1TypeDefinitionRef"/>
         <lang.elementManipulator
                 implementationClass="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.manipulator.Asn1ObjectClassDefinitionManipulator"
                 forClass="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ObjectClassDefinition"/>
@@ -93,7 +118,7 @@
                 implementationClass="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.manipulator.Asn1ValueRefManipulator"
                 forClass="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ValueRef"/>
         <lang.elementManipulator
-                implementationClass="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.manipulator.Asn1ObjectValueDefinitionManipulator"
+                implementationClass="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.manipulator.Asn1ValueDefinitionManipulator"
                 forClass="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ObjectValueDefinition"/>
         <lang.elementManipulator
                 implementationClass="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.manipulator.Asn1ConstantDefinitionValueManipulator"
@@ -123,15 +148,29 @@
                 implementationClass="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.manipulator.Asn1FullQualifiedObjectClassDefinitionFieldQualifierRefManipulator"
                 forClass="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1FullQualifiedObjectClassDefinitionFieldQualifierRef"/>
 
-        <completion.contributor language="asn1" implementationClass="org.pcsoft.plugin.intellij.asn1.language.contributor.Asn1NativeTypeCompletionContributor"/>
-        <completion.contributor language="asn1" implementationClass="org.pcsoft.plugin.intellij.asn1.language.contributor.Asn1ModuleKeywordCompletionContributor"/>
-        <completion.contributor language="asn1" implementationClass="org.pcsoft.plugin.intellij.asn1.language.contributor.Asn1ImportKeywordCompletionContributor"/>
-        <completion.contributor language="asn1" implementationClass="org.pcsoft.plugin.intellij.asn1.language.contributor.Asn1TypeKeywordCompletionContributor"/>
-        <completion.contributor language="asn1" implementationClass="org.pcsoft.plugin.intellij.asn1.language.contributor.Asn1TagKeywordCompletionContributor"/>
+        <completion.contributor language="asn1"
+                                implementationClass="org.pcsoft.plugin.intellij.asn1.language.contributor.Asn1NativeTypeCompletionContributor"/>
+        <completion.contributor language="asn1"
+                                implementationClass="org.pcsoft.plugin.intellij.asn1.language.contributor.Asn1ModuleKeywordCompletionContributor"/>
+        <completion.contributor language="asn1"
+                                implementationClass="org.pcsoft.plugin.intellij.asn1.language.contributor.Asn1ImportKeywordCompletionContributor"/>
+        <completion.contributor language="asn1"
+                                implementationClass="org.pcsoft.plugin.intellij.asn1.language.contributor.Asn1TypeKeywordCompletionContributor"/>
+        <completion.contributor language="asn1"
+                                implementationClass="org.pcsoft.plugin.intellij.asn1.language.contributor.Asn1TagKeywordCompletionContributor"/>
+
+        <liveTemplateContext implementation="org.pcsoft.plugin.intellij.asn1.language.template.Asn1TemplateContext"/>
+        <defaultLiveTemplatesProvider
+                implementation="org.pcsoft.plugin.intellij.asn1.language.template.Asn1LiveTemplateProvider"/>
     </extensions>
 
     <actions>
         <!-- Add your actions here -->
+        <action class="org.pcsoft.plugin.intellij.asn1.language.template.Asn1TemplateFileAction"
+                id="org.pcsoft.plugin.intellij.asn1.language.template.Asn1TemplateFileAction" text="ASN1 File"
+                description="Create new ASN1 file from template" icon="/icons/ic_file.png">
+            <add-to-group group-id="NewProjectOrModuleGroup"/>
+        </action>
     </actions>
 
 </idea-plugin>

@@ -8,62 +8,14 @@ import com.intellij.psi.PsiReference;
 import com.intellij.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.Nullable;
 import org.pcsoft.plugin.intellij.asn1.Asn1Icons;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ConstantDefinitionValue;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ConstantDefinitionValueName;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1DefinitiveObjectIdentifierPart;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1DefinitiveString;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ElementDefinitionObjectSetArgumentRef;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ElementDefinitionRef;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ElementDefinitionTypeArgumentRef;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1EnumeratedDefinition;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1EnumeratedDefinitionElement;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1EnumeratedDefinitionName;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1FullQualifiedObjectClassDefinitionFieldQualifierRef;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ImportExportSymbolRef;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ModuleDefinition;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ModuleIdentifier;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ModuleRef;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ObjectClassDefinition;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ObjectClassDefinitionField;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ObjectClassDefinitionFieldName;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ObjectClassDefinitionFieldRef;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ObjectClassDefinitionName;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ObjectClassDefinitionRef;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ObjectSetDefinition;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ObjectSetDefinitionName;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ObjectSetParameter;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ObjectSetParameterTypeRef;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ObjectValueDefinition;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ObjectValueDefinitionName;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ParameterName;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ParameterRef;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1TagDefinition;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1TypeDefinition;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1TypeDefinitionField;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1TypeDefinitionFieldRef;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1TypeDefinitionRef;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1TypeFieldIdentifier;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1TypeIdentifier;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1TypeParameter;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ValueRef;
+import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.*;
 import org.pcsoft.plugin.intellij.asn1.language.parser.token.Asn1CustomElementFactory;
 import org.pcsoft.plugin.intellij.asn1.language.parser.token.Asn1GenElementFactory;
-import org.pcsoft.plugin.intellij.asn1.language.reference.Asn1ConstantDefinitionValueReference;
-import org.pcsoft.plugin.intellij.asn1.language.reference.Asn1EnumeratedDefinitionElementReference;
-import org.pcsoft.plugin.intellij.asn1.language.reference.Asn1EnumeratedDefinitionReference;
-import org.pcsoft.plugin.intellij.asn1.language.reference.Asn1ModuleDefinitionReference;
-import org.pcsoft.plugin.intellij.asn1.language.reference.Asn1ObjectClassDefinitionFieldReference;
-import org.pcsoft.plugin.intellij.asn1.language.reference.Asn1ObjectClassDefinitionReference;
-import org.pcsoft.plugin.intellij.asn1.language.reference.Asn1ObjectSetDefinitionReference;
-import org.pcsoft.plugin.intellij.asn1.language.reference.Asn1ObjectSetParameterReference;
-import org.pcsoft.plugin.intellij.asn1.language.reference.Asn1ObjectValueDefinitionReference;
-import org.pcsoft.plugin.intellij.asn1.language.reference.Asn1TypeDefinitionFieldReference;
-import org.pcsoft.plugin.intellij.asn1.language.reference.Asn1TypeDefinitionReference;
-import org.pcsoft.plugin.intellij.asn1.language.reference.Asn1TypeParameterReference;
+import org.pcsoft.plugin.intellij.asn1.language.reference.*;
 import org.pcsoft.plugin.intellij.asn1.type.Asn1TagType;
 import org.pcsoft.plugin.intellij.asn1.type.Asn1TaggingType;
 
-import javax.swing.Icon;
+import javax.swing.*;
 
 /**
  *
@@ -207,7 +159,7 @@ public interface Asn1ElementUtils {
         return new PsiReference[]{
                 new Asn1TypeDefinitionReference(importExportSymbolRef),
                 new Asn1ObjectClassDefinitionReference(importExportSymbolRef),
-                new Asn1ObjectValueDefinitionReference(importExportSymbolRef),
+                new Asn1ValueDefinitionReference(importExportSymbolRef),
                 new Asn1ObjectSetDefinitionReference(importExportSymbolRef),
                 new Asn1EnumeratedDefinitionReference(importExportSymbolRef)
         };
@@ -222,7 +174,7 @@ public interface Asn1ElementUtils {
     }
 
     static PsiReference getObjectValueDefinitionReference(final Asn1ImportExportSymbolRef importExportSymbolRef) {
-        return new Asn1ObjectValueDefinitionReference(importExportSymbolRef);
+        return new Asn1ValueDefinitionReference(importExportSymbolRef);
     }
 
     static PsiReference getObjectSetDefinitionReference(final Asn1ImportExportSymbolRef importExportSymbolRef) {
@@ -577,7 +529,7 @@ public interface Asn1ElementUtils {
     static PsiReference[] getReferences(final Asn1FullQualifiedObjectClassDefinitionFieldQualifierRef fullQualifiedObjectClassDefinitionFieldQualifierRef) {
         return new PsiReference[]{
                 new Asn1ObjectClassDefinitionReference(fullQualifiedObjectClassDefinitionFieldQualifierRef),
-                new Asn1ObjectValueDefinitionReference(fullQualifiedObjectClassDefinitionFieldQualifierRef)
+                new Asn1ValueDefinitionReference(fullQualifiedObjectClassDefinitionFieldQualifierRef)
         };
     }
 
@@ -586,27 +538,27 @@ public interface Asn1ElementUtils {
     }
 
     static PsiReference getObjectValueDefinitionReference(final Asn1FullQualifiedObjectClassDefinitionFieldQualifierRef fullQualifiedObjectClassDefinitionFieldQualifierRef) {
-        return new Asn1ObjectValueDefinitionReference(fullQualifiedObjectClassDefinitionFieldQualifierRef);
+        return new Asn1ValueDefinitionReference(fullQualifiedObjectClassDefinitionFieldQualifierRef);
     }
     //endregion
     //endregion
 
     //region Element - Object Value Definition
-    static String getName(final Asn1ObjectValueDefinition objectValueDefinition) {
-        return getNameNodeText(objectValueDefinition.getObjectValueDefinitionName());
+    static String getName(final Asn1ValueDefinition valueDefinition) {
+        return getNameNodeText(valueDefinition.getValueIdentifier());
     }
 
-    static PsiElement setName(final Asn1ObjectValueDefinition objectValueDefinition, final String newName) {
-        final ASTNode astNode = getNameNode(objectValueDefinition.getObjectValueDefinitionName());
+    static PsiElement setName(final Asn1ValueDefinition valueDefinition, final String newName) {
+        final ASTNode astNode = getNameNode(valueDefinition.getValueIdentifier());
         if (astNode != null) {
             //TODO
         }
 
-        return objectValueDefinition;
+        return valueDefinition;
     }
 
-    static PsiElement getNameIdentifier(final Asn1ObjectValueDefinition objectValueDefinition) {
-        final ASTNode astNode = getNameNode(objectValueDefinition.getObjectValueDefinitionName());
+    static PsiElement getNameIdentifier(final Asn1ValueDefinition valueDefinition) {
+        final ASTNode astNode = getNameNode(valueDefinition.getValueIdentifier());
         if (astNode != null) {
             return astNode.getPsi();
         } else {
@@ -614,19 +566,19 @@ public interface Asn1ElementUtils {
         }
     }
 
-    static ItemPresentation getPresentation(final Asn1ObjectValueDefinition objectValueDefinition) {
+    static ItemPresentation getPresentation(final Asn1ValueDefinition valueDefinition) {
         return new ItemPresentation() {
             @Nullable
             @Override
             public String getPresentableText() {
-                return objectValueDefinition.getName();
+                return valueDefinition.getName();
             }
 
             @Nullable
             @Override
             public String getLocationString() {
-                final Asn1ModuleDefinition moduleDefinition = PsiTreeUtil.getParentOfType(objectValueDefinition, Asn1ModuleDefinition.class);
-                return moduleDefinition != null ? moduleDefinition.getName() : objectValueDefinition.getContainingFile() != null ? objectValueDefinition.getContainingFile().getName() : null;
+                final Asn1ModuleDefinition moduleDefinition = PsiTreeUtil.getParentOfType(valueDefinition, Asn1ModuleDefinition.class);
+                return moduleDefinition != null ? moduleDefinition.getName() : valueDefinition.getContainingFile() != null ? valueDefinition.getContainingFile().getName() : null;
             }
 
             @Nullable
@@ -637,8 +589,8 @@ public interface Asn1ElementUtils {
         };
     }
 
-    static String getName(final Asn1ObjectValueDefinitionName objectValueDefinitionName) {
-        return objectValueDefinitionName.getText();
+    static String getName(final Asn1ValueIdentifier valueIdentifier) {
+        return valueIdentifier.getText();
     }
 
     //endregion
@@ -881,7 +833,7 @@ public interface Asn1ElementUtils {
     static PsiReference[] getReferences(final Asn1ValueRef valueRef) {
         return new PsiReference[]{
                 new Asn1ConstantDefinitionValueReference(valueRef),
-                new Asn1ObjectValueDefinitionReference(valueRef),
+                new Asn1ValueDefinitionReference(valueRef),
                 new Asn1EnumeratedDefinitionElementReference(valueRef)
         };
     }
@@ -891,7 +843,7 @@ public interface Asn1ElementUtils {
     }
 
     static PsiReference getObjectValueDefinitionReference(final Asn1ValueRef valueRef) {
-        return new Asn1ObjectValueDefinitionReference(valueRef);
+        return new Asn1ValueDefinitionReference(valueRef);
     }
 
     static PsiReference getEnumeratedDefinitionElementReference(final Asn1ValueRef valueRef) {

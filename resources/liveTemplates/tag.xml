@@ -1,0 +1,8 @@
+<templateSet group="ASN1">
+  <template name="[" value="[$NUMBER$]" description="Tag Definition" toReformat="false" toShortenFQNames="true">
+    <variable name="NUMBER" expression="" defaultValue="0" alwaysStopAt="true" />
+    <context>
+      <option name="ASN1" value="true"/>
+    </context>
+  </template>
+</templateSet>

@@ -10,15 +10,7 @@ import com.intellij.psi.tree.TokenSet;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.pcsoft.plugin.intellij.asn1.language.parser.lexer.Asn1LexerAdapter;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ConstantDefinitionValue;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ModuleDefinition;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ObjectClassDefinition;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ObjectClassDefinitionField;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ObjectSetParameter;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ObjectValueDefinition;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1TypeDefinition;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1TypeDefinitionField;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1TypeParameter;
+import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.*;
 import org.pcsoft.plugin.intellij.asn1.language.parser.token.Asn1CustomElementFactory;
 import org.pcsoft.plugin.intellij.asn1.language.parser.token.Asn1GenElementFactory;
 
@@ -65,7 +57,7 @@ public class Asn1FindUsageProvider implements FindUsagesProvider {
             return "Object Class Definition Field";
         } else if (psiElement instanceof Asn1ObjectClassDefinition) {
             return "Object Class Definition";
-        } else if (psiElement instanceof Asn1ObjectValueDefinition) {
+        } else if (psiElement instanceof Asn1ValueDefinition) {
             return "Object Value Definition";
         } else if (psiElement instanceof Asn1ObjectSetParameter || psiElement instanceof Asn1TypeParameter) {
             return "Parameter";

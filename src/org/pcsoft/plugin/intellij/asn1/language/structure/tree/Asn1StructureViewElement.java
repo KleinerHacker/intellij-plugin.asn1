@@ -12,17 +12,9 @@ import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.Asn1File;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1EnumeratedDefinition;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1EnumeratedDefinitionElement;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ModuleDefinition;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ObjectClassDefinition;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ObjectClassDefinitionField;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ObjectSetDefinition;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ObjectValueDefinition;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1TypeDefinition;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1TypeDefinitionField;
+import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.*;
 
-import javax.swing.Icon;
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -86,7 +78,7 @@ public class Asn1StructureViewElement implements StructureViewTreeElement, Sorta
     @NotNull
     @Override
     public TreeElement[] getChildren() {
-        if (element instanceof Asn1File) {
+        if (element instanceof Asn1File || element instanceof Asn1ModuleDefinition) {
             final List<TreeElement> list = new ArrayList<>();
 
             final Collection<Asn1TypeDefinition> typeDefinitionList = PsiTreeUtil.findChildrenOfType(element, Asn1TypeDefinition.class);
@@ -103,9 +95,9 @@ public class Asn1StructureViewElement implements StructureViewTreeElement, Sorta
                             .collect(Collectors.toList())
             );
 
-            final Collection<Asn1ObjectValueDefinition> objectDefinitionList = PsiTreeUtil.findChildrenOfType(element, Asn1ObjectValueDefinition.class);
+            final Collection<Asn1ValueDefinition> valueDefinitions = PsiTreeUtil.findChildrenOfType(element, Asn1ValueDefinition.class);
             list.addAll(
-                    objectDefinitionList.stream()
+                    valueDefinitions.stream()
                             .map(Asn1StructureViewElement::new)
                             .collect(Collectors.toList())
             );

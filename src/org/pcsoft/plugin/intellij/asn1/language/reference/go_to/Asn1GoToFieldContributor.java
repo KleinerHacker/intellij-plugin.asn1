@@ -5,8 +5,8 @@ import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ObjectClassDefinitionField;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ObjectValueDefinition;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1TypeDefinitionField;
+import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ValueDefinition;
 import org.pcsoft.plugin.intellij.asn1.language.reference.Asn1ReferenceUtils;
 
 import java.util.ArrayList;
@@ -36,10 +36,10 @@ public class Asn1GoToFieldContributor implements ChooseByNameContributor {
                         .collect(Collectors.toList())
         );
 
-        final List<Asn1ObjectValueDefinition> objectValueDefinitionList = Asn1ReferenceUtils.findObjectValueDefinitions(project, null);
+        final List<Asn1ValueDefinition> valueDefinitionList = Asn1ReferenceUtils.findValueDefinitions(project, null);
         list.addAll(
-                objectValueDefinitionList.stream()
-                        .map(Asn1ObjectValueDefinition::getName)
+                valueDefinitionList.stream()
+                        .map(Asn1ValueDefinition::getName)
                         .collect(Collectors.toList())
         );
 
@@ -65,9 +65,9 @@ public class Asn1GoToFieldContributor implements ChooseByNameContributor {
                         .collect(Collectors.toList())
         );
 
-        final List<Asn1ObjectValueDefinition> objectValueDefinitionList = Asn1ReferenceUtils.findObjectValueDefinitions(project, null, true, full);
+        final List<Asn1ValueDefinition> valueDefinitionList = Asn1ReferenceUtils.findValueDefinitions(project, null, true, full);
         list.addAll(
-                objectValueDefinitionList.stream()
+                valueDefinitionList.stream()
                         .map(item -> (NavigationItem) item)
                         .collect(Collectors.toList())
         );
