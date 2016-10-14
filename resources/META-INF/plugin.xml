@@ -119,7 +119,7 @@
                 forClass="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ValueRef"/>
         <lang.elementManipulator
                 implementationClass="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.manipulator.Asn1ValueDefinitionManipulator"
-                forClass="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ObjectValueDefinition"/>
+                forClass="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ValueDefinition"/>
         <lang.elementManipulator
                 implementationClass="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.manipulator.Asn1ConstantDefinitionValueManipulator"
                 forClass="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ConstantDefinitionValue"/>
@@ -159,17 +159,17 @@
         <completion.contributor language="asn1"
                                 implementationClass="org.pcsoft.plugin.intellij.asn1.language.contributor.Asn1TagKeywordCompletionContributor"/>
 
-        <liveTemplateContext implementation="org.pcsoft.plugin.intellij.asn1.language.template.Asn1TemplateContext"/>
+        <liveTemplateContext implementation="org.pcsoft.plugin.intellij.asn1.template.Asn1TemplateContext"/>
         <defaultLiveTemplatesProvider
-                implementation="org.pcsoft.plugin.intellij.asn1.language.template.Asn1LiveTemplateProvider"/>
+                implementation="org.pcsoft.plugin.intellij.asn1.template.Asn1LiveTemplateProvider"/>
     </extensions>
 
     <actions>
         <!-- Add your actions here -->
-        <action class="org.pcsoft.plugin.intellij.asn1.language.template.Asn1TemplateFileAction"
-                id="org.pcsoft.plugin.intellij.asn1.language.template.Asn1TemplateFileAction" text="ASN1 File"
+        <action class="org.pcsoft.plugin.intellij.asn1.template.Asn1TemplateFileAction"
+                id="ASN1_CREATE_FILE" text="ASN1 File"
                 description="Create new ASN1 file from template" icon="/icons/ic_file.png">
-            <add-to-group group-id="NewProjectOrModuleGroup"/>
+            <add-to-group group-id="NewGroup" anchor="before" relative-to-action="NewHtmlFile"/>
         </action>
     </actions>
 

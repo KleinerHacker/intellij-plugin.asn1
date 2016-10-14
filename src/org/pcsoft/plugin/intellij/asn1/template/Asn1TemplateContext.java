@@ -1,4 +1,4 @@
-package org.pcsoft.plugin.intellij.asn1.language.template;
+package org.pcsoft.plugin.intellij.asn1.template;
 
 import com.intellij.codeInsight.template.TemplateContextType;
 import com.intellij.psi.PsiFile;

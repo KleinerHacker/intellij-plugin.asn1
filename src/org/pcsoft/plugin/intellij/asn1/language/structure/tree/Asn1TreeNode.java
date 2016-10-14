@@ -4,7 +4,6 @@ import com.intellij.ide.projectView.PresentationData;
 import com.intellij.ide.projectView.ViewSettings;
 import com.intellij.ide.projectView.impl.nodes.BasePsiNode;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
-import com.intellij.ide.util.treeView.smartTree.TreeElement;
 import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiNamedElement;
@@ -13,6 +12,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by Christoph on 13.10.2016.
@@ -29,9 +29,9 @@ public class Asn1TreeNode extends BasePsiNode<PsiNamedElement> {
         final List<AbstractTreeNode> children = new ArrayList<>();
 
         final Asn1StructureViewElement structureViewElement = new Asn1StructureViewElement(getValue());
-        for (final TreeElement treeElement : structureViewElement.getChildren()) {
-            children.add(new Asn1TreeNode(myProject, (PsiNamedElement) ((Asn1StructureViewElement)treeElement).getValue(), getSettings()));
-        }
+        children.addAll(structureViewElement.getElementChildren().stream()
+                .map(psiNamedElement -> new Asn1TreeNode(myProject, psiNamedElement, getSettings()))
+                .collect(Collectors.toList()));
 
         return children;
     }
