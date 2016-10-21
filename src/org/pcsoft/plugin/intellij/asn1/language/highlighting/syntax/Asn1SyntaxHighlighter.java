@@ -39,8 +39,7 @@ public class Asn1SyntaxHighlighter extends SyntaxHighlighterBase {
     public TextAttributesKey[] getTokenHighlights(IElementType iElementType) {
         if (iElementType.equals(Asn1CustomElementFactory.COMMENT)) {
             return COMMENT;
-        } else if (iElementType.equals(Asn1GenElementFactory.NAME_CAP) || iElementType.equals(Asn1GenElementFactory.NAME_NO_CAP) ||
-                iElementType.equals(Asn1GenElementFactory.NAME_UPPER) || iElementType.equals(Asn1GenElementFactory.NAME_LOWER)) {
+        } else if (iElementType.equals(Asn1GenElementFactory.NAME)) {
             return NAME;
         } else if (iElementType.equals(Asn1CustomElementFactory.OPERATOR)) {
             return OPERATOR;

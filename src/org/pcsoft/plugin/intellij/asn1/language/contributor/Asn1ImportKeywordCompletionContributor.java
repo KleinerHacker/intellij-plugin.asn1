@@ -45,8 +45,7 @@ public class Asn1ImportKeywordCompletionContributor extends CompletionContributo
         extend(
                 CompletionType.BASIC,
                 PlatformPatterns.or(
-                        PlatformPatterns.psiElement().afterLeaf(PlatformPatterns.psiElement(Asn1GenElementFactory.NAME_CAP).withParent(Asn1ImportExportSymbol.class)).withLanguage(Asn1Language.INSTANCE),
-                        PlatformPatterns.psiElement().afterLeaf(PlatformPatterns.psiElement(Asn1GenElementFactory.NAME_UPPER).withParent(Asn1ImportExportSymbol.class)).withLanguage(Asn1Language.INSTANCE)
+                        PlatformPatterns.psiElement().afterLeaf(PlatformPatterns.psiElement(Asn1GenElementFactory.NAME).withParent(Asn1ImportExportSymbol.class)).withLanguage(Asn1Language.INSTANCE)
                 ),
                 new CompletionProvider<CompletionParameters>() {
                     @Override

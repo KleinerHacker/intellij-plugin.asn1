@@ -8,6 +8,11 @@
             <set />
           </value>
         </entry>
+        <entry key="/a.txt">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="/asn1.bnf.preview">
           <value>
             <set />
@@ -210,6 +215,14 @@
             <set>
               <SonarIssue>
                 <option name="isNew" value="false" />
+                <option name="key" value="AVcOhbc-EQ77G5RhYLip" />
+                <option name="line" value="50" />
+                <option name="message" value="Remove this call from a constructor to the overridable &quot;getAesKeyLength&quot; method." />
+                <option name="ruleKey" value="squid:S1699" />
+                <option name="severity" value="MAJOR" />
+              </SonarIssue>
+              <SonarIssue>
+                <option name="isNew" value="false" />
                 <option name="key" value="AVcOhbc-EQ77G5RhYLim" />
                 <option name="line" value="44" />
                 <option name="message" value="Remove this call from a constructor to the overridable &quot;getRsaKeyLength&quot; method." />
@@ -218,10 +231,9 @@
               </SonarIssue>
               <SonarIssue>
                 <option name="isNew" value="false" />
-                <option name="key" value="AVcOhbc-EQ77G5RhYLip" />
-                <option name="line" value="50" />
-                <option name="message" value="Remove this call from a constructor to the overridable &quot;getAesKeyLength&quot; method." />
-                <option name="ruleKey" value="squid:S1699" />
+                <option name="key" value="AVcOhbc9EQ77G5RhYLij" />
+                <option name="message" value="1 duplicated blocks of code must be removed." />
+                <option name="ruleKey" value="common-java:DuplicatedBlocks" />
                 <option name="severity" value="MAJOR" />
               </SonarIssue>
               <SonarIssue>
@@ -231,13 +243,6 @@
                 <option name="message" value="Define and throw a dedicated exception instead of using a generic one." />
                 <option name="ruleKey" value="squid:S00112" />
                 <option name="severity" value="CRITICAL" />
-              </SonarIssue>
-              <SonarIssue>
-                <option name="isNew" value="false" />
-                <option name="key" value="AVcOhbc9EQ77G5RhYLij" />
-                <option name="message" value="1 duplicated blocks of code must be removed." />
-                <option name="ruleKey" value="common-java:DuplicatedBlocks" />
-                <option name="severity" value="MAJOR" />
               </SonarIssue>
               <SonarIssue>
                 <option name="isNew" value="false" />
@@ -314,18 +319,18 @@
               </SonarIssue>
               <SonarIssue>
                 <option name="isNew" value="false" />
-                <option name="key" value="AVcOhbwXEQ77G5RhYLut" />
-                <option name="message" value="4 duplicated blocks of code must be removed." />
-                <option name="ruleKey" value="common-java:DuplicatedBlocks" />
-                <option name="severity" value="MAJOR" />
-              </SonarIssue>
-              <SonarIssue>
-                <option name="isNew" value="false" />
                 <option name="key" value="AVcOhbwaEQ77G5RhYLu4" />
                 <option name="line" value="225" />
                 <option name="message" value="At most one statement is allowed per line, but 2 statements were found on this line." />
                 <option name="ruleKey" value="squid:S00122" />
                 <option name="severity" value="MINOR" />
+              </SonarIssue>
+              <SonarIssue>
+                <option name="isNew" value="false" />
+                <option name="key" value="AVcOhbwXEQ77G5RhYLut" />
+                <option name="message" value="4 duplicated blocks of code must be removed." />
+                <option name="ruleKey" value="common-java:DuplicatedBlocks" />
+                <option name="severity" value="MAJOR" />
               </SonarIssue>
               <SonarIssue>
                 <option name="isNew" value="false" />
@@ -417,6 +422,11 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/gen/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/Asn1FullQualifiedObjectClassDefinitionFieldQualifierRefImpl.java">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/gen/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/Asn1ImportElementModuleImpl.java">
           <value>
             <set />
@@ -442,7 +452,87 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/gen/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/Asn1SetDefinitionImpl.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/gen/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/Asn1TypeDefinitionVersionImpl.java">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/resources/META-INF/plugin.xml">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/resources/liveTemplates/chd.xml">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/resources/liveTemplates/cyd.xml">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/resources/liveTemplates/end.xml">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/resources/liveTemplates/fid.xml">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/resources/liveTemplates/firef.xml">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/resources/liveTemplates/imp.xml">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/resources/liveTemplates/mod.xml">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/resources/liveTemplates/ocd.xml">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/resources/liveTemplates/setd.xml">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/resources/liveTemplates/tbdef.xml">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/resources/liveTemplates/tyd.xml">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/resources/liveTemplates/tyfd.xml">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/resources/liveTemplates/vald.xml">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/resources/liveTemplates/wsyn.xml">
           <value>
             <set />
           </value>
@@ -547,12 +637,32 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/highlighting/annotator/Asn1ConstantAnnotator.java">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/highlighting/annotator/Asn1FieldHighlightingAnnotator.java">
           <value>
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/highlighting/annotator/Asn1MarkerAnnotator.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/highlighting/annotator/Asn1ModifierAnnotator.java">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/highlighting/annotator/Asn1ModuleIdentifierAnnotator.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/highlighting/annotator/Asn1ObjectClassConstructorAnnotator.java">
           <value>
             <set />
           </value>
@@ -682,6 +792,16 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/Asn1NamedElement.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/Asn1NamedElementImpl.java">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/gen/Asn1ClassDefinition.java">
           <value>
             <set />
@@ -768,6 +888,11 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/manipulator/Asn1EnumeratedDefinitionManipulator.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/manipulator/Asn1FieldTypeDefinitionManipulator.java">
           <value>
             <set />
           </value>
@@ -888,6 +1013,61 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/manipulator/Asn1ParameterRefManipulator.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/manipulator/Asn1SetDefinitionManipulator.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/manipulator/Asn1SymbolConstructorFieldManipulator.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/manipulator/Asn1SymbolDefinitionFieldManipulator.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/manipulator/Asn1SymbolDefinitionManipulator.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/manipulator/Asn1SymbolFieldReferenceSymbolManipulator.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/manipulator/Asn1SymbolIdentifierManipulator.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/manipulator/Asn1SymbolTypeQualifierManipulator.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/manipulator/Asn1SymbolTypeReferenceQualifierManipulator.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/manipulator/Asn1SymbolTypeReferenceSymbolManipulator.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/manipulator/Asn1SymbolTypeReferenceValueManipulator.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/manipulator/Asn1SymbolValueTypeFieldReferenceManipulator.java">
           <value>
             <set />
           </value>
@@ -1112,6 +1292,11 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/reference/Asn1FieldTypeDefinitionReference.java">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/reference/Asn1FileReference.java">
           <value>
             <set />
@@ -1177,6 +1362,26 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/reference/Asn1SetDefinitionReference.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/reference/Asn1SymbolConstantReference.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/reference/Asn1SymbolDefinitionFieldReference.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/reference/Asn1SymbolDefinitionReference.java">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/reference/Asn1TypeDefinitionFieldReference.java">
           <value>
             <set />
@@ -1188,6 +1393,11 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/reference/Asn1TypeParameterReference.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/reference/go_to/Asn1GoToAssignmentContributor.java">
           <value>
             <set />
           </value>
@@ -1208,6 +1418,16 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/reference/go_to/Asn1GoToParameterContributor.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/reference/go_to/Asn1GoToSymbolContributor.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/reference/go_to/Asn1GoToSymbolFieldContributor.java">
           <value>
             <set />
           </value>
@@ -1247,6 +1467,11 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/structure/folding/Asn1ImportExportFolding.java">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/structure/folding/Asn1ImportFolding.java">
           <value>
             <set />
@@ -1262,7 +1487,27 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/structure/folding/Asn1OIDFolding.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/structure/folding/Asn1SymbolFolding.java">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/structure/folding/Asn1TypeFolding.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/structure/folding/Asn1ValueFolding.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/structure/folding/Asn1VersionFolding.java">
           <value>
             <set />
           </value>
@@ -1327,7 +1572,37 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/template/Asn1LiveTemplateProvider.java">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/template/Asn1TemplateFileAction.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/type/Asn1FieldType.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/type/Asn1Modifier.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/type/Asn1SetType.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/type/Asn1SymbolElement.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/type/Asn1SymbolType.java">
           <value>
             <set />
           </value>

@@ -11,14 +11,10 @@ import com.intellij.util.ProcessingContext;
 import org.jetbrains.annotations.NotNull;
 import org.pcsoft.plugin.intellij.asn1.language.Asn1Language;
 import org.pcsoft.plugin.intellij.asn1.language.highlighting.Asn1HighlighterScheme;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ObjectClassDefinitionField;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1TagDefinition;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1TypeDefinition;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1TypeDefinitionField;
 import org.pcsoft.plugin.intellij.asn1.language.parser.token.Asn1CustomElementFactory;
-import org.pcsoft.plugin.intellij.asn1.language.parser.token.Asn1GenElementFactory;
-import org.pcsoft.plugin.intellij.asn1.type.ListType;
-import org.pcsoft.plugin.intellij.asn1.type.PrimitiveType;
+import org.pcsoft.plugin.intellij.asn1.type.Asn1ListType;
+import org.pcsoft.plugin.intellij.asn1.type.Asn1PrimitiveType;
 
 import java.awt.Font;
 import java.util.Arrays;
@@ -34,16 +30,14 @@ public class Asn1NativeTypeCompletionContributor extends CompletionContributor {
         extend(
                 CompletionType.BASIC,
                 PlatformPatterns.or(
-                        PlatformPatterns.psiElement().afterLeaf(PlatformPatterns.psiElement(Asn1CustomElementFactory.BRACES_CORNER_CLOSE)).withParent(Asn1TagDefinition.class).withLanguage(Asn1Language.INSTANCE),
-                        PlatformPatterns.psiElement().afterLeaf("::=").withLanguage(Asn1Language.INSTANCE),
-                        PlatformPatterns.psiElement().afterLeaf(PlatformPatterns.psiElement(Asn1GenElementFactory.NAME_CAP).withParent(Asn1TypeDefinitionField.class)).withLanguage(Asn1Language.INSTANCE),
-                        PlatformPatterns.psiElement().afterLeaf(PlatformPatterns.psiElement(Asn1GenElementFactory.NAME_UPPER).withParent(Asn1ObjectClassDefinitionField.class)).withLanguage(Asn1Language.INSTANCE)
+                        PlatformPatterns.psiElement().afterLeaf(PlatformPatterns.psiElement(Asn1CustomElementFactory.BRACES_CORNER_CLOSE)).withLanguage(Asn1Language.INSTANCE),
+                        PlatformPatterns.psiElement().afterLeaf("::=").withLanguage(Asn1Language.INSTANCE)
                 ),
                 new CompletionProvider<CompletionParameters>() {
                     @Override
                     protected void addCompletions(@NotNull CompletionParameters completionParameters, ProcessingContext processingContext, @NotNull CompletionResultSet completionResultSet) {
                         completionResultSet.addAllElements(
-                                Stream.of(PrimitiveType.values())
+                                Stream.of(Asn1PrimitiveType.values())
                                         .map(item -> LookupElementBuilder.create(item.getName())
                                                 .withTypeText(Arrays.toString(item.getValueTypes()))
                                                 .withBoldness(Asn1HighlighterScheme.KEYWORD.getDefaultAttributes().getFontType() == Font.BOLD)
@@ -57,14 +51,14 @@ public class Asn1NativeTypeCompletionContributor extends CompletionContributor {
         extend(
                 CompletionType.BASIC,
                 PlatformPatterns.or(
-                        PlatformPatterns.psiElement().afterLeaf(PlatformPatterns.psiElement(Asn1CustomElementFactory.BRACES_CORNER_CLOSE).withParent(Asn1TagDefinition.class).withParent(Asn1TypeDefinition.class)).withLanguage(Asn1Language.INSTANCE),
+                        PlatformPatterns.psiElement().afterLeaf(PlatformPatterns.psiElement(Asn1CustomElementFactory.BRACES_CORNER_CLOSE).withParent(Asn1TagDefinition.class)).withLanguage(Asn1Language.INSTANCE),
                         PlatformPatterns.psiElement().afterLeaf("::=").withLanguage(Asn1Language.INSTANCE)
                 ),
                 new CompletionProvider<CompletionParameters>() {
                     @Override
                     protected void addCompletions(@NotNull CompletionParameters completionParameters, ProcessingContext processingContext, @NotNull CompletionResultSet completionResultSet) {
                         completionResultSet.addAllElements(
-                                Stream.of(ListType.values())
+                                Stream.of(Asn1ListType.values())
                                         .map(item -> LookupElementBuilder.create(item.getName())
                                                 .withBoldness(Asn1HighlighterScheme.KEYWORD.getDefaultAttributes().getFontType() == Font.BOLD)
                                                 .withItemTextForeground(Asn1HighlighterScheme.KEYWORD.getDefaultAttributes().getForegroundColor())

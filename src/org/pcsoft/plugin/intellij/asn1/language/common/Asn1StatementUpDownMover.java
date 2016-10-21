@@ -1,6 +1,5 @@
 package org.pcsoft.plugin.intellij.asn1.language.common;
 
-import com.intellij.codeInsight.editorActions.moveUpDown.LineRange;
 import com.intellij.codeInsight.editorActions.moveUpDown.StatementUpDownMover;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.util.Pair;
@@ -8,9 +7,6 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import org.jetbrains.annotations.NotNull;
 import org.pcsoft.plugin.intellij.asn1.language.Asn1Language;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ObjectClassDefinition;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1TypeDefinition;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ValueDefinition;
 
 /**
  * Created by pfeifchr on 04.10.2016.
@@ -40,14 +36,14 @@ public class Asn1StatementUpDownMover extends StatementUpDownMover {
         if (elementRange1 == null || elementRange2 == null || elementRange2.second == null)
             return;
 
-        if (elementRange1.second instanceof Asn1TypeDefinition || elementRange1.second instanceof Asn1ObjectClassDefinition || elementRange1.second instanceof Asn1ValueDefinition) {
-            if (elementRange2.second instanceof Asn1TypeDefinition || elementRange2.second instanceof Asn1ObjectClassDefinition || elementRange2.second instanceof Asn1ValueDefinition) {
-                if (down) {
-                    info.toMove2 = new LineRange(elementRange2.second.getNextSibling());
-                } else {
-                    info.toMove2 = new LineRange(elementRange2.second.getPrevSibling());
-                }
-            }
-        }
+//        if (elementRange1.second instanceof Asn1TypeDefinition || elementRange1.second instanceof Asn1ObjectClassDefinition || elementRange1.second instanceof Asn1ValueDefinition) {
+//            if (elementRange2.second instanceof Asn1TypeDefinition || elementRange2.second instanceof Asn1ObjectClassDefinition || elementRange2.second instanceof Asn1ValueDefinition) {
+//                if (down) {
+//                    info.toMove2 = new LineRange(elementRange2.second.getNextSibling());
+//                } else {
+//                    info.toMove2 = new LineRange(elementRange2.second.getPrevSibling());
+//                }
+//            }
+//        }
     }
 }

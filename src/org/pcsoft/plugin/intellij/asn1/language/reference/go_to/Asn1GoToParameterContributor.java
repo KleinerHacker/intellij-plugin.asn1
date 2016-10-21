@@ -4,8 +4,8 @@ import com.intellij.navigation.ChooseByNameContributor;
 import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ObjectSetParameter;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1TypeParameter;
+import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ParameterForSet;
+import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ParameterForType;
 import org.pcsoft.plugin.intellij.asn1.language.reference.Asn1ReferenceUtils;
 
 import java.util.ArrayList;
@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Created by pfeifchr on 29.09.2016.
+ * Created by pfeifchr on 06.10.2016.
  */
 public class Asn1GoToParameterContributor implements ChooseByNameContributor {
     @NotNull
@@ -21,17 +21,17 @@ public class Asn1GoToParameterContributor implements ChooseByNameContributor {
     public String[] getNames(Project project, boolean b) {
         final List<String> list = new ArrayList<>();
 
-        final List<Asn1ObjectSetParameter> objectSetParameterList = Asn1ReferenceUtils.findObjectSetParameters(project, null);
+        final List<Asn1ParameterForType> parameterForTypeList = Asn1ReferenceUtils.findTypeParameters(project, null);
         list.addAll(
-                objectSetParameterList.stream()
-                        .map(Asn1ObjectSetParameter::getName)
+                parameterForTypeList.stream()
+                        .map(Asn1ParameterForType::getName)
                         .collect(Collectors.toList())
         );
 
-        final List<Asn1TypeParameter> typeParameterList = Asn1ReferenceUtils.findTypeParameters(project, null);
+        final List<Asn1ParameterForSet> parameterForSetList = Asn1ReferenceUtils.findSetParameters(project, null);
         list.addAll(
-                typeParameterList.stream()
-                        .map(Asn1TypeParameter::getName)
+                parameterForSetList.stream()
+                        .map(Asn1ParameterForSet::getName)
                         .collect(Collectors.toList())
         );
 
@@ -43,16 +43,16 @@ public class Asn1GoToParameterContributor implements ChooseByNameContributor {
     public NavigationItem[] getItemsByName(String full, String entered, Project project, boolean b) {
         final List<NavigationItem> list = new ArrayList<>();
 
-        final List<Asn1ObjectSetParameter> objectSetParameterList = Asn1ReferenceUtils.findObjectSetParameters(project, null, true, full);
+        final List<Asn1ParameterForType> parameterForTypeList = Asn1ReferenceUtils.findTypeParameters(project, null);
         list.addAll(
-                objectSetParameterList.stream()
+                parameterForTypeList.stream()
                         .map(item -> (NavigationItem) item)
                         .collect(Collectors.toList())
         );
 
-        final List<Asn1TypeParameter> typeParameterList = Asn1ReferenceUtils.findTypeParameters(project, null, true, full);
+        final List<Asn1ParameterForSet> parameterForSetList = Asn1ReferenceUtils.findSetParameters(project, null);
         list.addAll(
-                typeParameterList.stream()
+                parameterForSetList.stream()
                         .map(item -> (NavigationItem) item)
                         .collect(Collectors.toList())
         );

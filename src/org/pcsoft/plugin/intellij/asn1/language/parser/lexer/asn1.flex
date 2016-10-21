@@ -21,12 +21,10 @@ WHITE_SPACE=[\ \t\f]
 COMMENT_LINE="--".*("--"|{CRLF})
 COMMENT_BLOCK="/*".*"*/"
 NUMBER=[\-]?[0-9]*
-TEXT=[^\"]*
+DECIMAL=[\-]?(([0-9](\.[0-9]*)?) | (\.[0-9]+))
 
-NAME_UPPER=[A-Z]{1}[A-Z0-9_\-]*
-NAME_LOWER=[a-z]{1}[a-z0-9_\-]*
-NAME_CAP=[A-Z]{1}[A-Za-z0-9_\-]*
-NAME_NO_CAP=[a-z]{1}[A-Za-z0-9_\-]*
+NAME=[A-Za-z]{1}[A-Za-z0-9_\-]*
+TEXT=[^\"]*
 
 OPERATOR= "::="
 SEPARATOR="," | ";" | ":" | "." | "|"
@@ -64,12 +62,9 @@ LIST_TYPE="SEQUENCE" | "SET" | "CHOICE" | "ENUMERATED"
     }
 
     {NUMBER}                                        { return Asn1GenElementFactory.NUMBER; }
+    {DECIMAL}                                       { return Asn1GenElementFactory.DECIMAL; }
 
-
-    {NAME_UPPER}                                    { return Asn1GenElementFactory.NAME_UPPER; }
-    {NAME_LOWER}                                    { return Asn1GenElementFactory.NAME_LOWER; }
-    {NAME_CAP}                                      { return Asn1GenElementFactory.NAME_CAP; }
-    {NAME_NO_CAP}                                   { return Asn1GenElementFactory.NAME_NO_CAP; }
+    {NAME}                                          { return Asn1GenElementFactory.NAME; }
 
     {BR_ROUND_OPEN}                                 { return Asn1CustomElementFactory.BRACES_ROUND_OPEN; }
     {BR_ROUND_CLOSE}                                { return Asn1CustomElementFactory.BRACES_ROUND_CLOSE; }
