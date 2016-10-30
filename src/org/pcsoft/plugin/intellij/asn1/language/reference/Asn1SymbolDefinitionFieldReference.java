@@ -3,10 +3,11 @@ package org.pcsoft.plugin.intellij.asn1.language.reference;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiNamedElement;
-import org.pcsoft.plugin.intellij.asn1.Asn1Icons;
 import org.pcsoft.plugin.intellij.asn1.language.Asn1Language;
+import org.pcsoft.plugin.intellij.asn1.language.highlighting.Asn1HighlighterScheme;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1SymbolDefinitionField;
 import org.pcsoft.plugin.intellij.asn1.type.Asn1FieldType;
+import org.pcsoft.plugin.intellij.asn1.util.LookupElementUtils;
 
 import java.util.List;
 
@@ -42,7 +43,7 @@ public class Asn1SymbolDefinitionFieldReference extends Asn1Reference<Asn1Symbol
 
     @Override
     protected LookupElementBuilder buildItem(Asn1SymbolDefinitionField value) {
-        return LookupElementBuilder.create(value)
-                .withIcon(Asn1Icons.FILE);
+        return LookupElementUtils.updateStyle(LookupElementBuilder.create(value), Asn1HighlighterScheme.FIELD)
+                .withIcon(value.getPresentation().getIcon(false));
     }
 }

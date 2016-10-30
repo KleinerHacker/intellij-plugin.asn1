@@ -16,6 +16,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.pcsoft.plugin.intellij.asn1.language.Asn1FileType;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.Asn1File;
+import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ArgumentForField;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ExportContent;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ImportElement;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ModifierElement;
@@ -24,10 +25,12 @@ import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1Parameter
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ParameterForSet;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ParameterForType;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1SymbolConstantElement;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1SymbolConstructorField;
+import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1SymbolConstructor;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1SymbolDefinition;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1SymbolDefinitionField;
+import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1SymbolFieldReference;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1SymbolType;
+import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1SymbolTypeDefinedBy;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1SymbolTypeReference;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1SymbolTypeReferenceValue;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1SymbolValueTypeContentLine;
@@ -312,11 +315,9 @@ public final class Asn1ReferenceUtils {
                 }
             });
         } else {
-            if (!handleSymbolDefinitionFieldInReference(currentElement, checkFull, key, usedTypes, list)) {
-                if (!handleSymbolDefinitionFieldInConstructor(currentElement, checkFull, key, usedTypes, list)) {
-                    if (!handleSymbolDefinitionFieldInTypeValue(currentElement, checkFull, key, usedTypes, list)) {
-                        //Future Use
-                    }
+            if (!handleSymbolDefinitionFieldInQualifiedReference(currentElement, checkFull, key, usedTypes, list)) {
+                if (!handleSymbolDefinitionFieldInReference(currentElement, checkFull, key, usedTypes, list)) {
+                    //Future Use
                 }
             }
         }
@@ -324,8 +325,8 @@ public final class Asn1ReferenceUtils {
         return list;
     }
 
-    private static boolean handleSymbolDefinitionFieldInReference(@NotNull final PsiElement currentElement, final boolean checkFull,
-                                                                  @Nullable final String key, @NotNull final Asn1FieldType[] fieldTypes, @NotNull final List<Asn1SymbolDefinitionField> list) {
+    private static boolean handleSymbolDefinitionFieldInQualifiedReference(@NotNull final PsiElement currentElement, final boolean checkFull,
+                                                                           @Nullable final String key, @NotNull final Asn1FieldType[] fieldTypes, @NotNull final List<Asn1SymbolDefinitionField> list) {
         if (currentElement instanceof Asn1SymbolTypeReferenceValue) {
             final Asn1SymbolTypeReferenceValue symbolTypeReferenceValue = (Asn1SymbolTypeReferenceValue) currentElement;
             final Asn1SymbolTypeReferenceValue prevSymbolTypeReferenceValue = PsiTreeUtil.getPrevSiblingOfType(symbolTypeReferenceValue, Asn1SymbolTypeReferenceValue.class);
@@ -368,17 +369,63 @@ public final class Asn1ReferenceUtils {
         return symbolValueTypeContentLine != null;
     }
 
+    private static boolean handleSymbolDefinitionFieldInArgument(@NotNull final PsiElement currentElement, final boolean checkFull,
+                                                                 @Nullable final String key, @NotNull final Asn1FieldType[] fieldTypes, @NotNull final List<Asn1SymbolDefinitionField> list) {
+        final Asn1ArgumentForField argumentForField = PsiTreeUtil.getParentOfType(currentElement, Asn1ArgumentForField.class);
+        if (argumentForField != null) {
+            final Asn1SymbolDefinition symbolDefinition = PsiTreeUtil.getParentOfType(argumentForField, Asn1SymbolDefinition.class);
+            //Symbol, definition of type value definition with symbol type
+            if (symbolDefinition != null) {
+                handleSymbolDefinitionFieldFromSymbolDefinition(symbolDefinition, checkFull, key, fieldTypes, list);
+            }
+        }
+
+        return argumentForField != null;
+    }
+
+    private static boolean handleSymbolDefinitionFieldInReference(@NotNull final PsiElement currentElement, final boolean checkFull,
+                                                                  @Nullable final String key, @NotNull final Asn1FieldType[] fieldTypes, @NotNull final List<Asn1SymbolDefinitionField> list) {
+        if (currentElement instanceof Asn1SymbolFieldReference) {
+            if (!handleSymbolDefinitionFieldInConstructor(currentElement, checkFull, key, fieldTypes, list)) {
+                if (!handleSymbolDefinitionFieldInDefinedBy(currentElement, checkFull, key, fieldTypes, list)) {
+                    if (!handleSymbolDefinitionFieldInArgument(currentElement, checkFull, key, fieldTypes, list)) {
+                        if (!handleSymbolDefinitionFieldInTypeValue(currentElement, checkFull, key, fieldTypes, list)) {
+                            //Future Use
+                        }
+                    }
+                }
+            }
+        }
+
+        return currentElement instanceof Asn1SymbolFieldReference;
+    }
+
     private static boolean handleSymbolDefinitionFieldInConstructor(@NotNull final PsiElement currentElement, final boolean checkFull,
                                                                     @Nullable final String key, @NotNull final Asn1FieldType[] fieldTypes, @NotNull final List<Asn1SymbolDefinitionField> list) {
-        if (currentElement instanceof Asn1SymbolConstructorField) {
-            final Asn1SymbolDefinition symbolDefinition = PsiTreeUtil.getParentOfType(currentElement, Asn1SymbolDefinition.class);
+        final Asn1SymbolConstructor symbolConstructor = PsiTreeUtil.getParentOfType(currentElement, Asn1SymbolConstructor.class);
+        if (symbolConstructor != null) {
+            final Asn1SymbolDefinition symbolDefinition = PsiTreeUtil.getParentOfType(symbolConstructor, Asn1SymbolDefinition.class);
             //Symbol, definition of type value definition with symbol type
             if (symbolDefinition != null && symbolDefinition.getSymbolElement() == Asn1SymbolElement.ObjectClassDefinition) {
                 handleSymbolDefinitionFieldFromSymbolDefinition(symbolDefinition, checkFull, key, fieldTypes, list);
             }
         }
 
-        return currentElement instanceof Asn1SymbolConstructorField;
+        return symbolConstructor != null;
+    }
+
+    private static boolean handleSymbolDefinitionFieldInDefinedBy(@NotNull final PsiElement currentElement, final boolean checkFull,
+                                                                    @Nullable final String key, @NotNull final Asn1FieldType[] fieldTypes, @NotNull final List<Asn1SymbolDefinitionField> list) {
+        final Asn1SymbolTypeDefinedBy symbolTypeDefinedBy = PsiTreeUtil.getParentOfType(currentElement, Asn1SymbolTypeDefinedBy.class);
+        if (symbolTypeDefinedBy != null) {
+            final Asn1SymbolDefinition symbolDefinition = PsiTreeUtil.getParentOfType(symbolTypeDefinedBy, Asn1SymbolDefinition.class);
+            //Symbol, definition of type value definition with symbol type
+            if (symbolDefinition != null) {
+                handleSymbolDefinitionFieldFromSymbolDefinition(symbolDefinition, checkFull, key, fieldTypes, list);
+            }
+        }
+
+        return symbolTypeDefinedBy != null;
     }
 
     private static void handleSymbolDefinitionFieldFromSymbolDefinition(Asn1SymbolDefinition symbolDefinition, boolean checkFull, @Nullable String key, @Nullable Asn1FieldType[] types, List<Asn1SymbolDefinitionField> list) {
@@ -510,8 +557,8 @@ public final class Asn1ReferenceUtils {
     private static boolean handleSymbolConstantInReferenceInValueType(Asn1SymbolTypeReferenceValue symbolTypeReferenceValue, final boolean checkFull,
                                                                       @Nullable final String key, @NotNull final List<Asn1SymbolConstantElement> list) {
         final Asn1SymbolValueTypeContentLine symbolValueTypeContentLine = PsiTreeUtil.getParentOfType(symbolTypeReferenceValue, Asn1SymbolValueTypeContentLine.class);
-        if (symbolValueTypeContentLine != null && symbolValueTypeContentLine.getSymbolValueTypeFieldReference() != null) {
-            final PsiElement element = resolveFromMultiReference(symbolValueTypeContentLine.getSymbolValueTypeFieldReference());
+        if (symbolValueTypeContentLine != null && symbolValueTypeContentLine.getSymbolFieldReference() != null) {
+            final PsiElement element = resolveFromMultiReference(symbolValueTypeContentLine.getSymbolFieldReference());
             if (element != null && element instanceof Asn1SymbolDefinitionField) {
                 handleSymbolConstantFromSymbolDefinitionField((Asn1SymbolDefinitionField) element, checkFull, key, list);
             }
@@ -558,24 +605,43 @@ public final class Asn1ReferenceUtils {
                 for (final Asn1ModuleDefinition moduleDefinition : moduleDefinitions) {
                     if (moduleDefinition.getModuleContent() != null) {
                         for (final Asn1SymbolDefinition symbolDefinition : moduleDefinition.getModuleContent().getSymbolDefinitionList()) {
-                            if (symbolDefinition.getParameterDefinition() != null) {
-                                list.addAll(
-                                        symbolDefinition.getParameterDefinition().getParameterElementList().stream()
-                                                .filter(item -> item.getParameterForType() != null)
-                                                .map(Asn1ParameterElement::getParameterForType)
-                                                .filter(item -> checkString(key, item.getName(), checkFull))
-                                                .collect(Collectors.toList())
-                                );
-                            }
+                            handleTypeParameterFromSymbolDefinition(symbolDefinition, checkFull, key, list);
                         }
                     }
                 }
             });
         } else {
-
+            if (!handleTypeParameterInReferenceType(currentElement, checkFull, key, list)) {
+                //for future use
+            }
         }
 
         return list;
+    }
+
+    private static boolean handleTypeParameterInReferenceType(@NotNull final PsiElement currentElement, final boolean checkFull,
+                                                              @Nullable final String key, @NotNull final List<Asn1ParameterForType> list) {
+        final Asn1SymbolTypeReference symbolTypeReference = PsiTreeUtil.getParentOfType(currentElement, Asn1SymbolTypeReference.class);
+        if (symbolTypeReference != null && symbolTypeReference.getSymbolTypeReferenceValueList().size() == 1) {
+            final Asn1SymbolDefinition symbolDefinition = PsiTreeUtil.getParentOfType(symbolTypeReference, Asn1SymbolDefinition.class);
+            if (symbolDefinition != null) {
+                handleTypeParameterFromSymbolDefinition(symbolDefinition, checkFull, key, list);
+            }
+        }
+
+        return symbolTypeReference != null;
+    }
+
+    private static void handleTypeParameterFromSymbolDefinition(Asn1SymbolDefinition symbolDefinition, boolean checkFull, @Nullable String key, List<Asn1ParameterForType> list) {
+        if (symbolDefinition.getParameterDefinition() != null) {
+            list.addAll(
+                    symbolDefinition.getParameterDefinition().getParameterElementList().stream()
+                            .filter(item -> item.getParameterForType() != null)
+                            .map(Asn1ParameterElement::getParameterForType)
+                            .filter(item -> checkString(key, item.getName(), checkFull))
+                            .collect(Collectors.toList())
+            );
+        }
     }
     //endregion
 
@@ -596,24 +662,43 @@ public final class Asn1ReferenceUtils {
                 for (final Asn1ModuleDefinition moduleDefinition : moduleDefinitions) {
                     if (moduleDefinition.getModuleContent() != null) {
                         for (final Asn1SymbolDefinition symbolDefinition : moduleDefinition.getModuleContent().getSymbolDefinitionList()) {
-                            if (symbolDefinition.getParameterDefinition() != null) {
-                                list.addAll(
-                                        symbolDefinition.getParameterDefinition().getParameterElementList().stream()
-                                                .filter(item -> item.getParameterForSet() != null)
-                                                .map(Asn1ParameterElement::getParameterForSet)
-                                                .filter(item -> checkString(key, item.getName(), checkFull))
-                                                .collect(Collectors.toList())
-                                );
-                            }
+                            handleSetParameterFromSymbolDefinition(symbolDefinition, checkFull, key, list);
                         }
                     }
                 }
             });
         } else {
-
+            if (!handleSetParameterInReferenceType(currentElement, checkFull, key, list)) {
+                //for future use
+            }
         }
 
         return list;
+    }
+
+    private static boolean handleSetParameterInReferenceType(@NotNull final PsiElement currentElement, final boolean checkFull,
+                                                             @Nullable final String key, @NotNull final List<Asn1ParameterForSet> list) {
+        final Asn1SymbolTypeReference symbolTypeReference = PsiTreeUtil.getParentOfType(currentElement, Asn1SymbolTypeReference.class);
+        if (symbolTypeReference != null && symbolTypeReference.getSymbolTypeReferenceValueList().size() == 1) {
+            final Asn1SymbolDefinition symbolDefinition = PsiTreeUtil.getParentOfType(symbolTypeReference, Asn1SymbolDefinition.class);
+            if (symbolDefinition != null) {
+                handleSetParameterFromSymbolDefinition(symbolDefinition, checkFull, key, list);
+            }
+        }
+
+        return symbolTypeReference != null;
+    }
+
+    private static void handleSetParameterFromSymbolDefinition(Asn1SymbolDefinition symbolDefinition, boolean checkFull, @Nullable String key, List<Asn1ParameterForSet> list) {
+        if (symbolDefinition.getParameterDefinition() != null) {
+            list.addAll(
+                    symbolDefinition.getParameterDefinition().getParameterElementList().stream()
+                            .filter(item -> item.getParameterForSet() != null)
+                            .map(Asn1ParameterElement::getParameterForSet)
+                            .filter(item -> checkString(key, item.getName(), checkFull))
+                            .collect(Collectors.toList())
+            );
+        }
     }
     //endregion
 

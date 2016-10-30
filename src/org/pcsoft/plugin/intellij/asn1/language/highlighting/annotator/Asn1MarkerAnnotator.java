@@ -12,14 +12,13 @@ import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1Parameter
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ParameterForTypeIdentifier;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1SymbolConstantElement;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1SymbolConstantIdentifier;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1SymbolConstructorField;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1SymbolDefinition;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1SymbolDefinitionField;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1SymbolFieldIdentifier;
+import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1SymbolFieldReference;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1SymbolIdentifier;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1SymbolTypeReference;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1SymbolTypeReferenceValue;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1SymbolValueTypeFieldReference;
 import org.pcsoft.plugin.intellij.asn1.language.reference.Asn1ReferenceUtils;
 import org.pcsoft.plugin.intellij.asn1.type.Asn1SymbolElement;
 
@@ -59,7 +58,7 @@ public class Asn1MarkerAnnotator implements Annotator {
             annotationHolder.createInfoAnnotation(psiElement, null).setTextAttributes(Asn1HighlighterScheme.CONSTANT);
         } else if (psiElement instanceof Asn1ParameterForSetIdentifier || psiElement instanceof Asn1ParameterForTypeIdentifier) {
             annotationHolder.createInfoAnnotation(psiElement, null).setTextAttributes(Asn1HighlighterScheme.PARAMETER);
-        } else if (psiElement instanceof Asn1SymbolConstructorField || psiElement instanceof Asn1SymbolValueTypeFieldReference) {
+        } else if (psiElement instanceof Asn1SymbolFieldReference) {
             annotationHolder.createInfoAnnotation(psiElement, null).setTextAttributes(Asn1HighlighterScheme.FIELD_REFERENCE);
         }
     }

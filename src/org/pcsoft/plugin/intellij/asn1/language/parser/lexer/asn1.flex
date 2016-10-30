@@ -20,8 +20,8 @@ CRLF=\n|\r|\r\n
 WHITE_SPACE=[\ \t\f]
 COMMENT_LINE="--".*("--"|{CRLF})
 COMMENT_BLOCK="/*".*"*/"
-NUMBER=[\-]?[0-9]*
-DECIMAL=[\-]?(([0-9](\.[0-9]*)?) | (\.[0-9]+))
+NUMBER=[\-]?[0-9]+
+DECIMAL={NUMBER}"."[0-9]+
 
 NAME=[A-Za-z]{1}[A-Za-z0-9_\-]*
 TEXT=[^\"]*

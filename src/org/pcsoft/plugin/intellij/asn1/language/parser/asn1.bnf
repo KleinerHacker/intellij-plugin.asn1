@@ -73,7 +73,7 @@ encodingControlElement ::= 'ENCODING-CONTROL' NAME
 /********************* Symbol Definition ******************************************************************************/
 /**********************************************************************************************************************/
 
-symbolDefinition ::= <<parseSymbolDefinition symbolIdentifier parameterDefinition? symbolType? ('::=' tagDefinition?) symbolTypeForAssignment symbolTypeForValue symbolTypeForSet>> symbolConstantDefinition? modifierDefinition? symbolBody?
+symbolDefinition ::= <<parseSymbolDefinition symbolIdentifier parameterDefinition? symbolType? ('::=' tagDefinition?) symbolTypeForAssignment symbolTypeForValue symbolTypeForSet>> symbolConstantDefinition? modifierDefinition? symbolBody? constraintDefinition?
 {
     mixin="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1NamedElementImpl"
     implements="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1NamedElement"
@@ -120,14 +120,9 @@ symbolFieldIdentifier ::= NAME
 symbolConstructor ::= 'WITH SYNTAX' symbolConstructorBody
 private symbolConstructorBody ::= '{' symbolConstructorContent '}'
 private symbolConstructorContent ::= symbolConstructorElement*
-symbolConstructorElement ::= symbolConstructorWord | ('&' symbolConstructorField)
+symbolConstructorElement ::= symbolConstructorWord | ('&' symbolFieldReference) | symbolConstructorOptional
+symbolConstructorOptional ::= '[' symbolConstructorContent ']'
 symbolConstructorWord ::= NAME
-symbolConstructorField ::= NAME
-{
-    mixin="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1NamedElementImpl"
-    implements="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1NamedElement"
-    methods=[getName setName getNameIdentifier getReferences]
-}
 
 /**********************************************************************************************************************/
 /******************** Tag Definition **********************************************************************************/
@@ -142,16 +137,9 @@ tagDefinition ::= '[' 'APPLICATION'? NUMBER? ']' ('IMPLICIT' | 'EXPLICIT')?
 /***************** Type Definition ************************************************************************************/
 /**********************************************************************************************************************/
 
-symbolType ::= symbolTypeNative | symbolTypeReference
-symbolTypeNative ::= (PRIMITIVE_TYPE constraintDefinition?) | (constraintDefinition? LIST_TYPE) | (LIST_TYPE constraintDefinition? 'OF' symbolType)
-symbolTypeReference ::= ('&'? symbolTypeReferenceValue '.')* '&'? symbolTypeReferenceValue
-symbolTypeReferenceValue ::= NAME
-{
-    mixin="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1NamedElementImpl"
-    implements="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1NamedElement"
-    methods=[getName setName getNameIdentifier getReferences]
-}
-
+symbolType ::= 'INSTANCE OF'? (symbolTypeNative | (symbolTypeReference symbolArgumentDefinition? constraintDefinition?)) symbolTypeDefinedBy?
+symbolTypeDefinedBy ::= 'DEFINED BY' symbolFieldReference
+symbolTypeNative ::= 'ANY' | (PRIMITIVE_TYPE constraintDefinition? constraintDefinition?) | (LIST_TYPE constraintDefinition? 'OF' symbolType) | (constraintDefinition? LIST_TYPE)
 symbolTypeKeyword ::= 'CLASS' | 'ENUMERATED' | 'CHOICE'
 
 /**********************************************************************************************************************/
@@ -186,15 +174,9 @@ symbolValueObjectIdentifierElement ::= NUMBER | (NAME '(' (NUMBER | symbolTypeRe
 symbolValueType ::= '{' symbolValueTypeContent '}'
 private symbolValueTypeContent ::= (symbolValueTypeContentLine ',')* symbolValueTypeContentLine?
 //private symbolValueTypeContentTermination ::= !('}' | ',')
-symbolValueTypeContentLine ::= (symbolValueTypeFieldReference (symbolValue | symbolTypeReference)) | "..."
+symbolValueTypeContentLine ::= (symbolFieldReference (symbolValue | symbolTypeReference)) | "..."
 {
     //recoverWhile=symbolValueTypeContentTermination
-}
-symbolValueTypeFieldReference ::= NAME
-{
-    mixin="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1NamedElementImpl"
-    implements="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1NamedElement"
-    methods=[getName setName getNameIdentifier getReferences]
 }
 
 symbolValueSet ::= symbolValueSetBody
@@ -232,7 +214,7 @@ private constraintContentWithKeyword ::= constraintValueSize | constraintValueFr
 private constraintContentWithValue ::= constraintValueDirect | constraintValueInclude
 
 constraintValueSize ::= 'SIZE' '(' constraintValueSizeContent ')'
-private constraintValueSizeValueSet ::= 'MIN' | 'MAX' | symbolValue
+private constraintValueSizeValueSet ::= 'MIN' | 'MAX' | symbolValue | symbolTypeReference
 private constraintValueSizeContent ::= constraintValueSizeValueSet ('..' constraintValueSizeValueSet)? ('|' constraintValueSizeContent)?
 
 constraintValueFrom ::= 'FROM' '(' constraintValueFromContent ')'
@@ -240,7 +222,7 @@ private constraintValueFromValueSet ::= symbolValue
 private constraintValueFromContent ::= constraintValueFromValueSet ('..' constraintValueFromValueSet)? ('|' constraintValueFromContent)?
 
 constraintValueDirect ::= constraintValueDirectContent
-private constraintValueDirectValueSet ::= 'MIN' | 'MAX' | symbolValue
+private constraintValueDirectValueSet ::= 'MIN' | 'MAX' | symbolValue | symbolTypeReference
 private constraintValueDirectContent ::= constraintValueDirectValueSet ('..' constraintValueDirectValueSet)?
 
 constraintValueComponent ::= constraintValueComponentSingle | constraintValueComponentMultiple
@@ -282,7 +264,7 @@ parameterForTypeIdentifier ::= NAME
 {
     methods=[getName]
 }
-parameterForSet ::= symbolTypeReference ':' parameterForSetIdentifier
+parameterForSet ::= symbolType ':' parameterForSetIdentifier
 {
     mixin="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1NamedElementImpl"
     implements="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1NamedElement"
@@ -291,4 +273,34 @@ parameterForSet ::= symbolTypeReference ':' parameterForSetIdentifier
 parameterForSetIdentifier ::= NAME
 {
     methods=[getName]
+}
+
+/**********************************************************************************************************************/
+/**************** Argument Definition ********************************************************************************/
+/**********************************************************************************************************************/
+
+symbolArgumentDefinition ::= '{' argumentContent '}'
+fieldArgumentDefinition ::= '(' argumentContent argumentForField? ')'
+private argumentContent ::= (argumentElement ',')* argumentElement
+argumentElement ::= argumentForType | argumentForSet
+argumentForType ::= symbolTypeReference | '...'
+argumentForSet ::= '{' (symbolTypeReference | '...') '}'
+argumentForField ::= '{' '@' symbolFieldReference '}'
+
+/**********************************************************************************************************************/
+/**************** References ******************************************************************************************/
+/**********************************************************************************************************************/
+
+symbolTypeReference ::= ('&'? symbolTypeReferenceValue '.')* '&'? symbolTypeReferenceValue fieldArgumentDefinition?
+symbolTypeReferenceValue ::= NAME
+{
+    mixin="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1NamedElementImpl"
+    implements="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1NamedElement"
+    methods=[getName setName getNameIdentifier getReferences]
+}
+symbolFieldReference ::= NAME
+{
+    mixin="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1NamedElementImpl"
+    implements="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1NamedElement"
+    methods=[getName setName getNameIdentifier getReferences]
 }

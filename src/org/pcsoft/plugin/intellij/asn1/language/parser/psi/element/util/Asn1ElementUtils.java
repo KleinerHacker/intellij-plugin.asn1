@@ -22,11 +22,11 @@ import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1Parameter
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ParameterForTypeIdentifier;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1SymbolConstantElement;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1SymbolConstantIdentifier;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1SymbolConstructorField;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1SymbolContentVersion;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1SymbolDefinition;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1SymbolDefinitionField;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1SymbolFieldIdentifier;
+import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1SymbolFieldReference;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1SymbolIdentifier;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1SymbolType;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1SymbolTypeForAssignment;
@@ -40,15 +40,16 @@ import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1SymbolVal
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1SymbolValueSetElement;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1SymbolValueSetElementContent;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1SymbolValueString;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1SymbolValueTypeFieldReference;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1TagDefinition;
 import org.pcsoft.plugin.intellij.asn1.language.parser.token.Asn1CustomElementFactory;
 import org.pcsoft.plugin.intellij.asn1.language.parser.token.Asn1GenElementFactory;
 import org.pcsoft.plugin.intellij.asn1.language.reference.Asn1ModuleDefinitionReference;
 import org.pcsoft.plugin.intellij.asn1.language.reference.Asn1ReferenceUtils;
+import org.pcsoft.plugin.intellij.asn1.language.reference.Asn1SetParameterReference;
 import org.pcsoft.plugin.intellij.asn1.language.reference.Asn1SymbolConstantReference;
 import org.pcsoft.plugin.intellij.asn1.language.reference.Asn1SymbolDefinitionFieldReference;
 import org.pcsoft.plugin.intellij.asn1.language.reference.Asn1SymbolDefinitionReference;
+import org.pcsoft.plugin.intellij.asn1.language.reference.Asn1TypeParameterReference;
 import org.pcsoft.plugin.intellij.asn1.type.Asn1FieldType;
 import org.pcsoft.plugin.intellij.asn1.type.Asn1Modifier;
 import org.pcsoft.plugin.intellij.asn1.type.Asn1SymbolElement;
@@ -472,38 +473,7 @@ public interface Asn1ElementUtils {
     }
     //endregion
 
-    //region Symbol Constructor
-    static String getName(final Asn1SymbolConstructorField symbolConstructorField) {
-        return getNameNodeText(symbolConstructorField);
-    }
-
-    static PsiElement setName(final Asn1SymbolConstructorField symbolConstructorField, final String newName) {
-        final ASTNode astNode = getNameNode(symbolConstructorField);
-        if (astNode != null) {
-            //TODO
-        }
-
-        return symbolConstructorField;
-    }
-
-    static PsiElement getNameIdentifier(final Asn1SymbolConstructorField symbolConstructorField) {
-        final ASTNode astNode = getNameNode(symbolConstructorField);
-        if (astNode != null) {
-            return astNode.getPsi();
-        } else {
-            return null;
-        }
-    }
-
-    @NotNull
-    static PsiReference[] getReferences(final Asn1SymbolConstructorField symbolConstructorField) {
-        return new PsiReference[]{
-                new Asn1SymbolDefinitionFieldReference(symbolConstructorField, Asn1FieldType.ObjectClassField)
-        };
-    }
-    //endregion
-
-    //region Symbol Type Reference
+    //region References
     static String getName(final Asn1SymbolTypeReferenceValue symbolTypeReferenceQualifier) {
         return getNameNodeText(symbolTypeReferenceQualifier);
     }
@@ -532,7 +502,38 @@ public interface Asn1ElementUtils {
                 new Asn1SymbolDefinitionReference(symbolTypeReferenceQualifier),
                 new Asn1SymbolDefinitionFieldReference(symbolTypeReferenceQualifier),
                 new Asn1ModuleDefinitionReference(symbolTypeReferenceQualifier),
-                new Asn1SymbolConstantReference(symbolTypeReferenceQualifier)
+                new Asn1SymbolConstantReference(symbolTypeReferenceQualifier),
+                new Asn1TypeParameterReference(symbolTypeReferenceQualifier),
+                new Asn1SetParameterReference(symbolTypeReferenceQualifier)
+        };
+    }
+
+    static String getName(final Asn1SymbolFieldReference symbolFieldReference) {
+        return getNameNodeText(symbolFieldReference);
+    }
+
+    static PsiElement setName(final Asn1SymbolFieldReference symbolValueTypeFieldReference, final String newName) {
+        final ASTNode astNode = getNameNode(symbolValueTypeFieldReference);
+        if (astNode != null) {
+            //TODO
+        }
+
+        return symbolValueTypeFieldReference;
+    }
+
+    static PsiElement getNameIdentifier(final Asn1SymbolFieldReference symbolFieldReference) {
+        final ASTNode astNode = getNameNode(symbolFieldReference);
+        if (astNode != null) {
+            return astNode.getPsi();
+        } else {
+            return null;
+        }
+    }
+
+    @NotNull
+    static PsiReference[] getReferences(final Asn1SymbolFieldReference symbolFieldReference) {
+        return new PsiReference[]{
+                new Asn1SymbolDefinitionFieldReference(symbolFieldReference)
         };
     }
     //endregion
@@ -676,35 +677,6 @@ public interface Asn1ElementUtils {
 
         return null;
     }
-
-    static String getName(final Asn1SymbolValueTypeFieldReference symbolValueTypeFieldReference) {
-        return getNameNodeText(symbolValueTypeFieldReference);
-    }
-
-    static PsiElement setName(final Asn1SymbolValueTypeFieldReference symbolValueTypeFieldReference, final String newName) {
-        final ASTNode astNode = getNameNode(symbolValueTypeFieldReference);
-        if (astNode != null) {
-            //TODO
-        }
-
-        return symbolValueTypeFieldReference;
-    }
-
-    static PsiElement getNameIdentifier(final Asn1SymbolValueTypeFieldReference symbolValueTypeFieldReference) {
-        final ASTNode astNode = getNameNode(symbolValueTypeFieldReference);
-        if (astNode != null) {
-            return astNode.getPsi();
-        } else {
-            return null;
-        }
-    }
-
-    @NotNull
-    static PsiReference[] getReferences(final Asn1SymbolValueTypeFieldReference symbolValueTypeFieldReference) {
-        return new PsiReference[]{
-                new Asn1SymbolDefinitionFieldReference(symbolValueTypeFieldReference, Asn1FieldType.TypeField)
-        };
-    }
     //endregion
 
     //region Modifier
@@ -726,6 +698,7 @@ public interface Asn1ElementUtils {
     }
     //endregion
 
+    //region Parameter
     static String getName(final Asn1ParameterForType parameterForType) {
         return getNameNodeText(parameterForType.getParameterForTypeIdentifier());
     }
@@ -829,4 +802,5 @@ public interface Asn1ElementUtils {
     static String getName(final Asn1ParameterForSetIdentifier parameterForSetIdentifier) {
         return getNameNodeText(parameterForSetIdentifier);
     }
+    //endregion
 }

@@ -215,14 +215,6 @@
             <set>
               <SonarIssue>
                 <option name="isNew" value="false" />
-                <option name="key" value="AVcOhbc-EQ77G5RhYLip" />
-                <option name="line" value="50" />
-                <option name="message" value="Remove this call from a constructor to the overridable &quot;getAesKeyLength&quot; method." />
-                <option name="ruleKey" value="squid:S1699" />
-                <option name="severity" value="MAJOR" />
-              </SonarIssue>
-              <SonarIssue>
-                <option name="isNew" value="false" />
                 <option name="key" value="AVcOhbc-EQ77G5RhYLim" />
                 <option name="line" value="44" />
                 <option name="message" value="Remove this call from a constructor to the overridable &quot;getRsaKeyLength&quot; method." />
@@ -231,9 +223,10 @@
               </SonarIssue>
               <SonarIssue>
                 <option name="isNew" value="false" />
-                <option name="key" value="AVcOhbc9EQ77G5RhYLij" />
-                <option name="message" value="1 duplicated blocks of code must be removed." />
-                <option name="ruleKey" value="common-java:DuplicatedBlocks" />
+                <option name="key" value="AVcOhbc-EQ77G5RhYLip" />
+                <option name="line" value="50" />
+                <option name="message" value="Remove this call from a constructor to the overridable &quot;getAesKeyLength&quot; method." />
+                <option name="ruleKey" value="squid:S1699" />
                 <option name="severity" value="MAJOR" />
               </SonarIssue>
               <SonarIssue>
@@ -243,6 +236,13 @@
                 <option name="message" value="Define and throw a dedicated exception instead of using a generic one." />
                 <option name="ruleKey" value="squid:S00112" />
                 <option name="severity" value="CRITICAL" />
+              </SonarIssue>
+              <SonarIssue>
+                <option name="isNew" value="false" />
+                <option name="key" value="AVcOhbc9EQ77G5RhYLij" />
+                <option name="message" value="1 duplicated blocks of code must be removed." />
+                <option name="ruleKey" value="common-java:DuplicatedBlocks" />
+                <option name="severity" value="MAJOR" />
               </SonarIssue>
               <SonarIssue>
                 <option name="isNew" value="false" />
@@ -319,18 +319,18 @@
               </SonarIssue>
               <SonarIssue>
                 <option name="isNew" value="false" />
+                <option name="key" value="AVcOhbwXEQ77G5RhYLut" />
+                <option name="message" value="4 duplicated blocks of code must be removed." />
+                <option name="ruleKey" value="common-java:DuplicatedBlocks" />
+                <option name="severity" value="MAJOR" />
+              </SonarIssue>
+              <SonarIssue>
+                <option name="isNew" value="false" />
                 <option name="key" value="AVcOhbwaEQ77G5RhYLu4" />
                 <option name="line" value="225" />
                 <option name="message" value="At most one statement is allowed per line, but 2 statements were found on this line." />
                 <option name="ruleKey" value="squid:S00122" />
                 <option name="severity" value="MINOR" />
-              </SonarIssue>
-              <SonarIssue>
-                <option name="isNew" value="false" />
-                <option name="key" value="AVcOhbwXEQ77G5RhYLut" />
-                <option name="message" value="4 duplicated blocks of code must be removed." />
-                <option name="ruleKey" value="common-java:DuplicatedBlocks" />
-                <option name="severity" value="MAJOR" />
               </SonarIssue>
               <SonarIssue>
                 <option name="isNew" value="false" />
@@ -1037,6 +1037,11 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/manipulator/Asn1SymbolFieldReferenceManipulator.java">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/parser/psi/element/manipulator/Asn1SymbolFieldReferenceSymbolManipulator.java">
           <value>
             <set />
@@ -1367,6 +1372,11 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/reference/Asn1SetParameterReference.java">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/language/reference/Asn1SymbolConstantReference.java">
           <value>
             <set />
@@ -1618,6 +1628,11 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/type/ValueType.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/org/pcsoft/plugin/intellij/asn1/util/LookupElementUtils.java">
           <value>
             <set />
           </value>

@@ -93,11 +93,8 @@
                 implementationClass="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.manipulator.Asn1SymbolTypeReferenceValueManipulator"
                 forClass="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1SymbolTypeReferenceValue"/>
         <lang.elementManipulator
-                implementationClass="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.manipulator.Asn1SymbolValueTypeFieldReferenceManipulator"
-                forClass="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1SymbolValueTypeFieldReference"/>
-        <lang.elementManipulator
-                implementationClass="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.manipulator.Asn1SymbolConstructorFieldManipulator"
-                forClass="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1SymbolConstructorField"/>
+                implementationClass="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.manipulator.Asn1SymbolFieldReferenceManipulator"
+                forClass="org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1SymbolFieldReference"/>
 
         <completion.contributor language="asn1"
                                 implementationClass="org.pcsoft.plugin.intellij.asn1.language.contributor.Asn1NativeTypeCompletionContributor"/>
