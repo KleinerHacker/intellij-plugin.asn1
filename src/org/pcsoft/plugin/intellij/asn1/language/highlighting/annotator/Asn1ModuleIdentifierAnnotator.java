@@ -9,7 +9,7 @@ import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ModuleIde
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1SymbolValueString;
 
 /**
- * Created by pfeifchr on 13.10.2016.
+ * Created by Christoph on 13.10.2016.
  */
 public class Asn1ModuleIdentifierAnnotator implements Annotator {
 

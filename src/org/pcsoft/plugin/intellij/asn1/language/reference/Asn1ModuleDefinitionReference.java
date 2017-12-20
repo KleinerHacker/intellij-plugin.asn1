@@ -11,7 +11,7 @@ import org.pcsoft.plugin.intellij.asn1.util.LookupElementUtils;
 import java.util.List;
 
 /**
- * Created by pfeifchr on 29.09.2016.
+ * Created by Christoph on 29.09.2016.
  */
 public class Asn1ModuleDefinitionReference extends Asn1Reference<Asn1ModuleDefinition> {
     public Asn1ModuleDefinitionReference(PsiNamedElement element) {

@@ -12,7 +12,7 @@ import org.pcsoft.plugin.intellij.asn1.util.LookupElementUtils;
 import java.util.List;
 
 /**
- * Created by pfeifchr on 29.09.2016.
+ * Created by Christoph on 29.09.2016.
  */
 public class Asn1SymbolDefinitionFieldReference extends Asn1Reference<Asn1SymbolDefinitionField> {
     private final Asn1FieldType[] fieldTypes;

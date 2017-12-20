@@ -22,7 +22,7 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * Created by pfeifchr on 21.10.2016.
+ * Created by Christoph on 21.10.2016.
  */
 public class Asn1OIDFolding extends FoldingBuilderEx {
     @NotNull

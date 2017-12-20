@@ -1,7 +1,7 @@
 package org.pcsoft.plugin.intellij.asn1.type;
 
 /**
- * Created by pfeifchr on 29.09.2016.
+ * Created by Christoph on 29.09.2016.
  */
 public enum Asn1PrimitiveType {
     INTEGER("INTEGER", Asn1ValueType.INTEGER_NUMBER),

@@ -15,7 +15,7 @@ import org.pcsoft.plugin.intellij.asn1.language.parser.token.Asn1CustomElementFa
 import org.pcsoft.plugin.intellij.asn1.language.parser.token.Asn1GenElementFactory;
 
 /**
- * Created by pfeifchr on 06.10.2016.
+ * Created by Christoph on 06.10.2016.
  */
 public class Asn1FindUsageProvider implements FindUsagesProvider {
     @Nullable

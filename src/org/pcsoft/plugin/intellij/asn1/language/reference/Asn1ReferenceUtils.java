@@ -44,7 +44,7 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 /**
- * Created by pfeifchr on 28.09.2016.
+ * Created by Christoph on 28.09.2016.
  */
 public final class Asn1ReferenceUtils {
 

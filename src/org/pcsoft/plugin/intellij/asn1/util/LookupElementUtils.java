@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 import java.awt.Font;
 
 /**
- * Created by pfeifchr on 28.10.2016.
+ * Created by Christoph on 28.10.2016.
  */
 public final class LookupElementUtils {
 

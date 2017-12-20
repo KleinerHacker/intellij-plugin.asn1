@@ -9,7 +9,7 @@ import com.intellij.ui.JBColor;
 import java.awt.Font;
 
 /**
- * Created by pfeifchr on 06.10.2016.
+ * Created by Christoph on 06.10.2016.
  */
 public interface Asn1HighlighterScheme {
     TextAttributesKey OPERATOR = TextAttributesKey.createTextAttributesKey("ASN1_OPERATOR", DefaultLanguageHighlighterColors.OPERATION_SIGN);

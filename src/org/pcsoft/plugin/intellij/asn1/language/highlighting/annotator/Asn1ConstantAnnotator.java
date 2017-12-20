@@ -10,7 +10,7 @@ import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1SymbolDef
 import org.pcsoft.plugin.intellij.asn1.type.Asn1SymbolElement;
 
 /**
- * Created by pfeifchr on 20.10.2016.
+ * Created by Christoph on 20.10.2016.
  */
 public class Asn1ConstantAnnotator implements Annotator {
 

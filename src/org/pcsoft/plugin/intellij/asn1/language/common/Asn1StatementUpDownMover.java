@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 import org.pcsoft.plugin.intellij.asn1.language.Asn1Language;
 
 /**
- * Created by pfeifchr on 04.10.2016.
+ * Created by Christoph on 04.10.2016.
  */
 public class Asn1StatementUpDownMover extends StatementUpDownMover {
 

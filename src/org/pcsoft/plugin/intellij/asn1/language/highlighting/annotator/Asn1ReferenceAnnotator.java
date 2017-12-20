@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import org.pcsoft.plugin.intellij.asn1.language.highlighting.Asn1HighlighterScheme;
 
 /**
- * Created by pfeifchr on 06.10.2016.
+ * Created by Christoph on 06.10.2016.
  */
 public class Asn1ReferenceAnnotator implements Annotator {
     @Override

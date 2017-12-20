@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * Created by pfeifchr on 29.09.2016.
+ * Created by Christoph on 29.09.2016.
  */
 public class Asn1NativeTypeCompletionContributor extends CompletionContributor {
 

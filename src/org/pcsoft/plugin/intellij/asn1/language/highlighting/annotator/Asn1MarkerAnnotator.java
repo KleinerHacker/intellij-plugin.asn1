@@ -23,7 +23,7 @@ import org.pcsoft.plugin.intellij.asn1.language.reference.Asn1ReferenceUtils;
 import org.pcsoft.plugin.intellij.asn1.type.Asn1SymbolElement;
 
 /**
- * Created by pfeifchr on 19.10.2016.
+ * Created by Christoph on 19.10.2016.
  */
 public class Asn1MarkerAnnotator implements Annotator {
 

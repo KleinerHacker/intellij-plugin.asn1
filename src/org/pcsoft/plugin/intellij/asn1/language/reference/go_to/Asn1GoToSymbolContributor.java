@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Created by pfeifchr on 06.10.2016.
+ * Created by Christoph on 06.10.2016.
  */
 public class Asn1GoToSymbolContributor implements ChooseByNameContributor {
     @NotNull

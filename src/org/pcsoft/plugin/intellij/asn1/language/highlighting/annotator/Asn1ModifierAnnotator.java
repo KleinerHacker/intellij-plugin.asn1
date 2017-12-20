@@ -8,7 +8,7 @@ import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ModifierD
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ModifierElement;
 
 /**
- * Created by pfeifchr on 20.10.2016.
+ * Created by Christoph on 20.10.2016.
  */
 public class Asn1ModifierAnnotator implements Annotator {
 

@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by pfeifchr on 29.09.2016.
+ * Created by Christoph on 29.09.2016.
  */
 public class Asn1ImportExportFolding extends FoldingBuilderEx {
 

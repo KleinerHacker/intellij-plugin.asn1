@@ -6,7 +6,7 @@ import com.intellij.psi.impl.ElementBase;
 import javax.swing.Icon;
 
 /**
- * Created by pfeifchr on 18.10.2016.
+ * Created by Christoph on 18.10.2016.
  */
 public enum Asn1SymbolElement {
     TypeDefinition(AllIcons.Nodes.Class, Type.Assignment),

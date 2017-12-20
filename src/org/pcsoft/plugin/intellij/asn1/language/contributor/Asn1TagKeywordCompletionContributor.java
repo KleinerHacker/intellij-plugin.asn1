@@ -18,7 +18,7 @@ import java.awt.Font;
 import java.util.Arrays;
 
 /**
- * Created by pfeifchr on 06.10.2016.
+ * Created by Christoph on 06.10.2016.
  */
 public class Asn1TagKeywordCompletionContributor extends CompletionContributor {
     public Asn1TagKeywordCompletionContributor() {
