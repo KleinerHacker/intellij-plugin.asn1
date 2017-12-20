@@ -6,4 +6,5 @@ import com.intellij.psi.PsiNameIdentifierOwner;
  *
  */
 public interface Asn1NamedElement extends PsiNameIdentifierOwner {
+
 }

@@ -11,26 +11,27 @@ import com.intellij.util.ProcessingContext;
 import org.jetbrains.annotations.NotNull;
 import org.pcsoft.plugin.intellij.asn1.language.Asn1Language;
 import org.pcsoft.plugin.intellij.asn1.language.highlighting.Asn1HighlighterScheme;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1DefinitiveObjectIdentifier;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ModuleDefinition;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ModuleIdentifier;
+import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1SymbolValueObjectIdentifier;
 import org.pcsoft.plugin.intellij.asn1.language.parser.token.Asn1CustomElementFactory;
-import org.pcsoft.plugin.intellij.asn1.language.parser.token.Asn1GenElementFactory;
 
 import java.awt.Font;
 import java.util.Arrays;
 
+import static com.intellij.patterns.PlatformPatterns.or;
+import static com.intellij.patterns.PlatformPatterns.psiElement;
+
 /**
- * Created by pfeifchr on 06.10.2016.
+ * Created by Christoph on 06.10.2016.
  */
 public class Asn1ModuleKeywordCompletionContributor extends CompletionContributor {
     public Asn1ModuleKeywordCompletionContributor() {
         extend(
                 CompletionType.BASIC,
                 PlatformPatterns.or(
-                        PlatformPatterns.psiElement().afterLeaf(PlatformPatterns.psiElement(Asn1CustomElementFactory.BRACES_CURLY_CLOSE).withParent(Asn1DefinitiveObjectIdentifier.class)).withLanguage(Asn1Language.INSTANCE),
-                        PlatformPatterns.psiElement().afterLeaf(PlatformPatterns.psiElement(Asn1GenElementFactory.NAME_CAP).withParent(Asn1ModuleIdentifier.class)).withLanguage(Asn1Language.INSTANCE),
-                        PlatformPatterns.psiElement().afterLeaf(PlatformPatterns.psiElement(Asn1GenElementFactory.NAME_UPPER).withParent(Asn1ModuleIdentifier.class)).withLanguage(Asn1Language.INSTANCE)
+                        psiElement().afterLeaf(psiElement(Asn1CustomElementFactory.BRACES_CURLY_CLOSE).withParent(Asn1SymbolValueObjectIdentifier.class)).withLanguage(Asn1Language.INSTANCE)
+                        /*PlatformPatterns.psiElement().afterLeaf(PlatformPatterns.psiElement(Asn1GenElementFactory.NAME_CAP).withParent(Asn1ModuleIdentifier.class)).withLanguage(Asn1Language.INSTANCE),
+                        PlatformPatterns.psiElement().afterLeaf(PlatformPatterns.psiElement(Asn1GenElementFactory.NAME_UPPER).withParent(Asn1ModuleIdentifier.class)).withLanguage(Asn1Language.INSTANCE)*/
                 ),
                 new CompletionProvider<CompletionParameters>() {
                     @Override
@@ -45,8 +46,8 @@ public class Asn1ModuleKeywordCompletionContributor extends CompletionContributo
         );
         extend(
                 CompletionType.BASIC,
-                PlatformPatterns.or(
-                        PlatformPatterns.psiElement().afterLeaf("DEFINITIONS").withLanguage(Asn1Language.INSTANCE)
+                or(
+                        psiElement().afterLeaf("DEFINITIONS").withLanguage(Asn1Language.INSTANCE)
                 ),
                 new CompletionProvider<CompletionParameters>() {
                     @Override
@@ -67,8 +68,8 @@ public class Asn1ModuleKeywordCompletionContributor extends CompletionContributo
         );
         extend(
                 CompletionType.BASIC,
-                PlatformPatterns.or(
-                        PlatformPatterns.psiElement().afterLeaf(PlatformPatterns.psiElement(Asn1CustomElementFactory.OPERATOR).withParent(Asn1ModuleDefinition.class)).withLanguage(Asn1Language.INSTANCE)
+                or(
+                        psiElement().afterLeaf(psiElement(Asn1CustomElementFactory.OPERATOR).withParent(Asn1ModuleDefinition.class)).withLanguage(Asn1Language.INSTANCE)
                 ),
                 new CompletionProvider<CompletionParameters>() {
                     @Override
@@ -84,8 +85,8 @@ public class Asn1ModuleKeywordCompletionContributor extends CompletionContributo
 
         extend(
                 CompletionType.BASIC,
-                PlatformPatterns.or(
-                        PlatformPatterns.psiElement(Asn1ModuleDefinition.class).withLanguage(Asn1Language.INSTANCE)
+                or(
+                        psiElement(Asn1ModuleDefinition.class).withLanguage(Asn1Language.INSTANCE)
                 ),
                 new CompletionProvider<CompletionParameters>() {
                     @Override

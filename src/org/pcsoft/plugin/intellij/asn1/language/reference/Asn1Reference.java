@@ -14,7 +14,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 /**
- * Created by pfeifchr on 28.09.2016.
+ * Created by Christoph on 28.09.2016.
  */
 public abstract class Asn1Reference<T extends PsiNamedElement> extends PsiReferenceBase<PsiNamedElement> implements PsiPolyVariantReference {
     private String key;

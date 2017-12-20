@@ -1,0 +1,9 @@
+<templateSet group="ASN1">
+  <template name="mod" value="$NAME$ DEFINITIONS ::= BEGIN END" description="Module Definition" toReformat="true" toShortenFQNames="true">
+    <variable name="NAME" expression="complete()" defaultValue="" alwaysStopAt="true" />
+    <variable name="MODULE" expression="complete()" defaultValue="" alwaysStopAt="true" />
+    <context>
+      <option name="ASN1" value="true"/>
+    </context>
+  </template>
+</templateSet>

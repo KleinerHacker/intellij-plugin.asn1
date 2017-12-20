@@ -12,15 +12,9 @@ import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.Asn1File;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1EnumeratedDefinition;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1EnumeratedDefinitionElement;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ModuleDefinition;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ObjectClassDefinition;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ObjectClassDefinitionField;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ObjectSetDefinition;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1TypeDefinition;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1TypeDefinitionField;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ValueDefinition;
+import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1SymbolDefinition;
+import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1SymbolDefinitionField;
 
 import javax.swing.Icon;
 import java.util.ArrayList;
@@ -28,7 +22,7 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * Created by pfeifchr on 29.09.2016.
+ * Created by Christoph on 29.09.2016.
  */
 public class Asn1StructureViewElement implements StructureViewTreeElement, SortableTreeElement {
     @NotNull
@@ -91,23 +85,17 @@ public class Asn1StructureViewElement implements StructureViewTreeElement, Sorta
     }
 
     @NotNull
-    public Collection<PsiNamedElement> getElementChildren() {
+    public Collection<? extends PsiNamedElement> getElementChildren() {
         if (element instanceof Asn1File || element instanceof Asn1ModuleDefinition) {
             final List<PsiNamedElement> list = new ArrayList<>();
 
-            list.addAll(PsiTreeUtil.findChildrenOfType(element, Asn1TypeDefinition.class));
-            list.addAll(PsiTreeUtil.findChildrenOfType(element, Asn1ObjectClassDefinition.class));
-            list.addAll(PsiTreeUtil.findChildrenOfType(element, Asn1ValueDefinition.class));
-            list.addAll(PsiTreeUtil.findChildrenOfType(element, Asn1ObjectSetDefinition.class));
-            list.addAll(PsiTreeUtil.findChildrenOfType(element, Asn1EnumeratedDefinition.class));
+            list.addAll(PsiTreeUtil.findChildrenOfType(element, Asn1SymbolDefinition.class));
 
             return list;
-        } else if (element instanceof Asn1TypeDefinition) {
-            return PsiTreeUtil.findChildrenOfType(element, Asn1TypeDefinitionField.class);
-        } else if (element instanceof Asn1ObjectClassDefinition) {
-            return PsiTreeUtil.findChildrenOfType(element, Asn1ObjectClassDefinitionField.class);
-        } else if (element instanceof Asn1EnumeratedDefinition) {
-            return PsiTreeUtil.findChildrenOfType(element, Asn1EnumeratedDefinitionElement.class);
+        } else if (element instanceof Asn1SymbolDefinition && ((Asn1SymbolDefinition) element).getSymbolContent() != null) {
+            return ((Asn1SymbolDefinition) element).getSymbolContent().getSymbolDefinitionFieldList();
+        } else if (element instanceof Asn1SymbolDefinitionField && ((Asn1SymbolDefinitionField) element).getSymbolContent() != null) {
+            return ((Asn1SymbolDefinitionField) element).getSymbolContent().getSymbolDefinitionFieldList();
         } else {
             return new ArrayList<>();
         }

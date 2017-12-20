@@ -4,8 +4,7 @@ import com.intellij.navigation.ChooseByNameContributor;
 import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ConstantDefinitionValue;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1EnumeratedDefinitionElement;
+import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1SymbolConstantElement;
 import org.pcsoft.plugin.intellij.asn1.language.reference.Asn1ReferenceUtils;
 
 import java.util.ArrayList;
@@ -13,7 +12,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Created by pfeifchr on 29.09.2016.
+ * Created by Christoph on 06.10.2016.
  */
 public class Asn1GoToConstantContributor implements ChooseByNameContributor {
     @NotNull
@@ -21,17 +20,10 @@ public class Asn1GoToConstantContributor implements ChooseByNameContributor {
     public String[] getNames(Project project, boolean b) {
         final List<String> list = new ArrayList<>();
 
-        final List<Asn1ConstantDefinitionValue> constantDefinitionValues = Asn1ReferenceUtils.findConstantValues(project, null);
+        final List<Asn1SymbolConstantElement> symbolConstantDefinitionElementList = Asn1ReferenceUtils.findSymbolConstants(project, null);
         list.addAll(
-                constantDefinitionValues.stream()
-                        .map(Asn1ConstantDefinitionValue::getName)
-                        .collect(Collectors.toList())
-        );
-
-        final List<Asn1EnumeratedDefinitionElement> enumeratedDefinitionElements = Asn1ReferenceUtils.findEnumeratedDefinitionElements(project, null);
-        list.addAll(
-                enumeratedDefinitionElements.stream()
-                        .map(Asn1EnumeratedDefinitionElement::getName)
+                symbolConstantDefinitionElementList.stream()
+                        .map(Asn1SymbolConstantElement::getName)
                         .collect(Collectors.toList())
         );
 
@@ -43,16 +35,9 @@ public class Asn1GoToConstantContributor implements ChooseByNameContributor {
     public NavigationItem[] getItemsByName(String full, String entered, Project project, boolean b) {
         final List<NavigationItem> list = new ArrayList<>();
 
-        final List<Asn1ConstantDefinitionValue> classDefinitionFieldList = Asn1ReferenceUtils.findConstantValues(project, null, true, full);
+        final List<Asn1SymbolConstantElement> symbolConstantDefinitionElementList = Asn1ReferenceUtils.findSymbolConstants(project, null);
         list.addAll(
-                classDefinitionFieldList.stream()
-                        .map(item -> (NavigationItem) item)
-                        .collect(Collectors.toList())
-        );
-
-        final List<Asn1EnumeratedDefinitionElement> enumeratedDefinitionElements = Asn1ReferenceUtils.findEnumeratedDefinitionElements(project, null, true, full);
-        list.addAll(
-                enumeratedDefinitionElements.stream()
+                symbolConstantDefinitionElementList.stream()
                         .map(item -> (NavigationItem) item)
                         .collect(Collectors.toList())
         );

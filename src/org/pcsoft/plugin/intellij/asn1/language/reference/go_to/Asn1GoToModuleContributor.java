@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Created by pfeifchr on 06.10.2016.
+ * Created by Christoph on 06.10.2016.
  */
 public class Asn1GoToModuleContributor implements ChooseByNameContributor {
     @NotNull
@@ -20,7 +20,7 @@ public class Asn1GoToModuleContributor implements ChooseByNameContributor {
     public String[] getNames(Project project, boolean b) {
         final List<String> list = new ArrayList<>();
 
-        final List<Asn1ModuleDefinition> moduleDefinitionList = Asn1ReferenceUtils.findModuleDefinitions(project);
+        final List<Asn1ModuleDefinition> moduleDefinitionList = Asn1ReferenceUtils.findModuleDefinitions(project, null);
         list.addAll(
                 moduleDefinitionList.stream()
                         .map(Asn1ModuleDefinition::getName)
@@ -35,7 +35,7 @@ public class Asn1GoToModuleContributor implements ChooseByNameContributor {
     public NavigationItem[] getItemsByName(String full, String entered, Project project, boolean b) {
         final List<NavigationItem> list = new ArrayList<>();
 
-        final List<Asn1ModuleDefinition> moduleDefinitionList = Asn1ReferenceUtils.findModuleDefinitions(project, true, full);
+        final List<Asn1ModuleDefinition> moduleDefinitionList = Asn1ReferenceUtils.findModuleDefinitions(project, null, true, full);
         list.addAll(
                 moduleDefinitionList.stream()
                         .map(item -> (NavigationItem) item)

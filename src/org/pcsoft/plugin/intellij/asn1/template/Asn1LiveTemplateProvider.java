@@ -9,7 +9,10 @@ import org.jetbrains.annotations.Nullable;
 public class Asn1LiveTemplateProvider implements DefaultLiveTemplatesProvider {
     @Override
     public String[] getDefaultLiveTemplateFiles() {
-        return new String[] {"liveTemplates/tdef", "liveTemplates/tbdef", "liveTemplates/tag"};
+        return new String[]{
+                "liveTemplates/chd", "liveTemplates/ocd", "liveTemplates/end", "liveTemplates/fid", "liveTemplates/firef", "liveTemplates/imp", "liveTemplates/mod",
+                "liveTemplates/setd", "liveTemplates/tyd", "liveTemplates/vald", "liveTemplates/wsyn"
+        };
     }
 
     @Nullable

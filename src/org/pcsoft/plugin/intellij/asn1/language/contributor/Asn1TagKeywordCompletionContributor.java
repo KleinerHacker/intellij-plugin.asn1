@@ -11,21 +11,21 @@ import com.intellij.util.ProcessingContext;
 import org.jetbrains.annotations.NotNull;
 import org.pcsoft.plugin.intellij.asn1.language.Asn1Language;
 import org.pcsoft.plugin.intellij.asn1.language.highlighting.Asn1HighlighterScheme;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1TagDefinition;
 import org.pcsoft.plugin.intellij.asn1.language.parser.token.Asn1CustomElementFactory;
+import org.pcsoft.plugin.intellij.asn1.language.parser.token.Asn1GenElementFactory;
 
 import java.awt.Font;
 import java.util.Arrays;
 
 /**
- * Created by pfeifchr on 06.10.2016.
+ * Created by Christoph on 06.10.2016.
  */
 public class Asn1TagKeywordCompletionContributor extends CompletionContributor {
     public Asn1TagKeywordCompletionContributor() {
         extend(
                 CompletionType.BASIC,
                 PlatformPatterns.or(
-                        PlatformPatterns.psiElement().afterLeaf(PlatformPatterns.psiElement(Asn1CustomElementFactory.BRACES_CORNER_OPEN)).withParent(Asn1TagDefinition.class).withLanguage(Asn1Language.INSTANCE)
+                        PlatformPatterns.psiElement(Asn1GenElementFactory.NAME).afterLeaf(PlatformPatterns.psiElement(Asn1CustomElementFactory.BRACES_CORNER_OPEN)).withLanguage(Asn1Language.INSTANCE)
                 ),
                 new CompletionProvider<CompletionParameters>() {
                     @Override
@@ -41,7 +41,7 @@ public class Asn1TagKeywordCompletionContributor extends CompletionContributor {
         extend(
                 CompletionType.BASIC,
                 PlatformPatterns.or(
-                        PlatformPatterns.psiElement().afterLeaf(PlatformPatterns.psiElement(Asn1CustomElementFactory.BRACES_CORNER_CLOSE)).withParent(Asn1TagDefinition.class).withLanguage(Asn1Language.INSTANCE)
+                        PlatformPatterns.psiElement().afterLeaf(PlatformPatterns.psiElement(Asn1CustomElementFactory.BRACES_CORNER_CLOSE)).withLanguage(Asn1Language.INSTANCE)
                 ),
                 new CompletionProvider<CompletionParameters>() {
                     @Override

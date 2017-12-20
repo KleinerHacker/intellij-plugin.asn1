@@ -1,0 +1,9 @@
+<templateSet group="ASN1">
+  <template name="tyd" value="$NAME$ ::= $TYPE$" description="Type Definition" toReformat="true" toShortenFQNames="false">
+    <variable name="NAME" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="TYPE" expression="complete()" defaultValue="INTEGER" alwaysStopAt="true" />
+    <context>
+      <option name="ASN1" value="true"/>
+    </context>
+  </template>
+</templateSet>

@@ -1,0 +1,9 @@
+<templateSet group="ASN1">
+  <template name="firef" value="$CLASS$.&amp;$FIELD$" description="Object Class Field Reference" toReformat="true" toShortenFQNames="true">
+    <variable name="CLASS" expression="complete()" defaultValue="" alwaysStopAt="true" />
+    <variable name="FIELD" expression="complete()" defaultValue="" alwaysStopAt="true" />
+    <context>
+      <option name="ASN1" value="true"/>
+    </context>
+  </template>
+</templateSet>

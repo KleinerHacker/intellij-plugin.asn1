@@ -1,0 +1,8 @@
+<templateSet group="ASN1">
+  <template name="setd" value="$NAME$ ::= {}" description="Value Set Definition" toReformat="true" toShortenFQNames="true">
+    <variable name="NAME" expression="" defaultValue="" alwaysStopAt="true" />
+    <context>
+      <option name="ASN1" value="true"/>
+    </context>
+  </template>
+</templateSet>

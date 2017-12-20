@@ -1,0 +1,8 @@
+<templateSet group="ASN1">
+  <template name="chd" value="$NAME$ ::= CHOICE {}" description="Choice Definition" toReformat="true" toShortenFQNames="true">
+    <variable name="NAME" expression="" defaultValue="" alwaysStopAt="true" />
+    <context>
+      <option name="ASN1" value="true"/>
+    </context>
+  </template>
+</templateSet>

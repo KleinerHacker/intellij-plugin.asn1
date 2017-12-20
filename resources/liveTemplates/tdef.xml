@@ -1,9 +1,0 @@
-<templateSet group="ASN1">
-  <template name="tdef" value="$NAME$ ::= $TYPE$" description="Type Definition" toReformat="false" toShortenFQNames="true">
-    <variable name="NAME" expression="" defaultValue="" alwaysStopAt="true" />
-    <variable name="TYPE" expression="complete()" defaultValue="INTEGER" alwaysStopAt="true" />
-    <context>
-      <option name="ASN1" value="true"/>
-    </context>
-  </template>
-</templateSet>

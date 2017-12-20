@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.Asn1File;
 
 /**
- * Created by pfeifchr on 29.09.2016.
+ * Created by Christoph on 29.09.2016.
  */
 public class Asn1StructureViewModel extends StructureViewModelBase implements StructureViewModel.ElementInfoProvider {
     public Asn1StructureViewModel(@NotNull PsiFile psiFile) {

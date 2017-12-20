@@ -5,22 +5,22 @@ import com.intellij.lang.annotation.Annotator;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.NotNull;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1DefinitiveString;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ModuleIdentifier;
+import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1SymbolValueString;
 
 /**
- * Created by pfeifchr on 13.10.2016.
+ * Created by Christoph on 13.10.2016.
  */
 public class Asn1ModuleIdentifierAnnotator implements Annotator {
 
     @Override
     public void annotate(@NotNull PsiElement psiElement, @NotNull AnnotationHolder annotationHolder) {
-        if (psiElement instanceof Asn1DefinitiveString) {
+        if (psiElement instanceof Asn1SymbolValueString) {
             final Asn1ModuleIdentifier moduleIdentifier = PsiTreeUtil.getParentOfType(psiElement, Asn1ModuleIdentifier.class);
 
-            if (moduleIdentifier != null && moduleIdentifier.getDefinitiveString() != null) {
-                if (!moduleIdentifier.getDefinitiveString().getStringValue().matches("(/[^/]+)+")) {
-                    annotationHolder.createErrorAnnotation(moduleIdentifier.getDefinitiveString(), "Wrong IRI format");
+            if (moduleIdentifier != null && moduleIdentifier.getSymbolValueString() != null) {
+                if (!moduleIdentifier.getSymbolValueString().getString().matches("(/[^/]+)+")) {
+                    annotationHolder.createErrorAnnotation(moduleIdentifier.getSymbolValueString(), "Wrong IRI format");
                 }
             }
         }

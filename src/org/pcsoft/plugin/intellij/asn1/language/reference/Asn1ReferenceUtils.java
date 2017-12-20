@@ -10,12 +10,32 @@ import com.intellij.psi.search.FileTypeIndex;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.indexing.FileBasedIndex;
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.pcsoft.plugin.intellij.asn1.language.Asn1FileType;
 import org.pcsoft.plugin.intellij.asn1.language.parser.psi.Asn1File;
-import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.*;
+import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ArgumentForField;
+import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ExportContent;
+import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ImportElement;
+import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ModifierElement;
+import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ModuleDefinition;
+import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ParameterElement;
+import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ParameterForSet;
+import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1ParameterForType;
+import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1SymbolConstantElement;
+import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1SymbolConstructor;
+import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1SymbolDefinition;
+import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1SymbolDefinitionField;
+import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1SymbolFieldReference;
+import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1SymbolType;
+import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1SymbolTypeDefinedBy;
+import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1SymbolTypeReference;
+import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1SymbolTypeReferenceValue;
+import org.pcsoft.plugin.intellij.asn1.language.parser.psi.element.Asn1SymbolValueTypeContentLine;
+import org.pcsoft.plugin.intellij.asn1.type.Asn1FieldType;
+import org.pcsoft.plugin.intellij.asn1.type.Asn1SymbolElement;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -24,7 +44,7 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 /**
- * Created by pfeifchr on 28.09.2016.
+ * Created by Christoph on 28.09.2016.
  */
 public final class Asn1ReferenceUtils {
 
@@ -53,64 +73,41 @@ public final class Asn1ReferenceUtils {
 
     //region Module Definition
     @NotNull
-    public static List<Asn1ModuleDefinition> findModuleDefinitions(@NotNull final Project project) {
-        return findModuleDefinitions(project, true, null);
+    public static List<Asn1ModuleDefinition> findModuleDefinitions(@NotNull final Project project, @Nullable PsiElement currentElement) {
+        return findModuleDefinitions(project, currentElement, true, null);
     }
 
     @NotNull
-    public static List<Asn1ModuleDefinition> findModuleDefinitions(@NotNull final Project project, final boolean checkFull, @Nullable final String key) {
+    public static List<Asn1ModuleDefinition> findModuleDefinitions(@NotNull final Project project, @Nullable PsiElement currentElement, final boolean checkFull, @Nullable final String key) {
         final List<Asn1ModuleDefinition> list = new ArrayList<>();
-
-        visitFiles(project, psiFile -> {
-            final Collection<Asn1ModuleDefinition> moduleDefinitions = PsiTreeUtil.findChildrenOfType(psiFile, Asn1ModuleDefinition.class);
-            list.addAll(
-                    moduleDefinitions.stream()
-                            .filter(item -> checkString(key, item.getName(), checkFull))
-                            .collect(Collectors.toList())
-            );
-        });
-
-        return list;
-    }
-    //endregion
-
-    //region Type Definition
-    @NotNull
-    public static List<Asn1TypeDefinition> findTypeDefinitions(@NotNull final Project project, @Nullable PsiElement currentElement) {
-        return findTypeDefinitions(project, currentElement, true, null);
-    }
-
-    @NotNull
-    public static List<Asn1TypeDefinition> findTypeDefinitions(@NotNull final Project project, @Nullable final PsiElement currentElement, final boolean checkFull, @Nullable final String key) {
-        final List<Asn1TypeDefinition> list = new ArrayList<>();
 
         if (currentElement == null) {
             visitFiles(project, psiFile -> {
-                final Collection<Asn1TypeDefinition> definitionList = PsiTreeUtil.findChildrenOfType(psiFile, Asn1TypeDefinition.class);
+                final Collection<Asn1ModuleDefinition> moduleDefinitions = PsiTreeUtil.findChildrenOfType(psiFile, Asn1ModuleDefinition.class);
                 list.addAll(
-                        definitionList.stream()
+                        moduleDefinitions.stream()
                                 .filter(item -> checkString(key, item.getName(), checkFull))
                                 .collect(Collectors.toList())
                 );
             });
         } else {
-            if (!handleTypeDefinitionInImportElement(currentElement, checkFull, key, list)) {
-                handleTypeDefinitionInModule(currentElement, checkFull, key, list);
+            if (!handleModuleDefinitionInImport(project, currentElement, checkFull, key, list)) {
+                if (!handleModuleDefinitionInReference(currentElement, checkFull, key, list)) {
+                    //Future Use
+                }
             }
         }
 
         return list;
     }
 
-    private static boolean handleTypeDefinitionInImportElement(@Nullable PsiElement currentElement, boolean checkFull, @Nullable String key, @NotNull List<Asn1TypeDefinition> list) {
+    private static boolean handleModuleDefinitionInImport(@NotNull final Project project, @NotNull final PsiElement currentElement, final boolean checkFull,
+                                                          @Nullable final String key, @NotNull final List<Asn1ModuleDefinition> list) {
         final Asn1ImportElement importElement = PsiTreeUtil.getParentOfType(currentElement, Asn1ImportElement.class);
-        if (importElement != null && importElement.getModuleRef().getReference().resolve() != null) {
-            //Get imported module...
-            final Asn1ModuleDefinition importModuleDefinition = (Asn1ModuleDefinition) importElement.getModuleRef().getReference().resolve();
-            //...and collect all fit classes, based on class import name above
+        if (importElement != null) {
             list.addAll(
-                    importModuleDefinition.getModuleContent().getTypeDefinitionList().stream()
-                            .filter(classDefinition -> checkString(key, classDefinition.getName(), checkFull))
+                    findModuleDefinitions(project, null, checkFull, key).stream()
+                            .filter(item -> checkString(key, item.getName(), checkFull))
                             .collect(Collectors.toList())
             );
         }
@@ -118,131 +115,80 @@ public final class Asn1ReferenceUtils {
         return importElement != null;
     }
 
-    private static boolean handleTypeDefinitionInModule(@Nullable PsiElement currentElement, boolean checkFull, @Nullable String key, @NotNull List<Asn1TypeDefinition> list) {
-        final Asn1ModuleDefinition moduleDefinition = PsiTreeUtil.getParentOfType(currentElement, Asn1ModuleDefinition.class);
-        if (moduleDefinition != null) {
-            //Search for module internal class definitions
-            list.addAll(
-                    moduleDefinition.getModuleContent().getTypeDefinitionList().stream()
-                            .filter(item -> checkString(key, item.getName(), checkFull))
-                            .collect(Collectors.toList())
-            );
+    private static boolean handleModuleDefinitionInReference(@NotNull final PsiElement currentElement, final boolean checkFull,
+                                                             @Nullable final String key, @NotNull final List<Asn1ModuleDefinition> list) {
+        if (currentElement instanceof Asn1SymbolTypeReferenceValue) {
+            final Asn1SymbolTypeReferenceValue symbolTypeReferenceValue = (Asn1SymbolTypeReferenceValue) currentElement;
+            final Asn1SymbolTypeReferenceValue prevSymbolTypeReferenceValue = PsiTreeUtil.getPrevSiblingOfType(symbolTypeReferenceValue, Asn1SymbolTypeReferenceValue.class);
+            if (prevSymbolTypeReferenceValue == null) {
+                final Asn1ModuleDefinition moduleDefinition = PsiTreeUtil.getParentOfType(symbolTypeReferenceValue, Asn1ModuleDefinition.class);
+                if (moduleDefinition != null) {
+                    //Own Module?
+                    if (checkString(key, moduleDefinition.getName(), checkFull)) {
+                        list.add(moduleDefinition);
+                    }
 
-            //Search for referenced class definitions
-            if (moduleDefinition.getImportDefinition() != null && moduleDefinition.getImportDefinition().getImportContent() != null) {
-                for (final Asn1ImportElement importElement : moduleDefinition.getImportDefinition().getImportContent().getImportElementList()) {
-                    //Only for resolvable imports
-                    if (importElement.getModuleRef().getReference().resolve() == null)
-                        continue;
-
-                    for (Asn1ImportExportSymbol importExportSymbol : importElement.getImportExportSymbolList()) {
-                        final String refImportElementName = importExportSymbol.getImportExportSymbolRef().getName();
-                        //Only if search key fit to given class definition name
-                        if (!checkString(key, refImportElementName, checkFull))
-                            continue;
-
-                        final PsiElement classDefinition = importExportSymbol.getImportExportSymbolRef().getTypeDefinitionReference().resolve();
-                        if (classDefinition == null || !(classDefinition instanceof Asn1TypeDefinition))
-                            continue;
-
-                        list.add((Asn1TypeDefinition) classDefinition);
+                    //Imported Module?
+                    if (moduleDefinition.getImportDefinition() != null && moduleDefinition.getImportDefinition().getImportContent() != null) {
+                        list.addAll(
+                                moduleDefinition.getImportDefinition().getImportContent().getImportElementList().stream()
+                                        .filter(item -> item.getModuleRef() != null)
+                                        .map(item -> item.getModuleRef().getReference().resolve())
+                                        .filter(item -> item != null && item instanceof Asn1ModuleDefinition)
+                                        .map(item -> (Asn1ModuleDefinition) item)
+                                        .filter(item -> checkString(key, item.getName(), checkFull))
+                                        .collect(Collectors.toList())
+                        );
                     }
                 }
             }
         }
 
-        return moduleDefinition != null;
+        return currentElement instanceof Asn1SymbolTypeReferenceValue;
     }
     //endregion
 
-    //region Type Definition Field
+    //region Symbol Definition
+
+    /**
+     * @param project
+     * @param currentElement
+     * @param elements       Leave empty find all
+     * @return
+     */
     @NotNull
-    public static List<Asn1TypeDefinitionField> findTypeDefinitionFields(@NotNull final Project project, @Nullable final PsiElement currentElement) {
-        return findTypeDefinitionFields(project, currentElement, true, null);
+    public static List<Asn1SymbolDefinition> findSymbolDefinitions(@NotNull final Project project, @Nullable final PsiElement currentElement,
+                                                                   @Nullable final Asn1SymbolElement... elements) {
+        return findSymbolDefinitions(project, currentElement, true, null, elements);
     }
 
-    public static List<Asn1TypeDefinitionField> findTypeDefinitionFields(@NotNull final Project project, @Nullable final PsiElement currentElement, final boolean checkFull, @Nullable final String key) {
-        final List<Asn1TypeDefinitionField> list = new ArrayList<>();
-
-        if (currentElement == null) {
-            final List<Asn1TypeDefinition> typeDefinitionList = findTypeDefinitions(project, currentElement);
-            for (final Asn1TypeDefinition typeDefinition : typeDefinitionList) {
-                if (typeDefinition.getTypeDefinitionContent() == null)
-                    continue;
-
-                list.addAll(
-                        typeDefinition.getTypeDefinitionContent().getTypeDefinitionFieldList().stream()
-                                .filter(item -> checkString(key, item.getName(), checkFull))
-                                .collect(Collectors.toList())
-                );
-            }
-        } else {
-            if (!handleTypeDefinitionFieldInClassDefinition(currentElement, checkFull, key, list)) {
-                handleTypeDefinitionFieldInObjectValueDefinition(currentElement, checkFull, key, list);
-            }
-        }
-
-        return list;
-    }
-
-    private static boolean handleTypeDefinitionFieldInObjectValueDefinition(@NotNull PsiElement currentElement, boolean checkFull, @Nullable String key, @NotNull List<Asn1TypeDefinitionField> list) {
-        final Asn1ValueDefinition valueDefinition = PsiTreeUtil.getParentOfType(currentElement, Asn1ValueDefinition.class);
-        if (valueDefinition != null && valueDefinition.getDefinitiveType() != null && valueDefinition.getElementDefinitionType() != null) {
-            PsiElement foundElement = null;
-            for (final PsiReference reference : valueDefinition.getElementDefinitionType().getElementDefinitionRef().getReferences()) {
-                foundElement = reference.resolve();
-                if (foundElement != null)
-                    break;
-            }
-            if (foundElement != null && foundElement instanceof Asn1TypeDefinition && ((Asn1TypeDefinition) foundElement).getTypeDefinitionContent() != null) {
-                list.addAll(
-                        ((Asn1TypeDefinition) foundElement).getTypeDefinitionContent().getTypeDefinitionFieldList().stream()
-                                .filter(item -> checkString(key, item.getName(), checkFull))
-                                .collect(Collectors.toList())
-                );
-            }
-        }
-
-        return valueDefinition != null;
-    }
-
-    private static boolean handleTypeDefinitionFieldInClassDefinition(@NotNull PsiElement currentElement, boolean checkFull, @Nullable String key, @NotNull List<Asn1TypeDefinitionField> list) {
-        final Asn1TypeDefinition classDefinition = PsiTreeUtil.getParentOfType(currentElement, Asn1TypeDefinition.class);
-        if (classDefinition != null && classDefinition.getTypeDefinitionContent() != null) {
-            list.addAll(
-                    classDefinition.getTypeDefinitionContent().getTypeDefinitionFieldList().stream()
-                            .filter(item -> checkString(key, item.getName(), checkFull))
-                            .collect(Collectors.toList())
-            );
-        }
-
-        return classDefinition != null;
-    }
-    //endregion
-
-    //region Object Value Definition
+    /**
+     * @param project
+     * @param currentElement
+     * @param checkFull
+     * @param key
+     * @param elements       Leave empty to find all
+     * @return
+     */
     @NotNull
-    public static List<Asn1ValueDefinition> findValueDefinitions(@NotNull final Project project, @Nullable final PsiElement currentElement) {
-        return findValueDefinitions(project, currentElement, true, null);
-    }
-
-    @NotNull
-    public static List<Asn1ValueDefinition> findValueDefinitions(@NotNull final Project project, @Nullable final PsiElement currentElement, final boolean checkFull, @Nullable final String key) {
-        final List<Asn1ValueDefinition> list = new ArrayList<>();
+    public static List<Asn1SymbolDefinition> findSymbolDefinitions(@NotNull final Project project, @Nullable final PsiElement currentElement, final boolean checkFull,
+                                                                   @Nullable final String key, @Nullable final Asn1SymbolElement... elements) {
+        final List<Asn1SymbolDefinition> list = new ArrayList<>();
+        final Asn1SymbolElement[] usedElements = elements == null || elements.length <= 0 ? Asn1SymbolElement.values() : elements;
 
         if (currentElement == null) {
             visitFiles(project, psiFile -> {
-                final Collection<Asn1ValueDefinition> definitionList = PsiTreeUtil.findChildrenOfType(psiFile, Asn1ValueDefinition.class);
-                list.addAll(
-                        definitionList.stream()
-                                .filter(item -> checkString(key, item.getName(), checkFull))
-                                .collect(Collectors.toList())
-                );
+                final Collection<Asn1ModuleDefinition> moduleDefinitions = PsiTreeUtil.findChildrenOfType(psiFile, Asn1ModuleDefinition.class);
+                for (final Asn1ModuleDefinition moduleDefinition : moduleDefinitions) {
+                    handleSymbolDefinitionFromModule(moduleDefinition, checkFull, key, usedElements, list);
+                }
             });
         } else {
-            if (!handleValueDefinitionInModuleRef(currentElement, checkFull, key, list)) {
-                if (!handleValueDefinitionInImportElement(currentElement, checkFull, key, list)) {
-                    handleValueDefinitionInModule(currentElement, checkFull, key, list);
+            if (!handleSymbolDefinitionInImport(currentElement, checkFull, key, usedElements, list)) {
+                if (!handleSymbolDefinitionInExport(currentElement, checkFull, key, usedElements, list)) {
+                    if (!handleSymbolDefinitionInReference(currentElement, checkFull, key, usedElements, list)) {
+                        //Future Use
+                    }
                 }
             }
         }
@@ -250,710 +196,508 @@ public final class Asn1ReferenceUtils {
         return list;
     }
 
-    private static boolean handleValueDefinitionInImportElement(@Nullable PsiElement currentElement, boolean checkFull, @Nullable String key, @NotNull List<Asn1ValueDefinition> list) {
+    private static boolean handleSymbolDefinitionInImport(@NotNull final PsiElement currentElement, final boolean checkFull,
+                                                          @Nullable final String key, @NotNull final Asn1SymbolElement[] symbolElements, @NotNull final List<Asn1SymbolDefinition> list) {
         final Asn1ImportElement importElement = PsiTreeUtil.getParentOfType(currentElement, Asn1ImportElement.class);
-        if (importElement != null && importElement.getModuleRef().getReference().resolve() != null) {
-            //Get imported module...
-            final Asn1ModuleDefinition importModuleDefinition = (Asn1ModuleDefinition) importElement.getModuleRef().getReference().resolve();
-            if (importModuleDefinition != null) {
-                //...and collect all fit classes, based on class import name above
-                list.addAll(
-                        importModuleDefinition.getModuleContent().getValueDefinitionList().stream()
-                                .filter(valueDefinition -> checkString(key, valueDefinition.getName(), checkFull))
-                                .collect(Collectors.toList())
-                );
+        if (importElement != null && importElement.getModuleRef() != null) {
+            final Asn1ModuleDefinition moduleDefinition = (Asn1ModuleDefinition) importElement.getModuleRef().getReference().resolve();
+            if (moduleDefinition != null) {
+                handleSymbolDefinitionFromModule(moduleDefinition, checkFull, key, symbolElements, list);
             }
         }
 
         return importElement != null;
     }
 
-    private static boolean handleValueDefinitionInModuleRef(@Nullable PsiElement currentElement, boolean checkFull, @Nullable String key, @NotNull List<Asn1ValueDefinition> list) {
-        final Asn1ModuleRef moduleRef = PsiTreeUtil.getParentOfType(currentElement, Asn1ModuleRef.class);
-        if (moduleRef != null) {
-            //Get all in own module
-            final Asn1ModuleDefinition moduleDefinition = PsiTreeUtil.getParentOfType(currentElement, Asn1ModuleDefinition.class);
-            if (moduleDefinition != null && moduleDefinition.getModuleContent() != null) {
-                list.addAll(
-                        moduleDefinition.getModuleContent().getValueDefinitionList().stream()
-                                .filter(item -> checkString(key, item.getName(), checkFull))
-                                .collect(Collectors.toList())
-                );
+    private static boolean handleSymbolDefinitionInExport(@NotNull final PsiElement currentElement, final boolean checkFull,
+                                                          @Nullable final String key, @NotNull final Asn1SymbolElement[] symbolElements, @NotNull final List<Asn1SymbolDefinition> list) {
+        final Asn1ExportContent exportContent = PsiTreeUtil.getParentOfType(currentElement, Asn1ExportContent.class);
+        if (exportContent != null) {
+            //Search in own module only (imported cannot be exported)
+            final Asn1ModuleDefinition moduleDefinition = PsiTreeUtil.getParentOfType(exportContent, Asn1ModuleDefinition.class);
+            if (moduleDefinition != null) {
+                handleSymbolDefinitionFromModule(moduleDefinition, checkFull, key, symbolElements, list);
+            }
+        }
 
-                //Get imported module...
-                if (moduleDefinition.getImportDefinition() != null && moduleDefinition.getImportDefinition().getImportContent() != null) {
-                    for (Asn1ImportElement importElement : moduleDefinition.getImportDefinition().getImportContent().getImportElementList()) {
-                        final Asn1ModuleDefinition importModuleDefinition = (Asn1ModuleDefinition) importElement.getModuleRef().getReference().resolve();
-                        if (importModuleDefinition != null) {
-                            //...and collect all fit classes, based on class import name above
+        return exportContent != null;
+    }
+
+    private static boolean handleSymbolDefinitionInReference(@NotNull final PsiElement currentElement, final boolean checkFull,
+                                                             @Nullable final String key, @NotNull final Asn1SymbolElement[] symbolElements, @NotNull final List<Asn1SymbolDefinition> list) {
+        if (currentElement instanceof Asn1SymbolTypeReferenceValue) {
+            final Asn1SymbolTypeReferenceValue symbolTypeReferenceValue = (Asn1SymbolTypeReferenceValue) currentElement;
+            final Asn1SymbolTypeReferenceValue prevSymbolTypeReferenceValue = PsiTreeUtil.getPrevSiblingOfType(symbolTypeReferenceValue, Asn1SymbolTypeReferenceValue.class);
+            if (prevSymbolTypeReferenceValue == null) {
+                final Asn1ModuleDefinition moduleDefinition = PsiTreeUtil.getParentOfType(symbolTypeReferenceValue, Asn1ModuleDefinition.class);
+                if (moduleDefinition != null) {
+                    //All in own module
+                    handleSymbolDefinitionFromModule(moduleDefinition, checkFull, key, symbolElements, list);
+
+                    //All in imports
+                    if (moduleDefinition.getImportDefinition() != null && moduleDefinition.getImportDefinition().getImportContent() != null) {
+                        for (final Asn1ImportElement importElement : moduleDefinition.getImportDefinition().getImportContent().getImportElementList()) {
                             list.addAll(
-                                    importModuleDefinition.getModuleContent().getValueDefinitionList().stream()
-                                            .filter(classDefinition -> checkString(key, classDefinition.getName(), checkFull))
+                                    importElement.getImportExportSymbolList().stream()
+                                            .map(item -> item.getImportExportSymbolRef().getReference().resolve())
+                                            .filter(item -> item != null && item instanceof Asn1SymbolDefinition)
+                                            .map(item -> (Asn1SymbolDefinition) item)
+                                            .filter(item -> ArrayUtils.contains(symbolElements, item.getSymbolElement()))
+                                            .filter(item -> checkString(key, item.getName(), checkFull))
                                             .collect(Collectors.toList())
                             );
+                        }
+                    }
+                }
+            } else {
+                final PsiElement resolvedElement = resolveFromMultiReference(prevSymbolTypeReferenceValue);
+                if (resolvedElement != null) {
+                    if (resolvedElement instanceof Asn1ModuleDefinition) {
+                        final Asn1ModuleDefinition moduleDefinition = (Asn1ModuleDefinition) resolvedElement;
+                        handleSymbolDefinitionFromModule(moduleDefinition, checkFull, key, symbolElements, list);
+                    }
+                }
+            }
+        }
+
+        return currentElement instanceof Asn1SymbolTypeReferenceValue;
+    }
+
+    private static void handleSymbolDefinitionFromModule(Asn1ModuleDefinition moduleDefinition, boolean checkFull, @Nullable String key, @NotNull Asn1SymbolElement[] symbolElements, @NotNull List<Asn1SymbolDefinition> list) {
+        if (moduleDefinition.getModuleContent() != null) {
+            list.addAll(
+                    moduleDefinition.getModuleContent().getSymbolDefinitionList().stream()
+                            .filter(item -> ArrayUtils.contains(symbolElements, item.getSymbolElement()))
+                            .filter(item -> checkString(key, item.getName(), checkFull))
+                            .collect(Collectors.toList())
+            );
+        }
+    }
+    //endregion
+
+    //region Symbol Definition Field
+
+    /**
+     * @param project
+     * @param currentElement
+     * @param types          Leave empty find all
+     * @return
+     */
+    @NotNull
+    public static List<Asn1SymbolDefinitionField> findSymbolDefinitionFields(@NotNull final Project project, @Nullable final PsiElement currentElement,
+                                                                             @Nullable final Asn1FieldType... types) {
+        return findSymbolDefinitionFields(project, currentElement, true, null, types);
+    }
+
+    /**
+     * @param project
+     * @param currentElement
+     * @param checkFull
+     * @param key
+     * @param types          Leave empty to find all
+     * @return
+     */
+    @NotNull
+    public static List<Asn1SymbolDefinitionField> findSymbolDefinitionFields(@NotNull final Project project, @Nullable final PsiElement currentElement, final boolean checkFull,
+                                                                             @Nullable final String key, @Nullable final Asn1FieldType... types) {
+        final List<Asn1SymbolDefinitionField> list = new ArrayList<>();
+        final Asn1FieldType[] usedTypes = types == null || types.length <= 0 ? Asn1FieldType.values() : types;
+
+        if (currentElement == null) {
+            visitFiles(project, psiFile -> {
+                final Collection<Asn1ModuleDefinition> moduleDefinitions = PsiTreeUtil.findChildrenOfType(psiFile, Asn1ModuleDefinition.class);
+                for (final Asn1ModuleDefinition moduleDefinition : moduleDefinitions) {
+                    if (moduleDefinition.getModuleContent() != null) {
+                        for (final Asn1SymbolDefinition symbolDefinition : moduleDefinition.getModuleContent().getSymbolDefinitionList()) {
+                            handleSymbolDefinitionFieldFromSymbolDefinition(symbolDefinition, checkFull, key, usedTypes, list);
+                        }
+                    }
+                }
+            });
+        } else {
+            if (!handleSymbolDefinitionFieldInQualifiedReference(currentElement, checkFull, key, usedTypes, list)) {
+                if (!handleSymbolDefinitionFieldInReference(currentElement, checkFull, key, usedTypes, list)) {
+                    //Future Use
+                }
+            }
+        }
+
+        return list;
+    }
+
+    private static boolean handleSymbolDefinitionFieldInQualifiedReference(@NotNull final PsiElement currentElement, final boolean checkFull,
+                                                                           @Nullable final String key, @NotNull final Asn1FieldType[] fieldTypes, @NotNull final List<Asn1SymbolDefinitionField> list) {
+        if (currentElement instanceof Asn1SymbolTypeReferenceValue) {
+            final Asn1SymbolTypeReferenceValue symbolTypeReferenceValue = (Asn1SymbolTypeReferenceValue) currentElement;
+            final Asn1SymbolTypeReferenceValue prevSymbolTypeReferenceValue = PsiTreeUtil.getPrevSiblingOfType(symbolTypeReferenceValue, Asn1SymbolTypeReferenceValue.class);
+            if (prevSymbolTypeReferenceValue == null) {
+                //TODO
+            } else {
+                final PsiElement resolvedElement = resolveFromMultiReference(prevSymbolTypeReferenceValue);
+                if (resolvedElement != null) {
+                    if (resolvedElement instanceof Asn1SymbolDefinition) {
+                        final Asn1SymbolDefinition symbolDefinition = (Asn1SymbolDefinition) resolvedElement;
+                        handleSymbolDefinitionFieldFromSymbolDefinition(symbolDefinition, checkFull, key, fieldTypes, list);
+                    }
+                }
+            }
+        }
+
+        return currentElement instanceof Asn1SymbolTypeReferenceValue;
+    }
+
+    private static boolean handleSymbolDefinitionFieldInTypeValue(@NotNull final PsiElement currentElement, final boolean checkFull,
+                                                                  @Nullable final String key, @NotNull final Asn1FieldType[] fieldTypes, @NotNull final List<Asn1SymbolDefinitionField> list) {
+        final Asn1SymbolValueTypeContentLine symbolValueTypeContentLine = PsiTreeUtil.getParentOfType(currentElement, Asn1SymbolValueTypeContentLine.class);
+        if (symbolValueTypeContentLine != null) {
+            final Asn1SymbolDefinition symbolDefinition = PsiTreeUtil.getParentOfType(currentElement, Asn1SymbolDefinition.class);
+            //Symbol, definition of type value definition with symbol type
+            if (symbolDefinition != null && symbolDefinition.getSymbolElement() == Asn1SymbolElement.ValueDefinition &&
+                    symbolDefinition.getSymbolIdentifierType() != null && symbolDefinition.getSymbolIdentifierType().getSymbolTypeReference() != null) {
+                final List<Asn1SymbolTypeReferenceValue> typeReferenceValueList = symbolDefinition.getSymbolIdentifierType().getSymbolTypeReference().getSymbolTypeReferenceValueList();
+                if (!typeReferenceValueList.isEmpty()) {
+                    //Resolve symbol type from last element
+                    final PsiElement element = resolveFromMultiReference(typeReferenceValueList.get(typeReferenceValueList.size() - 1));
+                    if (element != null && element instanceof Asn1SymbolDefinition && ((Asn1SymbolDefinition) element).getSymbolElement() == Asn1SymbolElement.TypeDefinition) {
+                        //Add all from type definition
+                        handleSymbolDefinitionFieldFromSymbolDefinition((Asn1SymbolDefinition) element, checkFull, key, fieldTypes, list);
+                    }
+                }
+            }
+        }
+
+        return symbolValueTypeContentLine != null;
+    }
+
+    private static boolean handleSymbolDefinitionFieldInArgument(@NotNull final PsiElement currentElement, final boolean checkFull,
+                                                                 @Nullable final String key, @NotNull final Asn1FieldType[] fieldTypes, @NotNull final List<Asn1SymbolDefinitionField> list) {
+        final Asn1ArgumentForField argumentForField = PsiTreeUtil.getParentOfType(currentElement, Asn1ArgumentForField.class);
+        if (argumentForField != null) {
+            final Asn1SymbolDefinition symbolDefinition = PsiTreeUtil.getParentOfType(argumentForField, Asn1SymbolDefinition.class);
+            //Symbol, definition of type value definition with symbol type
+            if (symbolDefinition != null) {
+                handleSymbolDefinitionFieldFromSymbolDefinition(symbolDefinition, checkFull, key, fieldTypes, list);
+            }
+        }
+
+        return argumentForField != null;
+    }
+
+    private static boolean handleSymbolDefinitionFieldInReference(@NotNull final PsiElement currentElement, final boolean checkFull,
+                                                                  @Nullable final String key, @NotNull final Asn1FieldType[] fieldTypes, @NotNull final List<Asn1SymbolDefinitionField> list) {
+        if (currentElement instanceof Asn1SymbolFieldReference) {
+            if (!handleSymbolDefinitionFieldInConstructor(currentElement, checkFull, key, fieldTypes, list)) {
+                if (!handleSymbolDefinitionFieldInDefinedBy(currentElement, checkFull, key, fieldTypes, list)) {
+                    if (!handleSymbolDefinitionFieldInArgument(currentElement, checkFull, key, fieldTypes, list)) {
+                        if (!handleSymbolDefinitionFieldInTypeValue(currentElement, checkFull, key, fieldTypes, list)) {
+                            //Future Use
                         }
                     }
                 }
             }
         }
 
-        return moduleRef != null;
+        return currentElement instanceof Asn1SymbolFieldReference;
     }
 
-    private static boolean handleValueDefinitionInModule(@Nullable PsiElement currentElement, boolean checkFull, @Nullable String key, @NotNull List<Asn1ValueDefinition> list) {
-        final Asn1ModuleDefinition moduleDefinition = PsiTreeUtil.getParentOfType(currentElement, Asn1ModuleDefinition.class);
-        if (moduleDefinition != null) {
-            //Search for module internal class definitions
-            list.addAll(
-                    moduleDefinition.getModuleContent().getValueDefinitionList().stream()
-                            .filter(item -> checkString(key, item.getName(), checkFull))
-                            .collect(Collectors.toList())
-            );
-
-            //Search for referenced class definitions
-            if (moduleDefinition.getImportDefinition() != null && moduleDefinition.getImportDefinition().getImportContent() != null) {
-                for (final Asn1ImportElement importElement : moduleDefinition.getImportDefinition().getImportContent().getImportElementList()) {
-                    //Only for resolvable imports
-                    if (importElement.getModuleRef().getReference().resolve() == null)
-                        continue;
-
-                    for (Asn1ImportExportSymbol importExportSymbol : importElement.getImportExportSymbolList()) {
-                        final String refImportElementName = importExportSymbol.getImportExportSymbolRef().getName();
-                        //Only if search key fit to given class definition name
-                        if (!checkString(key, refImportElementName, checkFull))
-                            continue;
-
-                        final PsiElement objectValueDefinition = importExportSymbol.getImportExportSymbolRef().getObjectValueDefinitionReference().resolve();
-                        if (objectValueDefinition == null || !(objectValueDefinition instanceof Asn1ValueDefinition))
-                            continue;
-
-                        list.add((Asn1ValueDefinition) objectValueDefinition);
-                    }
-                }
+    private static boolean handleSymbolDefinitionFieldInConstructor(@NotNull final PsiElement currentElement, final boolean checkFull,
+                                                                    @Nullable final String key, @NotNull final Asn1FieldType[] fieldTypes, @NotNull final List<Asn1SymbolDefinitionField> list) {
+        final Asn1SymbolConstructor symbolConstructor = PsiTreeUtil.getParentOfType(currentElement, Asn1SymbolConstructor.class);
+        if (symbolConstructor != null) {
+            final Asn1SymbolDefinition symbolDefinition = PsiTreeUtil.getParentOfType(symbolConstructor, Asn1SymbolDefinition.class);
+            //Symbol, definition of type value definition with symbol type
+            if (symbolDefinition != null && symbolDefinition.getSymbolElement() == Asn1SymbolElement.ObjectClassDefinition) {
+                handleSymbolDefinitionFieldFromSymbolDefinition(symbolDefinition, checkFull, key, fieldTypes, list);
             }
         }
 
-        return moduleDefinition != null;
+        return symbolConstructor != null;
+    }
+
+    private static boolean handleSymbolDefinitionFieldInDefinedBy(@NotNull final PsiElement currentElement, final boolean checkFull,
+                                                                    @Nullable final String key, @NotNull final Asn1FieldType[] fieldTypes, @NotNull final List<Asn1SymbolDefinitionField> list) {
+        final Asn1SymbolTypeDefinedBy symbolTypeDefinedBy = PsiTreeUtil.getParentOfType(currentElement, Asn1SymbolTypeDefinedBy.class);
+        if (symbolTypeDefinedBy != null) {
+            final Asn1SymbolDefinition symbolDefinition = PsiTreeUtil.getParentOfType(symbolTypeDefinedBy, Asn1SymbolDefinition.class);
+            //Symbol, definition of type value definition with symbol type
+            if (symbolDefinition != null) {
+                handleSymbolDefinitionFieldFromSymbolDefinition(symbolDefinition, checkFull, key, fieldTypes, list);
+            }
+        }
+
+        return symbolTypeDefinedBy != null;
+    }
+
+    private static void handleSymbolDefinitionFieldFromSymbolDefinition(Asn1SymbolDefinition symbolDefinition, boolean checkFull, @Nullable String key, @Nullable Asn1FieldType[] types, List<Asn1SymbolDefinitionField> list) {
+        if (symbolDefinition.getSymbolContent() != null) {
+            list.addAll(
+                    symbolDefinition.getSymbolContent().getSymbolDefinitionFieldList().stream()
+                            .filter(item -> ArrayUtils.contains(types, item.getFieldType()))
+                            .filter(item -> checkString(key, item.getName(), checkFull))
+                            .collect(Collectors.toList())
+            );
+        }
     }
     //endregion
 
-    //region Object Set Definition
+    //region Symbol Constant
     @NotNull
-    public static List<Asn1ObjectSetDefinition> findObjectSetDefinitions(@NotNull final Project project, @Nullable final PsiElement currentElement) {
-        return findObjectSetDefinitions(project, currentElement, true, null);
+    public static List<Asn1SymbolConstantElement> findSymbolConstants(@NotNull final Project project, @Nullable final PsiElement currentElement) {
+        return findSymbolConstants(project, currentElement, true, null);
     }
 
     @NotNull
-    public static List<Asn1ObjectSetDefinition> findObjectSetDefinitions(@NotNull final Project project, @Nullable final PsiElement currentElement, final boolean checkFull, @Nullable final String key) {
-        final List<Asn1ObjectSetDefinition> list = new ArrayList<>();
+    public static List<Asn1SymbolConstantElement> findSymbolConstants(@NotNull final Project project, @Nullable final PsiElement currentElement, final boolean checkFull,
+                                                                      @Nullable final String key) {
+        final List<Asn1SymbolConstantElement> list = new ArrayList<>();
 
         if (currentElement == null) {
             visitFiles(project, psiFile -> {
-                final Collection<Asn1ObjectSetDefinition> definitionList = PsiTreeUtil.findChildrenOfType(psiFile, Asn1ObjectSetDefinition.class);
-                list.addAll(
-                        definitionList.stream()
-                                .filter(item -> checkString(key, item.getName(), checkFull))
-                                .collect(Collectors.toList())
-                );
+                final Collection<Asn1ModuleDefinition> moduleDefinitions = PsiTreeUtil.findChildrenOfType(psiFile, Asn1ModuleDefinition.class);
+                for (final Asn1ModuleDefinition moduleDefinition : moduleDefinitions) {
+                    if (moduleDefinition.getModuleContent() != null) {
+                        for (final Asn1SymbolDefinition symbolDefinition : moduleDefinition.getModuleContent().getSymbolDefinitionList()) {
+                            handleSymbolConstantFromSymbolDefinition(symbolDefinition, checkFull, key, list);
+                        }
+                    }
+                }
             });
         } else {
-            if (!handleObjectSetDefinitionInImportElement(currentElement, checkFull, key, list)) {
-                handleObjectSetDefinitionInModule(currentElement, checkFull, key, list);
+            if (!handleSymbolConstantInReference(currentElement, checkFull, key, list)) {
+                //Future Use
             }
         }
 
         return list;
     }
 
-    private static boolean handleObjectSetDefinitionInImportElement(@Nullable PsiElement currentElement, boolean checkFull, @Nullable String key, @NotNull List<Asn1ObjectSetDefinition> list) {
-        final Asn1ImportElement importElement = PsiTreeUtil.getParentOfType(currentElement, Asn1ImportElement.class);
-        if (importElement != null && importElement.getModuleRef().getReference().resolve() != null) {
-            //Get imported module...
-            final Asn1ModuleDefinition importModuleDefinition = (Asn1ModuleDefinition) importElement.getModuleRef().getReference().resolve();
-            //...and collect all fit classes, based on class import name above
-            list.addAll(
-                    importModuleDefinition.getModuleContent().getObjectSetDefinitionList().stream()
-                            .filter(classDefinition -> checkString(key, classDefinition.getName(), checkFull))
-                            .collect(Collectors.toList())
-            );
-        }
-
-        return importElement != null;
-    }
-
-    private static boolean handleObjectSetDefinitionInModule(@Nullable PsiElement currentElement, boolean checkFull, @Nullable String key, @NotNull List<Asn1ObjectSetDefinition> list) {
-        final Asn1ModuleDefinition moduleDefinition = PsiTreeUtil.getParentOfType(currentElement, Asn1ModuleDefinition.class);
-        if (moduleDefinition != null) {
-            //Search for module internal class definitions
-            list.addAll(
-                    moduleDefinition.getModuleContent().getObjectSetDefinitionList().stream()
-                            .filter(item -> checkString(key, item.getName(), checkFull))
-                            .collect(Collectors.toList())
-            );
-
-            //Search for referenced class definitions
-            if (moduleDefinition.getImportDefinition() != null && moduleDefinition.getImportDefinition().getImportContent() != null) {
-                for (final Asn1ImportElement importElement : moduleDefinition.getImportDefinition().getImportContent().getImportElementList()) {
-                    //Only for resolvable imports
-                    if (importElement.getModuleRef().getReference().resolve() == null)
-                        continue;
-
-                    for (Asn1ImportExportSymbol importExportSymbol : importElement.getImportExportSymbolList()) {
-                        final String refImportElementName = importExportSymbol.getImportExportSymbolRef().getName();
-                        //Only if search key fit to given class definition name
-                        if (!checkString(key, refImportElementName, checkFull))
-                            continue;
-
-                        final PsiElement objectSetDefinition = importExportSymbol.getImportExportSymbolRef().getObjectSetDefinitionReference().resolve();
-                        if (objectSetDefinition == null || !(objectSetDefinition instanceof Asn1ObjectSetDefinition))
-                            continue;
-
-                        list.add((Asn1ObjectSetDefinition) objectSetDefinition);
+    private static boolean handleSymbolConstantInReference(@NotNull final PsiElement currentElement, final boolean checkFull,
+                                                           @Nullable final String key, @NotNull final List<Asn1SymbolConstantElement> list) {
+        if (currentElement instanceof Asn1SymbolTypeReferenceValue) {
+            final Asn1SymbolTypeReferenceValue symbolTypeReferenceValue = (Asn1SymbolTypeReferenceValue) currentElement;
+            final Asn1SymbolTypeReferenceValue prevSymbolTypeReferenceValue = PsiTreeUtil.getPrevSiblingOfType(symbolTypeReferenceValue, Asn1SymbolTypeReferenceValue.class);
+            if (prevSymbolTypeReferenceValue == null) {
+                if (!handleSymbolConstantInReferenceInValueType(symbolTypeReferenceValue, checkFull, key, list)) {
+                    if (!handleSymbolConstantInReferenceInModifier(symbolTypeReferenceValue, checkFull, key, list)) {
+                        if (!handleSymbolConstantInReferenceInSymbolDefinition(symbolTypeReferenceValue, checkFull, key, list)) {
+                            //Future Use
+                        }
+                    }
+                }
+            } else {
+                final PsiElement resolvedElement = resolveFromMultiReference(prevSymbolTypeReferenceValue);
+                if (resolvedElement != null) {
+                    if (resolvedElement instanceof Asn1SymbolDefinition) {
+                        final Asn1SymbolDefinition symbolDefinition = (Asn1SymbolDefinition) resolvedElement;
+                        handleSymbolConstantFromSymbolDefinition(symbolDefinition, checkFull, key, list);
+                    } else if (resolvedElement instanceof Asn1SymbolDefinitionField) {
+                        final Asn1SymbolDefinitionField symbolDefinitionField = (Asn1SymbolDefinitionField) resolvedElement;
+                        handleSymbolConstantFromSymbolDefinitionField(symbolDefinitionField, checkFull, key, list);
                     }
                 }
             }
         }
 
-        return moduleDefinition != null;
-    }
-    //endregion
-
-    //region Object Class Definition
-    @NotNull
-    public static List<Asn1ObjectClassDefinition> findObjectClassDefinitions(@NotNull final Project project, @Nullable PsiElement currentElement) {
-        return findObjectClassDefinitions(project, currentElement, true, null);
+        return currentElement instanceof Asn1SymbolTypeReferenceValue;
     }
 
-    @NotNull
-    public static List<Asn1ObjectClassDefinition> findObjectClassDefinitions(@NotNull final Project project, @Nullable PsiElement currentElement, final boolean checkFull, @Nullable final String key) {
-        final List<Asn1ObjectClassDefinition> list = new ArrayList<>();
-
-        if (currentElement == null) {
-            visitFiles(project, psiFile -> {
-                final Collection<Asn1ObjectClassDefinition> definitionList = PsiTreeUtil.findChildrenOfType(psiFile, Asn1ObjectClassDefinition.class);
-                list.addAll(
-                        definitionList.stream()
-                                .filter(item -> checkString(key, item.getName(), checkFull))
-                                .collect(Collectors.toList())
-                );
-            });
-        } else {
-            if (!handleObjectClassDefinitionInImportElement(currentElement, checkFull, key, list)) {
-                handleObjectClassDefinitionInModule(currentElement, checkFull, key, list);
-            }
-        }
-
-        return list;
-    }
-
-    private static boolean handleObjectClassDefinitionInImportElement(@Nullable PsiElement currentElement, boolean checkFull, @Nullable String key, @NotNull List<Asn1ObjectClassDefinition> list) {
-        final Asn1ImportElement importElement = PsiTreeUtil.getParentOfType(currentElement, Asn1ImportElement.class);
-        if (importElement != null && importElement.getModuleRef().getReference().resolve() != null) {
-            //Get imported module...
-            final Asn1ModuleDefinition importModuleDefinition = (Asn1ModuleDefinition) importElement.getModuleRef().getReference().resolve();
-            //...and collect all fit classes, based on class import name above
-            list.addAll(
-                    importModuleDefinition.getModuleContent().getObjectClassDefinitionList().stream()
-                            .filter(classDefinition -> checkString(key, classDefinition.getName(), checkFull))
-                            .collect(Collectors.toList())
-            );
-        }
-
-        return importElement != null;
-    }
-
-    private static boolean handleObjectClassDefinitionInModule(@Nullable PsiElement currentElement, boolean checkFull, @Nullable String key, @NotNull List<Asn1ObjectClassDefinition> list) {
-        final Asn1ModuleDefinition moduleDefinition = PsiTreeUtil.getParentOfType(currentElement, Asn1ModuleDefinition.class);
-        if (moduleDefinition != null) {
-            //Search for module internal class definitions
-            list.addAll(
-                    moduleDefinition.getModuleContent().getObjectClassDefinitionList().stream()
-                            .filter(item -> checkString(key, item.getName(), checkFull))
-                            .collect(Collectors.toList())
-            );
-
-            //Search for referenced class definitions
-            if (moduleDefinition.getImportDefinition() != null && moduleDefinition.getImportDefinition().getImportContent() != null) {
-                for (final Asn1ImportElement importElement : moduleDefinition.getImportDefinition().getImportContent().getImportElementList()) {
-                    //Only for resolvable imports
-                    if (importElement.getModuleRef().getReference().resolve() == null)
-                        continue;
-
-                    for (Asn1ImportExportSymbol importExportSymbol : importElement.getImportExportSymbolList()) {
-                        final String refImportElementName = importExportSymbol.getImportExportSymbolRef().getName();
-                        //Only if search key fit to given class definition name
-                        if (!checkString(key, refImportElementName, checkFull))
-                            continue;
-
-                        final PsiElement objectClassDefinition = importExportSymbol.getImportExportSymbolRef().getObjectClassDefinitionReference().resolve();
-                        if (objectClassDefinition == null || !(objectClassDefinition instanceof Asn1ObjectClassDefinition))
-                            continue;
-
-                        list.add((Asn1ObjectClassDefinition) objectClassDefinition);
+    private static boolean handleSymbolConstantInReferenceInModifier(Asn1SymbolTypeReferenceValue symbolTypeReferenceValue, final boolean checkFull,
+                                                                     @Nullable final String key, @NotNull final List<Asn1SymbolConstantElement> list) {
+        final Asn1ModifierElement modifierElement = PsiTreeUtil.getParentOfType(symbolTypeReferenceValue, Asn1ModifierElement.class);
+        if (modifierElement != null && modifierElement.getSymbolTypeReference() != null) {
+            final PsiElement element = resolveFromMultiReference(modifierElement.getSymbolTypeReference());
+            if (element != null) {
+                if (element instanceof Asn1SymbolDefinitionField) {
+                    handleSymbolConstantFromSymbolDefinitionField((Asn1SymbolDefinitionField) element, checkFull, key, list);
+                } else if (element instanceof Asn1SymbolDefinition) {
+                    handleSymbolConstantFromSymbolDefinition((Asn1SymbolDefinition) element, checkFull, key, list);
+                }
+            } else {
+                final Asn1SymbolDefinitionField symbolDefinitionField = PsiTreeUtil.getParentOfType(modifierElement, Asn1SymbolDefinitionField.class);
+                if (symbolDefinitionField != null) {
+                    handleSymbolConstantFromSymbolDefinitionField(symbolDefinitionField, checkFull, key, list);
+                } else {
+                    final Asn1SymbolDefinition symbolDefinition = PsiTreeUtil.getParentOfType(modifierElement, Asn1SymbolDefinition.class);
+                    if (symbolDefinition != null) {
+                        handleSymbolConstantFromSymbolDefinition(symbolDefinition, checkFull, key, list);
                     }
                 }
             }
         }
 
-        return moduleDefinition != null;
-    }
-    //endregion
-
-    //region Object Class Definition Field
-    @NotNull
-    public static List<Asn1ObjectClassDefinitionField> findObjectClassDefinitionFields(@NotNull final Project project, @Nullable final PsiElement currentElement) {
-        return findObjectClassDefinitionFields(project, currentElement, true, null);
+        return modifierElement != null;
     }
 
-    @NotNull
-    public static List<Asn1ObjectClassDefinitionField> findObjectClassDefinitionFields(@NotNull final Project project, @Nullable final PsiElement currentElement, final boolean checkFull, @Nullable final String key) {
-        final List<Asn1ObjectClassDefinitionField> list = new ArrayList<>();
-
-        if (currentElement == null) {
-            final List<Asn1ObjectClassDefinition> objectClassDefinitionList = findObjectClassDefinitions(project, currentElement);
-            for (final Asn1ObjectClassDefinition objectClassDefinition : objectClassDefinitionList) {
-                if (objectClassDefinition.getObjectClassDefinitionContent() == null)
-                    continue;
-
-                list.addAll(
-                        objectClassDefinition.getObjectClassDefinitionContent().getObjectClassDefinitionFieldList().stream()
-                                .filter(item -> checkString(key, item.getName(), checkFull))
-                                .collect(Collectors.toList())
-                );
-            }
-        } else {
-            if (!handleObjectClassDefinitionFieldInConstructor(currentElement, checkFull, key, list)) {
-                handleFullQualifiedObjectClassDefinitionField(currentElement, checkFull, key, list);
-            }
-        }
-
-        return list;
-    }
-
-    private static boolean handleObjectClassDefinitionFieldInConstructor(@NotNull PsiElement currentElement, boolean checkFull, @Nullable String key,
-                                                                         @NotNull List<Asn1ObjectClassDefinitionField> list) {
-        final Asn1ObjectClassDefinitionConstructor objectClassDefinitionConstructor = PsiTreeUtil.getParentOfType(currentElement, Asn1ObjectClassDefinitionConstructor.class);
-        if (objectClassDefinitionConstructor != null) {
-            final Asn1ObjectClassDefinition objectClassDefinition = PsiTreeUtil.getParentOfType(objectClassDefinitionConstructor, Asn1ObjectClassDefinition.class);
-            if (objectClassDefinition != null && objectClassDefinition.getObjectClassDefinitionContent() != null) {
-                list.addAll(
-                        objectClassDefinition.getObjectClassDefinitionContent().getObjectClassDefinitionFieldList().stream()
-                                .filter(item -> checkString(key, item.getName(), checkFull))
-                                .collect(Collectors.toList())
-                );
-            }
-        }
-
-        return objectClassDefinitionConstructor != null;
-    }
-
-    private static boolean handleFullQualifiedObjectClassDefinitionField(@NotNull PsiElement currentElement, boolean checkFull, @Nullable String key,
-                                                                         @NotNull List<Asn1ObjectClassDefinitionField> list) {
-        final Asn1FullQualifiedObjectClassDefinitionFieldRef fullQualifiedObjectClassDefinitionFieldRef = PsiTreeUtil.getParentOfType(currentElement, Asn1FullQualifiedObjectClassDefinitionFieldRef.class);
-        if (fullQualifiedObjectClassDefinitionFieldRef != null) {
-            if (!handleFullQualifiedObjectClassDefinitionFieldWithObjectClassDefinitionQualifier(fullQualifiedObjectClassDefinitionFieldRef, checkFull, key, list)) {
-                handleFullQualifiedObjectClassDefinitionFieldWithObjectValueDefinitionQualifier(fullQualifiedObjectClassDefinitionFieldRef, checkFull, key, list);
-            }
-        }
-
-        return fullQualifiedObjectClassDefinitionFieldRef != null;
-    }
-
-    private static boolean handleFullQualifiedObjectClassDefinitionFieldWithObjectClassDefinitionQualifier(@NotNull Asn1FullQualifiedObjectClassDefinitionFieldRef fullQualifiedObjectClassDefinitionFieldRef,
-                                                                                                           boolean checkFull, @Nullable String key,
-                                                                                                           @NotNull List<Asn1ObjectClassDefinitionField> list) {
-        final Asn1ObjectClassDefinition objectClassDefinition = (Asn1ObjectClassDefinition)
-                fullQualifiedObjectClassDefinitionFieldRef.getFullQualifiedObjectClassDefinitionFieldQualifierRef().getObjectClassDefinitionReference().resolve();
-
-        if (objectClassDefinition != null && objectClassDefinition.getObjectClassDefinitionContent() != null) {
-            list.addAll(
-                    objectClassDefinition.getObjectClassDefinitionContent().getObjectClassDefinitionFieldList().stream()
-                            .filter(item -> checkString(key, item.getName(), checkFull))
-                            .collect(Collectors.toList())
-            );
-        }
-
-        return objectClassDefinition != null;
-    }
-
-    private static boolean handleFullQualifiedObjectClassDefinitionFieldWithObjectValueDefinitionQualifier(@NotNull Asn1FullQualifiedObjectClassDefinitionFieldRef fullQualifiedObjectClassDefinitionFieldRef,
-                                                                                                           boolean checkFull, @Nullable String key,
-                                                                                                           @NotNull List<Asn1ObjectClassDefinitionField> list) {
-        final Asn1ValueDefinition valueDefinition = (Asn1ValueDefinition)
-                fullQualifiedObjectClassDefinitionFieldRef.getFullQualifiedObjectClassDefinitionFieldQualifierRef().getObjectValueDefinitionReference().resolve();
-
-        if (valueDefinition != null && valueDefinition.getElementDefinitionType() != null) {
-            final Asn1ObjectClassDefinition objectClassDefinition = (Asn1ObjectClassDefinition)
-                    valueDefinition.getElementDefinitionType().getElementDefinitionRef().getObjectClassDefinitionReference().resolve();
-
-            if (objectClassDefinition != null && objectClassDefinition.getObjectClassDefinitionContent() != null) {
-                list.addAll(
-                        objectClassDefinition.getObjectClassDefinitionContent().getObjectClassDefinitionFieldList().stream()
-                                .filter(item -> checkString(key, item.getName(), checkFull))
-                                .collect(Collectors.toList())
-                );
-            }
-        }
-
-        return valueDefinition != null;
-    }
-    //endregion
-
-    //region Enumerated Definition
-    @NotNull
-    public static List<Asn1EnumeratedDefinition> findEnumeratedDefinitions(@NotNull final Project project, @Nullable PsiElement currentElement) {
-        return findEnumeratedDefinitions(project, currentElement, true, null);
-    }
-
-    @NotNull
-    public static List<Asn1EnumeratedDefinition> findEnumeratedDefinitions(@NotNull final Project project, @Nullable PsiElement currentElement, final boolean checkFull, @Nullable final String key) {
-        final List<Asn1EnumeratedDefinition> list = new ArrayList<>();
-
-        if (currentElement == null) {
-            visitFiles(project, psiFile -> {
-                final Collection<Asn1EnumeratedDefinition> definitionList = PsiTreeUtil.findChildrenOfType(psiFile, Asn1EnumeratedDefinition.class);
-                list.addAll(
-                        definitionList.stream()
-                                .filter(item -> checkString(key, item.getName(), checkFull))
-                                .collect(Collectors.toList())
-                );
-            });
-        } else {
-            if (!handleEnumeratedDefinitionInImportElement(currentElement, checkFull, key, list)) {
-                handleEnumeratedDefinitionInModule(currentElement, checkFull, key, list);
-            }
-        }
-
-        return list;
-    }
-
-    private static boolean handleEnumeratedDefinitionInImportElement(@Nullable PsiElement currentElement, boolean checkFull, @Nullable String key, @NotNull List<Asn1EnumeratedDefinition> list) {
-        final Asn1ImportElement importElement = PsiTreeUtil.getParentOfType(currentElement, Asn1ImportElement.class);
-        if (importElement != null && importElement.getModuleRef().getReference().resolve() != null) {
-            //Get imported module...
-            final Asn1ModuleDefinition importModuleDefinition = (Asn1ModuleDefinition) importElement.getModuleRef().getReference().resolve();
-            //...and collect all fit classes, based on class import name above
-            list.addAll(
-                    importModuleDefinition.getModuleContent().getEnumeratedDefinitionList().stream()
-                            .filter(classDefinition -> checkString(key, classDefinition.getName(), checkFull))
-                            .collect(Collectors.toList())
-            );
-        }
-
-        return importElement != null;
-    }
-
-    private static boolean handleEnumeratedDefinitionInModule(@Nullable PsiElement currentElement, boolean checkFull, @Nullable String key, @NotNull List<Asn1EnumeratedDefinition> list) {
-        final Asn1ModuleDefinition moduleDefinition = PsiTreeUtil.getParentOfType(currentElement, Asn1ModuleDefinition.class);
-        if (moduleDefinition != null) {
-            //Search for module internal class definitions
-            list.addAll(
-                    moduleDefinition.getModuleContent().getEnumeratedDefinitionList().stream()
-                            .filter(item -> checkString(key, item.getName(), checkFull))
-                            .collect(Collectors.toList())
-            );
-
-            //Search for referenced class definitions
-            if (moduleDefinition.getImportDefinition() != null && moduleDefinition.getImportDefinition().getImportContent() != null) {
-                for (final Asn1ImportElement importElement : moduleDefinition.getImportDefinition().getImportContent().getImportElementList()) {
-                    //Only for resolvable imports
-                    if (importElement.getModuleRef().getReference().resolve() == null)
-                        continue;
-
-                    for (Asn1ImportExportSymbol importExportSymbol : importElement.getImportExportSymbolList()) {
-                        final String refImportElementName = importExportSymbol.getImportExportSymbolRef().getName();
-                        //Only if search key fit to given class definition name
-                        if (!checkString(key, refImportElementName, checkFull))
-                            continue;
-
-                        final PsiElement enumeratedDefinition = importExportSymbol.getImportExportSymbolRef().getEnumeratedDefinitionReference().resolve();
-                        if (enumeratedDefinition == null || !(enumeratedDefinition instanceof Asn1EnumeratedDefinition))
-                            continue;
-
-                        list.add((Asn1EnumeratedDefinition) enumeratedDefinition);
+    private static boolean handleSymbolConstantInReferenceInSymbolDefinition(Asn1SymbolTypeReferenceValue symbolTypeReferenceValue, final boolean checkFull,
+                                                                             @Nullable final String key, @NotNull final List<Asn1SymbolConstantElement> list) {
+        final Asn1SymbolDefinition symbolDefinition = PsiTreeUtil.getParentOfType(symbolTypeReferenceValue, Asn1SymbolDefinition.class);
+        if (symbolDefinition != null) {
+            if (symbolDefinition.getSymbolElement() != null && symbolDefinition.getSymbolElement() == Asn1SymbolElement.ValueDefinition) {
+                final PsiElement element = resolveType(symbolDefinition.getSymbolIdentifierType());
+                if (element != null) {
+                    if (element instanceof Asn1SymbolDefinition && ((Asn1SymbolDefinition) element).getSymbolConstantDefinition() != null &&
+                            (((Asn1SymbolDefinition) element).getSymbolElement() == Asn1SymbolElement.TypeDefinition ||
+                                    ((Asn1SymbolDefinition) element).getSymbolElement() == Asn1SymbolElement.ObjectClassDefinition)) {
+                        handleSymbolConstantFromSymbolDefinition((Asn1SymbolDefinition) element, checkFull, key, list);
+                    }
+                } else {
+                    if (symbolDefinition.getSymbolIdentifierType() != null) {
+                        final PsiElement identifierType = resolveType(symbolDefinition.getSymbolIdentifierType());
+                        if (identifierType != null && identifierType instanceof Asn1SymbolDefinition && ((Asn1SymbolDefinition) identifierType).getSymbolElement() == Asn1SymbolElement.TypeDefinition) {
+                            handleSymbolConstantFromSymbolDefinition((Asn1SymbolDefinition) identifierType, checkFull, key, list);
+                        }
                     }
                 }
             }
         }
 
-        return moduleDefinition != null;
-    }
-    //endregion
-
-    //region Enumerated Definition Element
-    @NotNull
-    public static List<Asn1EnumeratedDefinitionElement> findEnumeratedDefinitionElements(@NotNull final Project project, @Nullable PsiElement currentElement) {
-        return findEnumeratedDefinitionElements(project, currentElement, true, null);
+        return symbolDefinition != null;
     }
 
-    @NotNull
-    public static List<Asn1EnumeratedDefinitionElement> findEnumeratedDefinitionElements(@NotNull final Project project, @Nullable PsiElement currentElement, final boolean checkFull, @Nullable final String key) {
-        final List<Asn1EnumeratedDefinitionElement> list = new ArrayList<>();
-
-        if (currentElement == null) {
-            visitFiles(project, psiFile -> {
-                final Collection<Asn1EnumeratedDefinition> definitionList = PsiTreeUtil.findChildrenOfType(psiFile, Asn1EnumeratedDefinition.class);
-                for (final Asn1EnumeratedDefinition enumeratedDefinition : definitionList) {
-                    if (enumeratedDefinition.getEnumeratedDefinitionContent() == null)
-                        continue;
-
-                    list.addAll(
-                            enumeratedDefinition.getEnumeratedDefinitionContent().getEnumeratedDefinitionElementList().stream()
-                                    .filter(item -> checkString(key, item.getName(), checkFull))
-                                    .collect(Collectors.toList())
-                    );
-                }
-            });
-        } else {
-            if (!handleEnumeratedDefinitionElementInObjectClassDefinitionField(currentElement, checkFull, key, list)) {
-                if (!handleEnumeratedDefinitionElementInClassDefinitionField(currentElement, checkFull, key, list)) {
-                    if (!handleEnumeratedDefinitionElementInValueListLine(currentElement, checkFull, key, list)) {
-                        handleEnumeratedDefinitionElementInObjectValueDefinition(currentElement, checkFull, key, list);
-                    }
-                }
+    private static boolean handleSymbolConstantInReferenceInValueType(Asn1SymbolTypeReferenceValue symbolTypeReferenceValue, final boolean checkFull,
+                                                                      @Nullable final String key, @NotNull final List<Asn1SymbolConstantElement> list) {
+        final Asn1SymbolValueTypeContentLine symbolValueTypeContentLine = PsiTreeUtil.getParentOfType(symbolTypeReferenceValue, Asn1SymbolValueTypeContentLine.class);
+        if (symbolValueTypeContentLine != null && symbolValueTypeContentLine.getSymbolFieldReference() != null) {
+            final PsiElement element = resolveFromMultiReference(symbolValueTypeContentLine.getSymbolFieldReference());
+            if (element != null && element instanceof Asn1SymbolDefinitionField) {
+                handleSymbolConstantFromSymbolDefinitionField((Asn1SymbolDefinitionField) element, checkFull, key, list);
             }
         }
 
-        return list;
+        return symbolValueTypeContentLine != null;
     }
 
-    private static boolean handleEnumeratedDefinitionElementInObjectClassDefinitionField(@Nullable PsiElement currentElement, boolean checkFull, @Nullable String key, @NotNull List<Asn1EnumeratedDefinitionElement> list) {
-        final Asn1ObjectClassDefinitionField objectClassDefinitionField = PsiTreeUtil.getParentOfType(currentElement, Asn1ObjectClassDefinitionField.class);
-        if (objectClassDefinitionField != null && objectClassDefinitionField.getElementDefinitionType() != null) {
-            final Asn1EnumeratedDefinition enumeratedDefinition = (Asn1EnumeratedDefinition) objectClassDefinitionField.getElementDefinitionType().getElementDefinitionRef().getEnumeratedReference().resolve();
-            if (enumeratedDefinition != null && enumeratedDefinition.getEnumeratedDefinitionContent() != null) {
-                list.addAll(
-                        enumeratedDefinition.getEnumeratedDefinitionContent().getEnumeratedDefinitionElementList().stream()
-                                .filter(enumeratedDefinitionElement -> checkString(key, enumeratedDefinitionElement.getName(), checkFull))
-                                .collect(Collectors.toList())
-                );
-            }
-        }
-
-        return objectClassDefinitionField != null;
-    }
-
-    private static boolean handleEnumeratedDefinitionElementInClassDefinitionField(@Nullable PsiElement currentElement, boolean checkFull, @Nullable String key, @NotNull List<Asn1EnumeratedDefinitionElement> list) {
-        final Asn1TypeDefinitionField typeDefinitionField = PsiTreeUtil.getParentOfType(currentElement, Asn1TypeDefinitionField.class);
-        if (typeDefinitionField != null && typeDefinitionField.getElementDefinitionType() != null) {
-            final Asn1EnumeratedDefinition enumeratedDefinition = (Asn1EnumeratedDefinition) typeDefinitionField.getElementDefinitionType().getElementDefinitionRef().getEnumeratedReference().resolve();
-            if (enumeratedDefinition != null && enumeratedDefinition.getEnumeratedDefinitionContent() != null) {
-                list.addAll(
-                        enumeratedDefinition.getEnumeratedDefinitionContent().getEnumeratedDefinitionElementList().stream()
-                                .filter(enumeratedDefinitionElement -> checkString(key, enumeratedDefinitionElement.getName(), checkFull))
-                                .collect(Collectors.toList())
-                );
-            }
-        }
-
-        return typeDefinitionField != null;
-    }
-
-    private static boolean handleEnumeratedDefinitionElementInValueListLine(@Nullable PsiElement currentElement, boolean checkFull, @Nullable String key, @NotNull List<Asn1EnumeratedDefinitionElement> list) {
-        final Asn1DefinitiveTypeField definitiveTypeField = PsiTreeUtil.getParentOfType(currentElement, Asn1DefinitiveTypeField.class);
-        if (definitiveTypeField != null && definitiveTypeField.getTypeDefinitionFieldRef().getReference().resolve() != null) {
-            final Asn1TypeDefinitionField classDefinitionField = (Asn1TypeDefinitionField) definitiveTypeField.getTypeDefinitionFieldRef().getReference().resolve();
-            if (classDefinitionField != null && classDefinitionField.getElementDefinitionType() != null) {
-                final Asn1EnumeratedDefinition enumeratedDefinition = (Asn1EnumeratedDefinition) classDefinitionField.getElementDefinitionType().getElementDefinitionRef().getEnumeratedReference().resolve();
-                if (enumeratedDefinition != null && enumeratedDefinition.getEnumeratedDefinitionContent() != null) {
-                    list.addAll(
-                            enumeratedDefinition.getEnumeratedDefinitionContent().getEnumeratedDefinitionElementList().stream()
-                                    .filter(enumeratedDefinitionElement -> checkString(key, enumeratedDefinitionElement.getName(), checkFull))
-                                    .collect(Collectors.toList())
-                    );
-                }
-            }
-        }
-
-        return definitiveTypeField != null;
-    }
-
-    private static boolean handleEnumeratedDefinitionElementInObjectValueDefinition(@Nullable PsiElement currentElement, boolean checkFull, @Nullable String key, @NotNull List<Asn1EnumeratedDefinitionElement> list) {
-        final Asn1ValueDefinition valueDefinition = PsiTreeUtil.getParentOfType(currentElement, Asn1ValueDefinition.class);
-        if (valueDefinition != null && valueDefinition.getElementDefinitionType() != null) {
-            final Asn1EnumeratedDefinition enumeratedDefinition = (Asn1EnumeratedDefinition) valueDefinition.getElementDefinitionType().getElementDefinitionRef().getEnumeratedReference().resolve();
-            if (enumeratedDefinition != null && enumeratedDefinition.getEnumeratedDefinitionContent() != null) {
-                list.addAll(
-                        enumeratedDefinition.getEnumeratedDefinitionContent().getEnumeratedDefinitionElementList().stream()
-                                .filter(enumeratedDefinitionElement -> checkString(key, enumeratedDefinitionElement.getName(), checkFull))
-                                .collect(Collectors.toList())
-                );
-            }
-        }
-
-        return valueDefinition != null;
-    }
-    //endregion
-
-    //region Parameter (Object Set)
-    @NotNull
-    public static List<Asn1ObjectSetParameter> findObjectSetParameters(@NotNull final Project project, @Nullable final PsiElement currentElement) {
-        return findObjectSetParameters(project, currentElement, true, null);
-    }
-
-    @NotNull
-    public static List<Asn1ObjectSetParameter> findObjectSetParameters(@NotNull final Project project, @Nullable final PsiElement currentElement, final boolean checkFull, @Nullable final String key) {
-        final List<Asn1ObjectSetParameter> list = new ArrayList<>();
-
-        if (currentElement == null) {
-            final List<Asn1TypeDefinition> typeDefinitionList = findTypeDefinitions(project, currentElement);
-            for (Asn1TypeDefinition typeDefinition : typeDefinitionList) {
-                if (typeDefinition.getParameterDefinition() == null)
-                    continue;
-
-                list.addAll(
-                        typeDefinition.getParameterDefinition().getObjectSetParameterList().stream()
-                                .filter(item -> checkString(key, item.getName(), checkFull))
-                                .collect(Collectors.toList())
-                );
-            }
-        } else {
-            handleObjectSetParameterInClassDefinition(currentElement, checkFull, key, list);
-        }
-
-        return list;
-    }
-
-    private static boolean handleObjectSetParameterInClassDefinition(@NotNull PsiElement currentElement, boolean checkFull, @Nullable String key, @NotNull List<Asn1ObjectSetParameter> list) {
-        final Asn1TypeDefinition typeDefinition = PsiTreeUtil.getParentOfType(currentElement, Asn1TypeDefinition.class);
-        if (typeDefinition != null && typeDefinition.getParameterDefinition() != null) {
+    private static void handleSymbolConstantFromSymbolDefinitionField(Asn1SymbolDefinitionField symbolDefinitionField, boolean checkFull, @Nullable String key, @NotNull List<Asn1SymbolConstantElement> list) {
+        if (symbolDefinitionField.getSymbolConstantDefinition() != null) {
             list.addAll(
-                    typeDefinition.getParameterDefinition().getObjectSetParameterList().stream()
+                    symbolDefinitionField.getSymbolConstantDefinition().getSymbolConstantElementList().stream()
                             .filter(item -> checkString(key, item.getName(), checkFull))
                             .collect(Collectors.toList())
             );
         }
+    }
 
-        return typeDefinition != null;
+    private static void handleSymbolConstantFromSymbolDefinition(Asn1SymbolDefinition symbolDefinition, boolean checkFull, @Nullable String key, @NotNull List<Asn1SymbolConstantElement> list) {
+        if (symbolDefinition.getSymbolConstantDefinition() != null) {
+            list.addAll(
+                    symbolDefinition.getSymbolConstantDefinition().getSymbolConstantElementList().stream()
+                            .filter(item -> checkString(key, item.getName(), checkFull))
+                            .collect(Collectors.toList())
+            );
+        }
     }
     //endregion
 
     //region Parameter (Type)
     @NotNull
-    public static List<Asn1TypeParameter> findTypeParameters(@NotNull final Project project, @Nullable final PsiElement currentElement) {
+    public static List<Asn1ParameterForType> findTypeParameters(@NotNull final Project project, @Nullable final PsiElement currentElement) {
         return findTypeParameters(project, currentElement, true, null);
     }
 
     @NotNull
-    public static List<Asn1TypeParameter> findTypeParameters(@NotNull final Project project, @Nullable final PsiElement currentElement, final boolean checkFull, @Nullable final String key) {
-        final List<Asn1TypeParameter> list = new ArrayList<>();
+    public static List<Asn1ParameterForType> findTypeParameters(@NotNull final Project project, @Nullable final PsiElement currentElement, final boolean checkFull,
+                                                                @Nullable final String key) {
+        final List<Asn1ParameterForType> list = new ArrayList<>();
 
         if (currentElement == null) {
-            final List<Asn1TypeDefinition> typeDefinitionList = findTypeDefinitions(project, currentElement);
-            for (Asn1TypeDefinition typeDefinition : typeDefinitionList) {
-                if (typeDefinition.getParameterDefinition() == null)
-                    continue;
-
-                list.addAll(
-                        typeDefinition.getParameterDefinition().getTypeParameterList().stream()
-                                .filter(item -> checkString(key, item.getName(), checkFull))
-                                .collect(Collectors.toList())
-                );
-            }
+            visitFiles(project, psiFile -> {
+                final Collection<Asn1ModuleDefinition> moduleDefinitions = PsiTreeUtil.findChildrenOfType(psiFile, Asn1ModuleDefinition.class);
+                for (final Asn1ModuleDefinition moduleDefinition : moduleDefinitions) {
+                    if (moduleDefinition.getModuleContent() != null) {
+                        for (final Asn1SymbolDefinition symbolDefinition : moduleDefinition.getModuleContent().getSymbolDefinitionList()) {
+                            handleTypeParameterFromSymbolDefinition(symbolDefinition, checkFull, key, list);
+                        }
+                    }
+                }
+            });
         } else {
-            handleTypeParameterInClassDefinition(currentElement, checkFull, key, list);
+            if (!handleTypeParameterInReferenceType(currentElement, checkFull, key, list)) {
+                //for future use
+            }
         }
 
         return list;
     }
 
-    private static boolean handleTypeParameterInClassDefinition(@NotNull PsiElement currentElement, boolean checkFull, @Nullable String key, @NotNull List<Asn1TypeParameter> list) {
-        final Asn1TypeDefinition typeDefinition = PsiTreeUtil.getParentOfType(currentElement, Asn1TypeDefinition.class);
-        if (typeDefinition != null && typeDefinition.getParameterDefinition() != null) {
+    private static boolean handleTypeParameterInReferenceType(@NotNull final PsiElement currentElement, final boolean checkFull,
+                                                              @Nullable final String key, @NotNull final List<Asn1ParameterForType> list) {
+        final Asn1SymbolTypeReference symbolTypeReference = PsiTreeUtil.getParentOfType(currentElement, Asn1SymbolTypeReference.class);
+        if (symbolTypeReference != null && symbolTypeReference.getSymbolTypeReferenceValueList().size() == 1) {
+            final Asn1SymbolDefinition symbolDefinition = PsiTreeUtil.getParentOfType(symbolTypeReference, Asn1SymbolDefinition.class);
+            if (symbolDefinition != null) {
+                handleTypeParameterFromSymbolDefinition(symbolDefinition, checkFull, key, list);
+            }
+        }
+
+        return symbolTypeReference != null;
+    }
+
+    private static void handleTypeParameterFromSymbolDefinition(Asn1SymbolDefinition symbolDefinition, boolean checkFull, @Nullable String key, List<Asn1ParameterForType> list) {
+        if (symbolDefinition.getParameterDefinition() != null) {
             list.addAll(
-                    typeDefinition.getParameterDefinition().getTypeParameterList().stream()
+                    symbolDefinition.getParameterDefinition().getParameterElementList().stream()
+                            .filter(item -> item.getParameterForType() != null)
+                            .map(Asn1ParameterElement::getParameterForType)
                             .filter(item -> checkString(key, item.getName(), checkFull))
                             .collect(Collectors.toList())
             );
         }
-
-        return typeDefinition != null;
     }
     //endregion
 
-    //region Constant Values
+    //region Parameter (Set)
     @NotNull
-    public static List<Asn1ConstantDefinitionValue> findConstantValues(@NotNull final Project project, @Nullable final PsiElement currentElement) {
-        return findConstantValues(project, currentElement, true, null);
+    public static List<Asn1ParameterForSet> findSetParameters(@NotNull final Project project, @Nullable final PsiElement currentElement) {
+        return findSetParameters(project, currentElement, true, null);
     }
 
     @NotNull
-    public static List<Asn1ConstantDefinitionValue> findConstantValues(@NotNull final Project project, @Nullable final PsiElement currentElement, final boolean checkFull, @Nullable final String key) {
-        final List<Asn1ConstantDefinitionValue> list = new ArrayList<>();
+    public static List<Asn1ParameterForSet> findSetParameters(@NotNull final Project project, @Nullable final PsiElement currentElement, final boolean checkFull,
+                                                              @Nullable final String key) {
+        final List<Asn1ParameterForSet> list = new ArrayList<>();
 
         if (currentElement == null) {
-            final List<Asn1TypeDefinition> typeDefinitionList = findTypeDefinitions(project, currentElement);
-            for (final Asn1TypeDefinition classDefinition : typeDefinitionList) {
-                if (classDefinition.getTypeDefinitionContent() == null)
-                    continue;
-
-                for (final Asn1TypeDefinitionField field : classDefinition.getTypeDefinitionContent().getTypeDefinitionFieldList()) {
-                    if (field.getConstantDefinitionContent() == null)
-                        continue;
-
-                    list.addAll(
-                            field.getConstantDefinitionContent().getConstantDefinitionValueList().stream()
-                                    .filter(item -> checkString(key, item.getName(), checkFull))
-                                    .collect(Collectors.toList())
-                    );
+            visitFiles(project, psiFile -> {
+                final Collection<Asn1ModuleDefinition> moduleDefinitions = PsiTreeUtil.findChildrenOfType(psiFile, Asn1ModuleDefinition.class);
+                for (final Asn1ModuleDefinition moduleDefinition : moduleDefinitions) {
+                    if (moduleDefinition.getModuleContent() != null) {
+                        for (final Asn1SymbolDefinition symbolDefinition : moduleDefinition.getModuleContent().getSymbolDefinitionList()) {
+                            handleSetParameterFromSymbolDefinition(symbolDefinition, checkFull, key, list);
+                        }
+                    }
                 }
-            }
+            });
         } else {
-            if (!handleConstantValueInClassDefinitionField(currentElement, checkFull, key, list)) {
-                handleConstantValueInValueList(currentElement, checkFull, key, list);
+            if (!handleSetParameterInReferenceType(currentElement, checkFull, key, list)) {
+                //for future use
             }
         }
 
         return list;
     }
 
-    private static boolean handleConstantValueInValueList(@NotNull PsiElement currentElement, boolean checkFull, @Nullable String key, @NotNull List<Asn1ConstantDefinitionValue> list) {
-        final Asn1DefinitiveTypeField definitiveTypeField = PsiTreeUtil.getParentOfType(currentElement, Asn1DefinitiveTypeField.class);
-        if (definitiveTypeField != null) {
-            final PsiElement foundElement = definitiveTypeField.getTypeDefinitionFieldRef().getReference().resolve();
-            if (foundElement != null && foundElement instanceof Asn1TypeDefinitionField && ((Asn1TypeDefinitionField) foundElement).getConstantDefinitionContent() != null) {
-                list.addAll(
-                        ((Asn1TypeDefinitionField) foundElement).getConstantDefinitionContent().getConstantDefinitionValueList().stream()
-                                .filter(item -> checkString(key, item.getName(), checkFull))
-                                .collect(Collectors.toList())
-                );
+    private static boolean handleSetParameterInReferenceType(@NotNull final PsiElement currentElement, final boolean checkFull,
+                                                             @Nullable final String key, @NotNull final List<Asn1ParameterForSet> list) {
+        final Asn1SymbolTypeReference symbolTypeReference = PsiTreeUtil.getParentOfType(currentElement, Asn1SymbolTypeReference.class);
+        if (symbolTypeReference != null && symbolTypeReference.getSymbolTypeReferenceValueList().size() == 1) {
+            final Asn1SymbolDefinition symbolDefinition = PsiTreeUtil.getParentOfType(symbolTypeReference, Asn1SymbolDefinition.class);
+            if (symbolDefinition != null) {
+                handleSetParameterFromSymbolDefinition(symbolDefinition, checkFull, key, list);
             }
         }
 
-        return definitiveTypeField != null;
+        return symbolTypeReference != null;
     }
 
-    private static boolean handleConstantValueInClassDefinitionField(@NotNull PsiElement currentElement, boolean checkFull, @Nullable String key, @NotNull List<Asn1ConstantDefinitionValue> list) {
-        final Asn1TypeDefinitionField typeDefinitionField = PsiTreeUtil.getParentOfType(currentElement, Asn1TypeDefinitionField.class);
-        if (typeDefinitionField != null) {
-            if (typeDefinitionField.getConstantDefinitionContent() != null) {
-                list.addAll(
-                        typeDefinitionField.getConstantDefinitionContent().getConstantDefinitionValueList().stream()
-                                .filter(item -> checkString(key, item.getName(), checkFull))
-                                .collect(Collectors.toList())
-                );
-            }
-            if (typeDefinitionField.getElementDefinitionType() != null) {
-                handleConstantValueWithNextClassDefinition(typeDefinitionField.getElementDefinitionType(), checkFull, key, list);
-            }
-        }
-
-        return typeDefinitionField != null;
-    }
-
-    private static void handleConstantValueWithNextClassDefinition(@NotNull Asn1ElementDefinitionType elementDefinitionType, boolean checkFull, @Nullable String key, @NotNull List<Asn1ConstantDefinitionValue> list) {
-        final Asn1TypeDefinition classDefinition = (Asn1TypeDefinition) elementDefinitionType.getElementDefinitionRef().getTypeDefinitionReference().resolve();
-        if (classDefinition != null) {
-            if (classDefinition.getConstantDefinitionContent() != null) {
-                list.addAll(
-                        classDefinition.getConstantDefinitionContent().getConstantDefinitionValueList().stream()
-                                .filter(item -> checkString(key, item.getName(), checkFull))
-                                .collect(Collectors.toList())
-                );
-            }
-            if (classDefinition.getElementDefinitionType() != null) {
-                handleConstantValueWithNextClassDefinition(classDefinition.getElementDefinitionType(), checkFull, key, list);
-            }
+    private static void handleSetParameterFromSymbolDefinition(Asn1SymbolDefinition symbolDefinition, boolean checkFull, @Nullable String key, List<Asn1ParameterForSet> list) {
+        if (symbolDefinition.getParameterDefinition() != null) {
+            list.addAll(
+                    symbolDefinition.getParameterDefinition().getParameterElementList().stream()
+                            .filter(item -> item.getParameterForSet() != null)
+                            .map(Asn1ParameterElement::getParameterForSet)
+                            .filter(item -> checkString(key, item.getName(), checkFull))
+                            .collect(Collectors.toList())
+            );
         }
     }
     //endregion
@@ -980,6 +724,33 @@ public final class Asn1ReferenceUtils {
         } else {
             return name.startsWith(key);
         }
+    }
+
+    @Nullable
+    public static PsiElement resolveFromMultiReference(@NotNull final PsiElement psiElement) {
+        for (final PsiReference psiReference : psiElement.getReferences()) {
+            final PsiElement resolvedElement = psiReference.resolve();
+            if (resolvedElement != null)
+                return resolvedElement;
+        }
+
+        return null;
+    }
+
+    @Nullable
+    public static PsiElement resolveType(@Nullable final Asn1SymbolType symbolType) {
+        if (symbolType == null || symbolType.getSymbolTypeReference() == null)
+            return null;
+
+        return resolveReference(symbolType.getSymbolTypeReference());
+    }
+
+    @Nullable
+    public static PsiElement resolveReference(@Nullable final Asn1SymbolTypeReference symbolTypeReference) {
+        if (symbolTypeReference == null || symbolTypeReference.getSymbolTypeReferenceValueList().isEmpty())
+            return null;
+
+        return resolveFromMultiReference(symbolTypeReference.getSymbolTypeReferenceValueList().get(symbolTypeReference.getSymbolTypeReferenceValueList().size() - 1));
     }
     //endregion
 

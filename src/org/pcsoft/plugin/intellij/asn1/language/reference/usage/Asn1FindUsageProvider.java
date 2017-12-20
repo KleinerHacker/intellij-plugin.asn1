@@ -15,7 +15,7 @@ import org.pcsoft.plugin.intellij.asn1.language.parser.token.Asn1CustomElementFa
 import org.pcsoft.plugin.intellij.asn1.language.parser.token.Asn1GenElementFactory;
 
 /**
- * Created by pfeifchr on 06.10.2016.
+ * Created by Christoph on 06.10.2016.
  */
 public class Asn1FindUsageProvider implements FindUsagesProvider {
     @Nullable
@@ -23,7 +23,7 @@ public class Asn1FindUsageProvider implements FindUsagesProvider {
     public WordsScanner getWordsScanner() {
         return new DefaultWordsScanner(
                 new Asn1LexerAdapter(),
-                TokenSet.create(Asn1GenElementFactory.NAME_CAP, Asn1GenElementFactory.NAME_LOWER, Asn1GenElementFactory.NAME_NO_CAP, Asn1GenElementFactory.NAME_UPPER),
+                TokenSet.create(Asn1GenElementFactory.NAME),
                 Asn1CustomElementFactory.COMMENT_SET,
                 TokenSet.EMPTY
         );
@@ -49,21 +49,7 @@ public class Asn1FindUsageProvider implements FindUsagesProvider {
     @NotNull
     @Override
     public String getDescriptiveName(@NotNull PsiElement psiElement) {
-        if (psiElement instanceof Asn1TypeDefinitionField) {
-            return "Type Definition Field";
-        } else if (psiElement instanceof Asn1TypeDefinition) {
-            return "Type Definition";
-        } else if (psiElement instanceof Asn1ObjectClassDefinitionField) {
-            return "Object Class Definition Field";
-        } else if (psiElement instanceof Asn1ObjectClassDefinition) {
-            return "Object Class Definition";
-        } else if (psiElement instanceof Asn1ValueDefinition) {
-            return "Object Value Definition";
-        } else if (psiElement instanceof Asn1ObjectSetParameter || psiElement instanceof Asn1TypeParameter) {
-            return "Parameter";
-        } else if (psiElement instanceof Asn1ConstantDefinitionValue) {
-            return "Constant";
-        } else if (psiElement instanceof Asn1ModuleDefinition) {
+        if (psiElement instanceof Asn1ModuleDefinition) {
             return "Module Definition";
         }
 

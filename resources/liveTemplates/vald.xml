@@ -1,0 +1,10 @@
+<templateSet group="ASN1">
+  <template name="vald" value="$NAME$ $TYPE$ ::= $VALUE$" description="Value Definition" toReformat="true" toShortenFQNames="false">
+    <variable name="NAME" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="TYPE" expression="complete()" defaultValue="INTEGER" alwaysStopAt="true" />
+    <variable name="VALUE" expression="" defaultValue="" alwaysStopAt="true" />
+    <context>
+      <option name="ASN1" value="true"/>
+    </context>
+  </template>
+</templateSet>

@@ -1,0 +1,9 @@
+<templateSet group="ASN1">
+  <template name="imp" value="$NAME$ FROM $MODULE$" description="Import Definition" toReformat="false" toShortenFQNames="true">
+    <variable name="NAME" expression="complete()" defaultValue="" alwaysStopAt="true" />
+    <variable name="MODULE" expression="complete()" defaultValue="" alwaysStopAt="true" />
+    <context>
+      <option name="ASN1" value="true"/>
+    </context>
+  </template>
+</templateSet>
