@@ -30,6 +30,23 @@
             <li><b>ASN.1 module files</b> &mdash; <code>.asn</code> and <code>.asn1</code> files are recognised and
                 shown with a dedicated icon.</li>
         </ul>
+
+        <h3>Language</h3>
+        <ul>
+            <li><b>Module definition</b> &mdash; the module header including the object identifier and the encoding,
+                tag and extension defaults is parsed; incomplete text is tolerated while typing.</li>
+            <li><b>Syntax highlighting</b> &mdash; keywords, <code>::=</code>, numbers, comments, braces, module name
+                and object identifier arcs, with a color settings page.</li>
+            <li><b>Brace matching</b> &mdash; <code>{ }</code> and <code>( )</code>.</li>
+            <li><b>Completion</b> &mdash; the tag default <code>EXPLICIT TAGS</code>, <code>IMPLICIT TAGS</code>
+                and <code>AUTOMATIC TAGS</code>, and the module keywords <code>DEFINITIONS</code>,
+                <code>BEGIN</code> and <code>END</code>.</li>
+            <li><b>Object identifier completion</b> &mdash; the known arcs (<code>iso(1)</code>,
+                <code>identified-organization(3)</code>, <code>dod(6)</code>, ...) inside the object identifier of a
+                module header.</li>
+            <li><b>Object identifier documentation</b> &mdash; quick documentation of an arc with description, number
+                and dotted notation.</li>
+        </ul>
     ]]></description>
     <version>0.1.0</version>
     <vendor url="https://github.com/KleinerHacker">KleinerHacker</vendor>

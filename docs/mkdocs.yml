@@ -48,6 +48,7 @@ theme:
 nav:
   - Home: index.md
   - File Types: file-types.md
+  - Module Definition: module-definition.md
   - API Docs: dokka/html/index.html
   - Licences:
       - Overview: licensing.md

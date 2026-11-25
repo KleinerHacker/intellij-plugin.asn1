@@ -6,8 +6,12 @@ name: development
 
 ## Planning
 
-* A plan MUST be created for EVERY change, ALWAYS ask the user to create a plan or not
-    * A switch to plan mode MUST happen
+* For non-trivial changes a plan is created; in case of doubt ask the user whether a plan should be created
+    * For small changes do NOT ask, implement them directly
+    * Do NOT switch to plan mode right away; only if the user agrees or a workflow (skill) prescribes it
+* EITHER write a plan AND enter plan mode, OR write NO plan and implement directly - never a mixture of both
+    * NEVER write a plan file outside of plan mode
+    * The plan file is written in plan mode and stored in `.claude/plans`
 * The plan and its console output MUST ALWAYS be written in GERMAN
 * For the mandatory plan format and file layout use the skill `plan-format`
 
