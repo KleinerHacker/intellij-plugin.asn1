@@ -57,7 +57,7 @@ Reference: [ITU-T X.680](https://www.itu.int/rec/T-REC-X.680) — last checked: 
 | Tag default (`EXPLICIT`, `IMPLICIT`, `AUTOMATIC TAGS`)           | Implemented |
 | Extension default (`EXTENSIBILITY IMPLIED`)                      | Implemented |
 | IRI value behind the object identifier                           | Planned     |
-| Module body (exports, imports, assignments)                      | Planned     |
+| Module body (exports, imports, assignments)                      | Partial     |
 
 ### Object Identifier Value (X.680, clause 32)
 

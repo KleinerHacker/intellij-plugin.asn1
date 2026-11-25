@@ -35,6 +35,8 @@
         <ul>
             <li><b>Module definition</b> &mdash; the module header including the object identifier and the encoding,
                 tag and extension defaults is parsed; incomplete text is tolerated while typing.</li>
+            <li><b>Assignments</b> &mdash; type and value assignments in the module body are recognised; stray text
+                is reported.</li>
             <li><b>Syntax highlighting</b> &mdash; keywords, <code>::=</code>, numbers, comments, braces, module name
                 and object identifier arcs, with a color settings page.</li>
             <li><b>Brace matching</b> &mdash; <code>{ }</code> and <code>( )</code>.</li>

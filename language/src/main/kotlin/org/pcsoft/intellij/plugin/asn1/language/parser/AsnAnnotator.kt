@@ -22,6 +22,7 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiErrorElement
 import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiWhiteSpace
+import com.intellij.psi.tree.IElementType
 import org.pcsoft.intellij.plugin.asn1.PluginBundle
 import org.pcsoft.intellij.plugin.asn1.language.parser.psi.AsnObjIdSupport
 import org.pcsoft.intellij.plugin.asn1.language.parser.psi.AsnTypes
@@ -53,7 +54,29 @@ class AsnAnnotator : Annotator, DumbAware {
 
             AsnTypes.NUMBER -> checkNumber(element, holder)
             AsnTypes.MODULE_DEFINITION -> checkHeaderDefaults(element, holder)
+            AsnTypes.ASSIGNMENT_JUNK -> holder.newAnnotation(
+                HighlightSeverity.ERROR,
+                PluginBundle.message("annotator.assignment.junk"),
+            ).range(element).create()
+
+            AsnTypes.TYPE_ASSIGNMENT -> checkNotationPresent(element, AsnTypes.TYPE_NOTATION, holder)
+            AsnTypes.VALUE_ASSIGNMENT -> checkNotationPresent(element, AsnTypes.VALUE_NOTATION, holder)
         }
+    }
+
+    /**
+     * An assignment whose right hand side is missing (e.g. `Name ::=` while typing) is reported; the already typed
+     * part stays untouched. Children are only looked at, never assumed.
+     */
+    private fun checkNotationPresent(assignment: PsiElement, notation: IElementType, holder: AnnotationHolder) {
+        var child = assignment.firstChild
+        while (child != null) {
+            if (child.node?.elementType == notation) return
+            child = child.nextSibling
+        }
+        holder.newAnnotation(HighlightSeverity.ERROR, PluginBundle.message("annotator.assignment.missing-notation"))
+            .range(assignment)
+            .create()
     }
 
     /**

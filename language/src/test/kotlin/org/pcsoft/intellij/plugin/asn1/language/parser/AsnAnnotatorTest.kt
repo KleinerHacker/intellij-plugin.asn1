@@ -134,6 +134,27 @@ class AsnAnnotatorTest : BasePlatformTestCase() {
     }
 
     /**
+     * Use case: stray text in the module body that belongs to no assignment.
+     * Expected: it is reported as error; a body with valid assignments only has no such error.
+     */
+    fun testJunkInBodyIsReported() {
+        val message = PluginBundle.message("annotator.assignment.junk")
+        assertTrue(errors("M DEFINITIONS ::= BEGIN ) A ::= INTEGER END").contains(message))
+        assertFalse(errors("M DEFINITIONS ::= BEGIN A ::= INTEGER b A ::= 1 END").contains(message))
+    }
+
+    /**
+     * Use case: an assignment without right hand side while typing (`A ::=`, `x INTEGER ::=`).
+     * Expected: the missing right hand side is reported; complete assignments are not.
+     */
+    fun testMissingNotationIsReported() {
+        val message = PluginBundle.message("annotator.assignment.missing-notation")
+        assertTrue(errors("M DEFINITIONS ::= BEGIN A ::= END").contains(message))
+        assertTrue(errors("M DEFINITIONS ::= BEGIN x INTEGER ::= END").contains(message))
+        assertFalse(errors("M DEFINITIONS ::= BEGIN A ::= INTEGER x INTEGER ::= 1 END").contains(message))
+    }
+
+    /**
      * Use case: a file with nothing but incomplete text.
      * Expected: the annotator does not fail on any of these inputs.
      */

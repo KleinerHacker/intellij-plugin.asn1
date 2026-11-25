@@ -12,6 +12,7 @@
 
 {
   parserClass="org.pcsoft.intellij.plugin.asn1.language.parser.AsnParser"
+  parserUtilClass="org.pcsoft.intellij.plugin.asn1.language.parser.AsnParserUtil"
   extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
 
   psiClassPrefix="Asn"
@@ -84,8 +85,49 @@ tagDefault ::= (EXPLICIT | IMPLICIT | AUTOMATIC) TAGS { pin=1 }
 
 extensionDefault ::= EXTENSIBILITY IMPLIED { pin=1 }
 
-// Placeholder until the module body grammar exists: every token but END belongs to the body.
-moduleBody ::= bodyToken*
+// ---------------------------------------------------------------------------------------------------------
+// Module body: a sequence of assignments (ITU-T X.680, clause 13.1). The notations on the right hand side are
+// placeholders for now: they collect the tokens up to the next assignment, with braces kept pairwise together.
+// A token that fits no assignment is collected as assignmentJunk up to the next assignment start.
+// ---------------------------------------------------------------------------------------------------------
+moduleBody ::= assignment*
+
+assignment ::= typeAssignment | valueAssignment | assignmentJunk
+
+// No recoverWhile on the two assignments: Grammar-Kit runs it even if the rule fails at its first token and would
+// swallow the start of the next alternative. Leftover tokens are collected by assignmentJunk.
+typeAssignment ::= UPPER_REFERENCE ASSIGN typeNotation { pin=2 }
+
+// The type between the value name and "::=" ends at "::=" only: its first words may look like a type assignment
+// start (e.g. "INTEGER ::="), so no assignment start check is made there.
+valueAssignment ::= IDENTIFIER valueTypeItem+ ASSIGN valueNotation { pin=3 }
+
+assignmentJunk ::= !END bodyToken { recoverWhile=assignmentRecover }
+
+// The names make the pinned assignment report "type notation expected" if the right hand side is missing.
+typeNotation ::= (!atAssignmentStart notationItem)+ { name="type notation" }
+
+valueNotation ::= (!atAssignmentStart notationItem)+ { name="value notation" }
+
+private valueTypeItem ::= bracedGroup | plainItem
+
+private notationItem ::= bracedGroup | plainItem
+
+private plainItem ::= !(ASSIGN | END | LBRACE | RBRACE) bodyToken
+
+// Braces stay together. An unterminated group ends at "END" or at the next assignment start, whatever follows is
+// not swallowed.
+private bracedGroup ::= LBRACE groupItem* RBRACE { pin=1 }
+
+private groupItem ::= bracedGroup | !(RBRACE | END | atAssignmentStart) bodyToken
+
+private assignmentRecover ::= !(atAssignmentStart | END)
+
+external atAssignmentStart ::= atAssignmentStart
+
+external comma ::= comma
+
+external semicolon ::= semicolon
 
 private bodyToken ::= DEFINITIONS | BEGIN | EXPLICIT | IMPLICIT | AUTOMATIC | TAGS | EXTENSIBILITY | IMPLIED
                     | INSTRUCTIONS | ASSIGN | LBRACE | RBRACE | LPAREN | RPAREN | NUMBER | UPPER_REFERENCE
