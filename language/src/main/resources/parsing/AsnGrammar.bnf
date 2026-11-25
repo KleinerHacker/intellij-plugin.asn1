@@ -1,0 +1,125 @@
+/*
+ * Copyright (c) KleinerHacker alias Pfeiffer C Soft 2026.
+ * This work is licensed under the Apache License, Version 2.0.
+ * You may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at:
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, this software is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and limitations.
+ */
+
+{
+  parserClass="org.pcsoft.intellij.plugin.asn1.language.parser.AsnParser"
+  extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
+
+  psiClassPrefix="Asn"
+  psiImplClassSuffix="Impl"
+  psiPackage="org.pcsoft.intellij.plugin.asn1.language.parser.psi"
+  psiImplPackage="org.pcsoft.intellij.plugin.asn1.language.parser.psi.impl"
+
+  elementTypeHolderClass="org.pcsoft.intellij.plugin.asn1.language.parser.psi.AsnTypes"
+  elementTypeClass="org.pcsoft.intellij.plugin.asn1.language.parser.psi.AsnElementType"
+  tokenTypeClass="org.pcsoft.intellij.plugin.asn1.language.parser.psi.AsnTokenType"
+
+  // The regular expressions only document the lexer (AsnLexer.flex); the lexer itself is not generated from here.
+  tokens=[
+    DEFINITIONS    = "DEFINITIONS"
+    BEGIN          = "BEGIN"
+    END            = "END"
+    EXPLICIT       = "EXPLICIT"
+    IMPLICIT       = "IMPLICIT"
+    AUTOMATIC      = "AUTOMATIC"
+    TAGS           = "TAGS"
+    EXTENSIBILITY  = "EXTENSIBILITY"
+    IMPLIED        = "IMPLIED"
+    INSTRUCTIONS   = "INSTRUCTIONS"
+
+    ASSIGN         = "::="
+    LBRACE         = "{"
+    RBRACE         = "}"
+    LPAREN         = "("
+    RPAREN         = ")"
+
+    NUMBER          = "regexp:[0-9]+"
+    UPPER_REFERENCE = "regexp:[A-Z](-?[A-Za-z0-9])*"
+    IDENTIFIER      = "regexp:[a-z](-?[A-Za-z0-9])*"
+    OTHER_SYMBOL    = "regexp:[!-/:-@\[-`{-~]"
+    LINE_COMMENT    = "regexp:--.*"
+    BLOCK_COMMENT   = "regexp:/\*.*\*/"
+    BAD_CHARACTER   = "regexp:."
+  ]
+}
+
+// ---------------------------------------------------------------------------------------------------------
+// File level: a sequence of module definitions. Everything between modules that cannot start a module is
+// skipped (with an error) up to the next module reference, so the parser never gives up on a file.
+// ---------------------------------------------------------------------------------------------------------
+private asnFile ::= item*
+
+private item ::= moduleDefinition | junkToken
+
+// A token that cannot start a module. A run of such tokens is reported as error up to the next module reference;
+// a single one is reported by the annotator.
+private junkToken ::= !UPPER_REFERENCE anyToken { recoverWhile=itemRecover }
+private anyToken ::= bodyToken | END
+private itemRecover ::= !UPPER_REFERENCE
+
+// ---------------------------------------------------------------------------------------------------------
+// Module definition (ITU-T X.680, clause 13). Pinned after the module identifier: whatever is missing behind
+// it is reported as an error, the already typed part stays in the tree.
+// ---------------------------------------------------------------------------------------------------------
+moduleDefinition ::= moduleIdentifier DEFINITIONS headerDefault* ASSIGN BEGIN moduleBody END { pin=1 }
+
+moduleIdentifier ::= UPPER_REFERENCE definitiveIdentifier? { recoverWhile=headerRecover }
+
+// Order and uniqueness of the defaults (encoding reference, tag, extension) is checked by the annotator, the
+// parser accepts them leniently in any order and any number.
+private headerDefault ::= tagDefault | extensionDefault | encodingReferenceDefault
+
+encodingReferenceDefault ::= UPPER_REFERENCE INSTRUCTIONS { pin=1 }
+
+tagDefault ::= (EXPLICIT | IMPLICIT | AUTOMATIC) TAGS { pin=1 }
+
+extensionDefault ::= EXTENSIBILITY IMPLIED { pin=1 }
+
+// Placeholder until the module body grammar exists: every token but END belongs to the body.
+moduleBody ::= bodyToken*
+
+private bodyToken ::= DEFINITIONS | BEGIN | EXPLICIT | IMPLICIT | AUTOMATIC | TAGS | EXTENSIBILITY | IMPLIED
+                    | INSTRUCTIONS | ASSIGN | LBRACE | RBRACE | LPAREN | RPAREN | NUMBER | UPPER_REFERENCE
+                    | IDENTIFIER | OTHER_SYMBOL | BAD_CHARACTER
+
+private headerRecover ::= !(DEFINITIONS | ASSIGN | BEGIN | END)
+
+// ---------------------------------------------------------------------------------------------------------
+// Definitive object identifier of a module identifier: { iso(1) identified-organization(3) 6 }
+// ---------------------------------------------------------------------------------------------------------
+definitiveIdentifier ::= LBRACE definitiveObjIdComponent+ RBRACE { pin=1 recoverWhile=headerRecover }
+
+definitiveObjIdComponent ::= definitiveNameAndNumberForm | nameForm | definitiveNumberForm
+
+definitiveNameAndNumberForm ::= nameForm LPAREN definitiveNumberForm RPAREN { pin=2 }
+
+definitiveNumberForm ::= NUMBER
+
+// ---------------------------------------------------------------------------------------------------------
+// Object identifier value (ITU-T X.680, clause 32) as a description of its own: reused wherever an object
+// identifier value is needed, not tied to the module definition. A leading DefinedValue is syntactically
+// identical to a NameForm and therefore parsed as such.
+// ---------------------------------------------------------------------------------------------------------
+objectIdentifierValue ::= LBRACE objIdComponents+ RBRACE { pin=1 recoverWhile=objectIdentifierValueRecover extraRoot=true }
+
+private objectIdentifierValueRecover ::= !(RBRACE | DEFINITIONS | ASSIGN | BEGIN | END)
+
+objIdComponents ::= nameAndNumberForm | nameForm | numberForm
+
+nameAndNumberForm ::= nameForm LPAREN numberForm RPAREN { pin=2 }
+
+numberForm ::= NUMBER | definedValue
+
+definedValue ::= IDENTIFIER
+
+// Shared by the definitive identifier and the object identifier value.
+nameForm ::= IDENTIFIER

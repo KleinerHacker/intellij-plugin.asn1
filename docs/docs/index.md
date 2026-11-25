@@ -19,9 +19,13 @@ cryptography (e.g. X.509 certificates) and network protocols (e.g. SNMP, LDAP).
 
 ## What this Plugin does
 
-The plugin brings language support for ASN.1 to any JetBrains IDE. The current state is the basic structure:
+The plugin brings language support for ASN.1 to any JetBrains IDE. The current state is the basic structure and the
+module header:
 
 - **File types** — `.asn` and `.asn1` files are recognised and shown with a dedicated icon
+- **Module definition** — parsing of the module header including the object identifier, syntax highlighting,
+  brace matching and completion of the tag default (`EXPLICIT TAGS`, `IMPLICIT TAGS`, `AUTOMATIC TAGS`) and of the module keywords
+  `DEFINITIONS`, `BEGIN` and `END`
 
-See [File Types](file-types.md) for details. The full list of supported features is kept in the
+See [File Types](file-types.md) and [Module Definition](module-definition.md) for details. The full list of supported features is kept in the
 [README](https://github.com/KleinerHacker/intellij-plugin.asn1#implementation-status).

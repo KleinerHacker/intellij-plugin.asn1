@@ -22,6 +22,11 @@ IDEs.
 ### Features
 
 * ASN.1 file type for `.asn` and `.asn1` files with a dedicated icon
+* Parsing of the module header (module name, object identifier, encoding, tag and extension defaults)
+* Syntax highlighting, color settings page and brace matching
+* Completion of the tag default (`EXPLICIT TAGS`, `IMPLICIT TAGS`, `AUTOMATIC TAGS`)
+* Completion of the module keywords `DEFINITIONS`, `BEGIN` and `END`
+* Error tolerant parsing: incomplete text never breaks the editor
 
 ### IDE Compatibility
 
@@ -37,11 +42,35 @@ Reference: [ITU-T X.680](https://www.itu.int/rec/T-REC-X.680) — last checked: 
 |-----------------------------|-------------|
 | `.asn` / `.asn1` file types | Implemented |
 
-### Not implemented yet
+### Module Definition (X.680, clause 13)
 
-* Lexer, parser and PSI
-* Syntax highlighting
-* All further editor features
+| Feature                                                          | Status      |
+|------------------------------------------------------------------|-------------|
+| Module name and definitive object identifier (all forms)         | Implemented |
+| `DEFINITIONS`, `::=`, `BEGIN`, `END`                             | Implemented |
+| Encoding reference default (`XER INSTRUCTIONS`)                  | Implemented |
+| Tag default (`EXPLICIT`, `IMPLICIT`, `AUTOMATIC TAGS`)           | Implemented |
+| Extension default (`EXTENSIBILITY IMPLIED`)                      | Implemented |
+| IRI value behind the object identifier                           | Planned     |
+| Module body (exports, imports, assignments)                      | Planned     |
+
+### Object Identifier Value (X.680, clause 32)
+
+| Feature                                         | Status      |
+|-------------------------------------------------|-------------|
+| Name, number and name with number forms         | Implemented |
+| Reference to a defined value as component       | Partial     |
+
+### Editor Features
+
+| Feature                                                     | Status      |
+|-------------------------------------------------------------|-------------|
+| Syntax highlighting and color settings page                 | Implemented |
+| Brace matching                                              | Implemented |
+| Completion of the tag default                               | Implemented |
+| Completion of `DEFINITIONS`, `BEGIN` and `END`              | Implemented |
+| Error tolerant parsing while typing                         | Implemented |
+| Further completion, navigation, refactoring, formatting     | Planned     |
 
 ## Getting Started (Development)
 

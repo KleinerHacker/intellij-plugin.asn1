@@ -6,6 +6,7 @@ changelog = "2.5.0"
 foojay-resolver = "1.0.0"
 intellij-platform = "2.18.1"
 idea = "2026.3"
+grammarkit = "2023.3.0.4"
 
 [libraries]
 junit = { module = "junit:junit", version.ref = "junit" }
@@ -22,3 +23,4 @@ kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 changelog = { id = "org.jetbrains.changelog", version.ref = "changelog" }
 foojay-resolver = { id = "org.gradle.toolchains.foojay-resolver-convention", version.ref = "foojay-resolver" }
 intellij-platform-settings = { id = "org.jetbrains.intellij.platform.settings", version.ref = "intellij-platform" }
+grammarkit = { id = "org.jetbrains.grammarkit", version.ref = "grammarkit" }

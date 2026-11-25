@@ -18,5 +18,20 @@
                   implementationClass="org.pcsoft.intellij.plugin.asn1.language.AsnFileType"
                   fieldName="INSTANCE"
                   extensions="asn;asn1"/>
+
+        <lang.parserDefinition language="ASN.1"
+                               implementationClass="org.pcsoft.intellij.plugin.asn1.language.parser.AsnParserDefinition"/>
+
+        <lang.syntaxHighlighterFactory language="ASN.1"
+                                       implementationClass="org.pcsoft.intellij.plugin.asn1.language.parser.AsnSyntaxHighlighterFactory"/>
+        <annotator language="ASN.1"
+                   implementationClass="org.pcsoft.intellij.plugin.asn1.language.parser.AsnAnnotator"/>
+        <colorSettingsPage implementation="org.pcsoft.intellij.plugin.asn1.language.feature.editor.AsnColorSettingsPage"/>
+
+        <lang.braceMatcher language="ASN.1"
+                           implementationClass="org.pcsoft.intellij.plugin.asn1.language.feature.editor.AsnBraceMatcher"/>
+
+        <completion.contributor language="ASN.1"
+                                implementationClass="org.pcsoft.intellij.plugin.asn1.language.feature.completion.AsnCompletionContributor"/>
     </extensions>
 </idea-plugin>

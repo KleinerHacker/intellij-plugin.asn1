@@ -6,8 +6,9 @@ name: development
 
 ## Planning
 
-* A plan MUST be created for EVERY change, ALWAYS ask the user to create a plan or not
-    * A switch to plan mode MUST happen
+* For non-trivial changes a plan is created; in case of doubt ask the user whether a plan should be created
+    * For small changes do NOT ask, implement them directly
+    * Do NOT switch to plan mode right away; only if the user agrees or a workflow (skill) prescribes it
 * The plan and its console output MUST ALWAYS be written in GERMAN
 * For the mandatory plan format and file layout use the skill `plan-format`
 
