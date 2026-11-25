@@ -1,0 +1,53 @@
+name: Set up Gradle build environment
+description: >-
+  Installs the JDK and wires up the shared Gradle build cache. Used by the build job (which produces the
+  cache) and by both test jobs (which consume it), so all three provably start from identical preconditions
+  — with the steps duplicated per job they would drift apart over time, and GitHub Actions has no YAML
+  anchors to prevent that.
+
+  Saving the cache is NOT part of this action: a composite action cannot register a post-job step, so the
+  save has to run after the Gradle invocation. The producing job therefore appends its own
+  actions/cache/save step (see the build job in ci.yml / release.yml).
+
+  The repository checkout is NOT part of this action either: a local action can only be resolved once the
+  repository is already on disk, so the calling job must run actions/checkout first.
+
+runs:
+  using: composite
+  steps:
+    - name: Set up JDK
+      uses: actions/setup-java@v5
+      with:
+        distribution: temurin
+        java-version: '25'
+        cache: gradle
+
+    - name: Make Gradle wrapper executable
+      run: chmod +x ./gradlew
+      shell: bash
+
+    # The build cache lives inside the workspace, not in the Gradle user home: the latter is managed by
+    # actions/setup-java above, and two cache actions writing the same directory would fight over it.
+    # settings.gradle.kts picks this variable up and relocates the local build cache accordingly.
+    - name: Point Gradle at the shared build cache directory
+      run: echo "GRADLE_BUILD_CACHE_DIR=${{ github.workspace }}/.gradle-build-cache" >> "$GITHUB_ENV"
+      shell: bash
+
+    # Deliberately NOT keyed on runner.os: the build job runs on Linux, the integration tests on Windows,
+    # and the JVM compilation output in the cache is platform independent. A per-OS key would make the
+    # Windows job miss every entry the build job produced.
+    #
+    # The key alone is not enough: without `enableCrossOsArchive` actions/cache versions every cache
+    # per operating system, so the Windows job would still never see what the Linux build job saved.
+    # The same flag MUST be set on the save step of the build job (see ci.yml / release.yml).
+    - name: Restore shared build cache
+      uses: actions/cache/restore@v4
+      with:
+        enableCrossOsArchive: true
+        path: ${{ github.workspace }}/.gradle-build-cache
+        # Exact hit on the cache the build job of THIS run wrote; the fallback reuses an earlier run's
+        # cache, which is still safe — Gradle validates every entry against its own input hashes and
+        # simply ignores the ones that no longer match.
+        key: gradle-build-cache-${{ github.run_id }}
+        restore-keys: |
+          gradle-build-cache-

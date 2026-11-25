@@ -1,0 +1,341 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, master, developer ]
+  pull_request:
+
+permissions:
+  contents: write
+
+jobs:
+  # Classifies the diff so that only the parts of the pipeline that can actually be affected run.
+  # Deliberately done here instead of with `on.<event>.paths`: a trigger-level filter would skip the whole
+  # workflow, leaving required status checks stuck on "Expected" for pull requests that touch nothing
+  # relevant. With a job-level `if` the workflow always starts and unaffected jobs report as "skipped",
+  # which counts as success for branch protection.
+  #
+  # `github` is a separate escape hatch rather than a path inside the other filters: a change to the
+  # pipeline itself (workflow, composite action, anything else under .github) must run EVERYTHING, because
+  # what it affects cannot be derived from the diff. Every job below therefore ORs this output into its
+  # condition.
+  #
+  # `**/src/**` covers every module source tree at once — plugin/src, language/*/src and buildSrc/src.
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      github: ${{ steps.filter.outputs.github }}
+      code: ${{ steps.filter.outputs.code }}
+      docs: ${{ steps.filter.outputs.docs }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Detect changed paths
+        id: filter
+        uses: dorny/paths-filter@v4
+        with:
+          filters: |
+            github:
+              - '.github/**'
+            code:
+              - '**/src/**'
+              - 'buildSrc/**'
+              - '**/*.gradle.kts'
+              - 'gradle/**'
+              - 'gradlew'
+              - 'gradlew.bat'
+              - 'gradle.properties'
+            docs:
+              - 'docs/**'
+
+  check-licences:
+    runs-on: ubuntu-latest
+    needs: changes
+    if: needs.changes.outputs.github == 'true' || needs.changes.outputs.code == 'true'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      # JDK, executable wrapper and Gradle caches come from the shared composite action. A plain
+      # actions/setup-java with `cache: gradle` found no cache in the sibling jobs and spent minutes at the
+      # end of the job trying to save one the registry rejected.
+      - uses: ./.github/actions/setup-gradle
+
+      # Every Gradle invocation below goes through the local `gradle` action instead of calling ./gradlew
+      # directly: it repeats the run when it failed because a dependency repository was unreachable, and
+      # only then. See .github/actions/gradle for what counts as such a failure.
+      - name: Check licences
+        uses: ./.github/actions/gradle
+        with:
+          arguments: licensee --stacktrace --info
+
+      - name: Generate SBOM
+        uses: ./.github/actions/gradle
+        with:
+          arguments: cyclonedxBom --stacktrace
+
+  # Head of the pipeline: this job compiles everything once — production code (`assemble`) AND test code
+  # (`testClasses`) — and publishes the result through the shared Gradle build cache. Both test jobs depend
+  # on it and restore that cache, so they no longer recompile what has already been built here. A
+  # compilation failure is therefore also reported as such, in one place, instead of surfacing identically
+  # in both test jobs.
+  build:
+    runs-on: ubuntu-latest
+    needs: changes
+    if: needs.changes.outputs.github == 'true' || needs.changes.outputs.code == 'true'
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
+
+    steps:
+      # The local composite action can only be resolved once the repo is on disk.
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - uses: ./.github/actions/setup-gradle
+
+      - name: Assemble
+        uses: ./.github/actions/gradle
+        with:
+          arguments: assemble testClasses --build-cache --stacktrace --info
+
+      # Must run here rather than inside the composite action: the cache can only be saved once the build
+      # has filled it, and a composite action cannot register a post-job step.
+      #
+      # `enableCrossOsArchive` is required because caches may be restored on different operating systems;
+      # without it actions/cache keeps Linux and Windows caches apart. Must match the restore step in
+      # .github/actions/setup-gradle.
+      - name: Save shared build cache
+        if: always()
+        uses: actions/cache/save@v6
+        with:
+          enableCrossOsArchive: true
+          path: ${{ github.workspace }}/.gradle-build-cache
+          key: gradle-build-cache-${{ github.run_id }}
+
+  # Developer tests: every test class NOT named *IT. The fast inner-loop suite.
+  # Runs in parallel with the integration tests, both fed by the build job's cache.
+  # No path condition of its own: a skipped `needs` propagates the skip down the whole chain, so gating
+  # `build` above is enough to switch off everything that follows it.
+  test-developer:
+    runs-on: ubuntu-latest
+    needs:
+      - build
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
+
+    steps:
+      # The local composite action can only be resolved once the repo is on disk.
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - uses: ./.github/actions/setup-gradle
+
+      # Dedicated task (see the root build.gradle.kts); `test` would run BOTH suites.
+      - name: Run developer tests
+        uses: ./.github/actions/gradle
+        with:
+          arguments: developerTest --build-cache --stacktrace --info
+
+      # Uploaded on failure too — that is the case the report is actually needed for. Three sources, because
+      # the HTML report alone is not enough to diagnose a failure that only happens on CI:
+      #   reports/      the browsable HTML report
+      #   test-results/ the JUnit XML, which carries the full stack trace and stdout/stderr per test
+      #   sandbox logs  the per-test idea.log under .intellijPlatform/sandbox/<module>/<ide>/log-test/;
+      #                 platform tests write their diagnostics there rather than to the console
+      #                 (idea.split.test.logs=true, see the module build scripts)
+      - name: Upload test report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: test-report-developer
+          path: |
+            **/build/reports/tests/developerTest/**
+            **/build/test-results/developerTest/**
+            .intellijPlatform/sandbox/*/*/log-test/**
+          # An empty artifact would silently hide a broken path; fail loudly instead.
+          if-no-files-found: error
+
+  # Integration tests: test classes named *IT — shipped-artifact smoke tests and the timing-based performance
+  # guards. Runs at the same time as the developer tests, from the identical setup and off the same
+  # build-job cache.
+  test-integration:
+    runs-on: ubuntu-latest
+    needs: build
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
+
+    steps:
+      # The local composite action can only be resolved once the repo is on disk.
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - uses: ./.github/actions/setup-gradle
+
+      # The gradle action runs the wrapper from bash and hands it the argument line word-split, so
+      # `-Pversion=1.0.0` arrives as exactly one argument. That also retires the pwsh problem this step
+      # used to work around: pwsh split an unquoted `-Pversion=1.0.0` into `-Pversion=1` and `.0.0`, and
+      # Gradle then aborted with "Task '.0.0' not found" — which is how the 1.0.0 release failed. Do NOT
+      # add quotes around a value here: the argument line gets no quote processing, so they would reach
+      # Gradle as part of the value.
+      - name: Run integration tests
+        uses: ./.github/actions/gradle
+        with:
+          arguments: integrationTest --build-cache --stacktrace --info
+
+      # Own task, hence its own report and result directories — separate from the developer suite.
+      # See the developer job above for what each of the three paths contributes.
+      - name: Upload test report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: test-report-integration
+          path: |
+            **/build/reports/tests/integrationTest/**
+            **/build/test-results/integrationTest/**
+            .intellijPlatform/sandbox/*/*/log-test/**
+          if-no-files-found: error
+
+  # Single gate name for everything downstream: the pipeline continues only when BOTH suites are green.
+  tests:
+    runs-on: ubuntu-latest
+    needs:
+      - test-developer
+      - test-integration
+    steps:
+      - name: Both test suites passed
+        run: echo "Developer and integration tests are green."
+
+  # Run the JetBrains Plugin Verifier against the full IDE matrix declared in
+  # plugin/build.gradle.kts (IntelliJ IDEA, Rider, CLion, GoLand). The matrix is version-catalog driven,
+  # so this job automatically follows a platform bump. See .claude/rules/plugin-verification.md.
+  #
+  # Depends on the build only, NOT on the tests: it is the longest job of the pipeline and needs nothing the
+  # tests produce, so it runs alongside both suites instead of behind them. A red suite still fails the
+  # workflow through the `tests` job — it just no longer holds this job back.
+  verify-plugin:
+    runs-on: ubuntu-latest
+    needs: build
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - uses: ./.github/actions/setup-gradle
+
+      # The heaviest downloader of the whole pipeline — it pulls a complete IDE per matrix entry, so it is
+      # also the job most exposed to a hiccup on the JetBrains side.
+      - name: Verify plugin
+        uses: ./.github/actions/gradle
+        with:
+          arguments: verifyPlugin --build-cache --stacktrace
+
+      - name: Upload verification report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: plugin-verification-report
+          path: '**/build/reports/pluginVerifier/**'
+
+  # Verify that the freshly built plugin can actually be signed with the signing material
+  # currently stored in the repository secrets — so a broken/expired certificate or a wrong
+  # password is caught on every push instead of only failing the real release.
+  verify-signing:
+    runs-on: ubuntu-latest
+    # Gated on the tests: a red suite must stop the pipeline, not merely be reported next to it.
+    needs: tests
+    # Secrets are not exposed to pull requests coming from forks; only run where they exist.
+    if: ${{ github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - uses: ./.github/actions/setup-gradle
+
+      - name: Check signing secrets presence
+        id: secrets
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+        run: |
+          if [ -n "$KEYSTORE_BASE64" ] && [ -n "$KEYSTORE_PASSWORD" ] && [ -n "$KEY_ALIAS" ]; then
+            echo "available=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "available=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::Signing secrets (KEYSTORE_BASE64 / KEYSTORE_PASSWORD / KEY_ALIAS) not configured — skipping signability check."
+          fi
+
+      # Secrets touch the environment only in this trusted printf-only step; the Gradle/signer
+      # process below gets just file paths (umask 077 keeps the files private).
+      #
+      # What the signer needs is handed on through $GITHUB_ENV instead of through `env:` on the Gradle
+      # step: a step that calls a composite action does not documentedly pass its own `env:` down into
+      # that action's steps, whereas $GITHUB_ENV is the shared store composite actions do see. The only
+      # step that follows in this job is that Gradle call, so the reach of the values is unchanged.
+      - name: Write signing material
+        if: steps.secrets.outputs.available == 'true'
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+        run: |
+          umask 077
+          printf '%s' "$KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/keystore.p12"
+          printf '%s' "$KEYSTORE_PASSWORD"           > "$RUNNER_TEMP/keystore.pass"
+          {
+            echo "KEYSTORE_FILE=$RUNNER_TEMP/keystore.p12"
+            echo "KEYSTORE_PASSWORD_FILE=$RUNNER_TEMP/keystore.pass"
+            echo "KEY_ALIAS=$KEY_ALIAS"
+          } >> "$GITHUB_ENV"
+
+      # Signing itself is offline, but the task chain in front of it builds the plugin and therefore
+      # resolves the whole platform — the same exposure as every other build job.
+      - name: Build and sign the plugin (signability check)
+        if: steps.secrets.outputs.available == 'true'
+        uses: ./.github/actions/gradle
+        with:
+          arguments: signPlugin --build-cache --stacktrace --info
+
+  # Build the docs as a generation test (mkdocs --strict) on every push and PR.
+  # Verification only — the gh-pages site is updated solely by tag releases
+  # (see release.yml). No deployment happens from this workflow.
+  # Runs independently of the build chain: a pure documentation change needs no compilation, and a pure
+  # code change needs no docs build.
+  validate-docs:
+    runs-on: ubuntu-latest
+    needs: changes
+    if: needs.changes.outputs.github == 'true' || needs.changes.outputs.docs == 'true'
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: 3.x
+
+      - name: Pip Update
+        run: pip install --upgrade pip
+
+      - name: Set up JDK
+        uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '25'
+          cache: gradle
+
+      - name: Make Gradle wrapper executable
+        run: chmod +x ./gradlew
+
+      # Retried as well: the task installs the MkDocs toolchain from PyPI, which is exactly the same kind
+      # of exposure to a remote repository.
+      - name: Build docs
+        uses: ./.github/actions/gradle
+        with:
+          arguments: buildDocs --stacktrace --info

@@ -1,0 +1,461 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - '*'
+
+permissions:
+  contents: write
+
+jobs:
+  # Head of the whole release pipeline: nothing is built, tested or published before the CHANGELOG.md is
+  # known to describe the tag being released. The release job extracts the very same section later on to
+  # fill the GitHub release notes — without this gate that failure would only surface at the very end,
+  # after the plugin has already been pushed to the Marketplace and the docs to gh-pages.
+  changelog:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Verify changelog entry for the release version
+        run: |
+          TAG="${{ github.ref_name }}"
+          if [ ! -f CHANGELOG.md ]; then
+            echo "ERROR: CHANGELOG.md not found"
+            exit 1
+          fi
+          # Same extraction the release job uses: everything between `## [TAG]` and the next `## [` heading.
+          NOTES=$(awk "/^## \[$TAG\]/{found=1; next} found && /^## \[/{exit} found{print}" CHANGELOG.md)
+          if [ -z "$(echo "$NOTES" | tr -d '[:space:]')" ]; then
+            echo "ERROR: No changelog entry found for tag $TAG — add a '## [$TAG]' section to CHANGELOG.md"
+            exit 1
+          fi
+          echo "Changelog entry for $TAG found."
+
+  licences:
+    runs-on: ubuntu-latest
+    needs: changelog
+
+    steps:
+      - uses: actions/checkout@v7
+
+      # JDK, executable wrapper and Gradle caches come from the shared composite action, like in ci.yml.
+      - uses: ./.github/actions/setup-gradle
+
+      # Every Gradle invocation below goes through the local `gradle` action instead of calling ./gradlew
+      # directly: it repeats the run when it failed because a dependency repository was unreachable, and
+      # only then. A release is triggered by a tag and cannot simply be re-run, which makes that
+      # resilience worth even more here than in ci.yml. See .github/actions/gradle.
+      - name: Check licences
+        uses: ./.github/actions/gradle
+        with:
+          arguments: licensee --stacktrace
+
+      - name: Generate SBOM
+        uses: ./.github/actions/gradle
+        with:
+          arguments: cyclonedxBom --stacktrace
+
+      - name: Upload SBOM artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: sbom
+          path: plugin/build/reports/cyclonedx/bom.xml
+
+  # Head of the pipeline: this job compiles everything once — the distributable plugin (`buildPlugin`) AND
+  # the test code (`testClasses`) — and publishes the result through the shared Gradle build cache. Both
+  # test jobs depend on it and restore that cache, so they no longer recompile what has already been built
+  # here. A compilation failure is therefore also reported as such, in one place, instead of surfacing
+  # identically in both test jobs.
+  build:
+    runs-on: ubuntu-latest
+    needs: changelog
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
+
+    steps:
+      # The local composite action can only be resolved once the repo is on disk.
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - uses: ./.github/actions/setup-gradle
+
+      - name: Build plugin
+        uses: ./.github/actions/gradle
+        with:
+          arguments: buildPlugin testClasses -Pversion=${{ github.ref_name }} --build-cache --stacktrace --info
+
+      # Must run here rather than inside the composite action: the cache can only be saved once the build
+      # has filled it, and a composite action cannot register a post-job step.
+      #
+      # `enableCrossOsArchive` is required because caches may be restored on different operating systems;
+      # without it actions/cache keeps Linux and Windows caches apart. Must match the restore step in
+      # .github/actions/setup-gradle.
+      - name: Save shared build cache
+        if: always()
+        uses: actions/cache/save@v6
+        with:
+          enableCrossOsArchive: true
+          path: ${{ github.workspace }}/.gradle-build-cache
+          key: gradle-build-cache-${{ github.run_id }}
+
+      - name: Upload plugin artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: plugin-distribution
+          path: plugin/build/distributions/*.zip
+
+  # Developer tests: every test class NOT named *IT. The fast inner-loop suite.
+  # Runs in parallel with the integration tests, both fed by the build job's cache.
+  test-developer:
+    runs-on: ubuntu-latest
+    needs:
+      - build
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
+
+    steps:
+      # The local composite action can only be resolved once the repo is on disk.
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - uses: ./.github/actions/setup-gradle
+
+      # Dedicated task (see the root build.gradle.kts); `test` would run BOTH suites.
+      # -Pversion mirrors the build job so both see identical task inputs — otherwise the cache entries
+      # written there would not match here.
+      - name: Run developer tests
+        uses: ./.github/actions/gradle
+        with:
+          arguments: developerTest -Pversion=${{ github.ref_name }} --build-cache --stacktrace --info
+
+      # Uploaded on failure too — that is the case the report is actually needed for. Three sources, because
+      # the HTML report alone is not enough to diagnose a failure that only happens on CI:
+      #   reports/      the browsable HTML report
+      #   test-results/ the JUnit XML, which carries the full stack trace and stdout/stderr per test
+      #   sandbox logs  the per-test idea.log under .intellijPlatform/sandbox/<module>/<ide>/log-test/;
+      #                 platform tests write their diagnostics there rather than to the console
+      #                 (idea.split.test.logs=true, see the module build scripts)
+      - name: Upload test report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: test-report-developer
+          path: |
+            **/build/reports/tests/developerTest/**
+            **/build/test-results/developerTest/**
+            .intellijPlatform/sandbox/*/*/log-test/**
+          # An empty artifact would silently hide a broken path; fail loudly instead.
+          if-no-files-found: error
+
+  # Integration tests: test classes named *IT — shipped-artifact smoke tests and the timing-based performance
+  # guards. Runs at the same time as the developer tests, from the identical setup and off the same
+  # build-job cache.
+  test-integration:
+    runs-on: ubuntu-latest
+    needs: build
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
+
+    steps:
+      # The local composite action can only be resolved once the repo is on disk.
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - uses: ./.github/actions/setup-gradle
+
+      # -Pversion mirrors the build job so both see identical task inputs.
+      #
+      # The gradle action runs the wrapper from bash and hands it the argument line word-split, so
+      # `-Pversion=1.0.0` arrives as exactly one argument. That also retires the pwsh problem this step
+      # used to work around: pwsh split an unquoted `-Pversion=1.0.0` into `-Pversion=1` and `.0.0`, and
+      # Gradle then aborted with "Task '.0.0' not found" before a single test had run — which is exactly
+      # how the 1.0.0 release failed. Do NOT re-add the quotes: the argument line gets no quote
+      # processing, so they would reach Gradle as part of the version.
+      - name: Run integration tests
+        uses: ./.github/actions/gradle
+        with:
+          arguments: integrationTest -Pversion=${{ github.ref_name }} --build-cache --stacktrace --info
+
+      # Own task, hence its own report and result directories — separate from the developer suite.
+      # See the developer job above for what each of the three paths contributes.
+      - name: Upload test report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: test-report-integration
+          path: |
+            **/build/reports/tests/integrationTest/**
+            **/build/test-results/integrationTest/**
+            .intellijPlatform/sandbox/*/*/log-test/**
+          if-no-files-found: error
+
+  # Single gate name for everything that publishes: a release only happens when BOTH suites are green.
+  # Until this was introduced a tagged release was published without running any test at all.
+  tests:
+    runs-on: ubuntu-latest
+    needs:
+      - test-developer
+      - test-integration
+    steps:
+      - name: Both test suites passed
+        run: echo "Developer and integration tests are green."
+
+  # Run the JetBrains Plugin Verifier against the full IDE matrix declared in plugin/build.gradle.kts
+  # (IntelliJ IDEA, Rider, CLion, GoLand). A release must never publish a plugin that fails verification
+  # on one of the supported products. See .claude/rules/plugin-verification.md.
+  verify-plugin:
+    runs-on: ubuntu-latest
+    # Gated on the tests: a red suite must stop the pipeline, not merely be reported next to it.
+    needs: tests
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: ./.github/actions/setup-gradle
+
+      # The heaviest downloader of the whole pipeline — it pulls a complete IDE per matrix entry, so it is
+      # also the job most exposed to a hiccup on the JetBrains side.
+      - name: Verify plugin
+        uses: ./.github/actions/gradle
+        with:
+          arguments: verifyPlugin -Pversion=${{ github.ref_name }} --build-cache --stacktrace
+
+      - name: Upload verification report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: plugin-verification-report
+          path: '**/build/reports/pluginVerifier/**'
+
+  # Build the docs as a generation test (mkdocs --strict) before they get deployed.
+  validate-docs:
+    runs-on: ubuntu-latest
+    needs: changelog
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: 3.x
+
+      - name: Pip Update
+        run: pip install --upgrade pip
+
+      - name: Set up JDK
+        uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '25'
+          cache: gradle
+
+      - name: Make Gradle wrapper executable
+        run: chmod +x ./gradlew
+
+      # Retried as well: the task installs the MkDocs toolchain from PyPI, which is exactly the same kind
+      # of exposure to a remote repository.
+      - name: Build docs
+        uses: ./.github/actions/gradle
+        with:
+          arguments: buildDocs --stacktrace --info
+
+  # Publish the docs via mike under the release tag as the version. This is the only
+  # place the gh-pages site is updated — pushes to the default branch merely build
+  # the docs for verification (see ci.yml). Stable releases (tag like x.y or x.y.z,
+  # optionally v-prefixed) also get the 'latest' alias; pre-releases (tag with a
+  # -alpha/-beta/-rc suffix) do not, so 'latest' keeps pointing at the last stable
+  # release.
+  deploy-docs:
+    runs-on: ubuntu-latest
+    needs: validate-docs
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: 3.x
+
+      - name: Pip Update
+        run: pip install --upgrade pip
+
+      - name: Set up JDK
+        uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '25'
+          cache: gradle
+
+      - name: Make Gradle wrapper executable
+        run: chmod +x ./gradlew
+
+      - name: Configure git for mike
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      # The tag decides whether this version also becomes 'latest'. Determined in its own step because the
+      # gradle action takes one flat argument line and cannot carry an if/else.
+      - name: Determine deployment arguments
+        id: args
+        run: |
+          TAG="${{ github.ref_name }}"
+          if [[ "$TAG" =~ ^v?[0-9]+\.[0-9]+(\.[0-9]+)?$ ]]; then
+            echo "gradle=deployDocs -Pversion=$TAG --stacktrace --info" >> "$GITHUB_OUTPUT"
+          else
+            echo "gradle=deployDocs -Pversion=$TAG -PsetLatest=false --stacktrace --info" >> "$GITHUB_OUTPUT"
+          fi
+
+      # Safe to repeat: mike overwrites the directory of the version being deployed, so a second run
+      # produces the same gh-pages state as the first.
+      - name: Deploy docs
+        uses: ./.github/actions/gradle
+        with:
+          arguments: ${{ steps.args.outputs.gradle }}
+
+  # Sign the plugin and upload it to the JetBrains Marketplace. This is the last step
+  # before the GitHub release is created (the release job depends on this job), so a
+  # failed upload prevents the GitHub release from being published.
+  publish-marketplace:
+    runs-on: ubuntu-latest
+    needs:
+      - licences
+      - deploy-docs
+      - verify-plugin
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '25'
+          cache: gradle
+
+      - name: Make Gradle wrapper executable
+        run: chmod +x ./gradlew
+
+      # Write all secrets to short-lived files (umask 077). Secrets touch the environment only in
+      # this trusted printf-only step; the Gradle/signer process below gets just file paths, so a
+      # `set`/`env` dump there reveals nothing.
+      - name: Write signing material
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          PUBLISH_TOKEN: ${{ secrets.PUBLISH_TOKEN }}
+        run: |
+          umask 077
+          printf '%s' "$KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/keystore.p12"
+          printf '%s' "$KEYSTORE_PASSWORD"           > "$RUNNER_TEMP/keystore.pass"
+          printf '%s' "$PUBLISH_TOKEN"               > "$RUNNER_TEMP/publish.token"
+
+      # Deliberately NOT wrapped in the retrying gradle action: publishPlugin uploads to the Marketplace,
+      # and an upload that got through before the connection broke would be repeated by a retry.
+      # Publishing is not idempotent, so it stays a single attempt — `continue-on-error` already turns a
+      # failure here into a warning instead of a broken release.
+      - name: Publish to JetBrains Marketplace
+        env:
+          KEYSTORE_FILE: ${{ runner.temp }}/keystore.p12
+          KEYSTORE_PASSWORD_FILE: ${{ runner.temp }}/keystore.pass
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          PUBLISH_TOKEN_FILE: ${{ runner.temp }}/publish.token
+        run: |
+          TAG="${{ github.ref_name }}"
+          if [[ "$TAG" =~ ^(0|[a-zA-Z]) ]]; then CHANNEL="eap"; else CHANNEL="default"; fi
+          ./gradlew publishPlugin -Pversion="$TAG" -PpublishChannel="$CHANNEL" --stacktrace
+        continue-on-error: true
+
+  # Publish the language modules (:language:script, :language:preprocessor) as Maven artifacts to the
+  # GitHub Packages registry. Runs after every other release step (build, licences, docs, marketplace)
+  # but before the GitHub release page is created (the release job depends on this one).
+  publish-packages:
+    runs-on: ubuntu-latest
+    needs:
+      - licences
+      - deploy-docs
+      - verify-plugin
+
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '25'
+          cache: gradle
+
+      - name: Make Gradle wrapper executable
+        run: chmod +x ./gradlew
+
+      # Not wrapped either, for the same reason as the Marketplace upload above: a repeated publication is
+      # an upload of artifacts that may already be in the registry, and GitHub Packages rejects a second
+      # push of the same version.
+      - name: Publish language modules to GitHub Packages
+        env:
+          GITHUB_ACTOR: ${{ github.actor }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: ./gradlew publishAllPublicationsToGitHubPackagesRepository -Pversion=${{ github.ref_name }} --stacktrace
+        continue-on-error: true
+
+  release:
+    runs-on: ubuntu-latest
+    needs:
+      - publish-marketplace
+      - publish-packages   # GitHub release only after the language artifacts are published
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Download plugin artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: plugin-distribution
+          path: build/distributions/
+
+      - name: Download SBOM artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: sbom
+          path: build/reports/cyclonedx/
+
+      - name: Extract changelog
+        run: |
+          TAG="${{ github.ref_name }}"
+          NOTES=$(awk "/^## \[$TAG\]/{found=1; next} found && /^## \[/{exit} found{print}" CHANGELOG.md)
+          NOTES=$(echo "$NOTES" | sed '/./,$!d' | sed -e :a -e '/^\n*$/{$d;N;ba}')
+          if [ -z "$NOTES" ]; then
+            echo "ERROR: No changelog entry found for tag $TAG"
+            exit 1
+          fi
+          echo "RELEASE_NOTES<<EOF" >> $GITHUB_ENV
+          echo "$NOTES" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG="${{ github.ref_name }}"
+          if [[ "$TAG" =~ ^(0|[a-zA-Z]) ]]; then
+            gh release create "$TAG" build/distributions/*.zip build/reports/cyclonedx/bom.xml \
+              --title "$TAG" \
+              --notes "$RELEASE_NOTES" \
+              --prerelease \
+              --latest=false
+          else
+            gh release create "$TAG" build/distributions/*.zip build/reports/cyclonedx/bom.xml \
+              --title "$TAG" \
+              --notes "$RELEASE_NOTES" \
+              --latest
+          fi

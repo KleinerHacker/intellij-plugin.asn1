@@ -1,0 +1,19 @@
+.gradle
+.idea
+# IntelliJ module descriptors are IDE-generated and belong to the local workspace, like .idea
+*.iml
+.intellijPlatform
+.kotlin
+.claude/plans
+# Gradle build output (root + every module). The trailing-slash pattern matches any directory named
+# "build", so re-include the `build` Kotlin *source package* that lives under each module's src/ tree.
+build/
+!**/src/**/build/
+docs/site
+docs/docs/dokka
+docs/docs/licences
+# Local plugin signing material (private key must never be committed)
+/.signing
+# Stray npm artifacts — this project is pure Kotlin/Gradle and has no Node part
+/package-lock.json
+/node_modules/
