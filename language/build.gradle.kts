@@ -18,7 +18,7 @@ import org.jetbrains.grammarkit.tasks.GenerateParserTask
 plugins {
     id("asn1.platform-module")
     alias(libs.plugins.grammarkit)
-    id("org.jetbrains.dokka") version "2.2.0"
+    id("org.jetbrains.dokka") version "2.3.0"
     id("org.jetbrains.kotlinx.kover") version "0.9.11"
 }
 
