@@ -15,7 +15,7 @@
 plugins {
     id("asn1.platform-module")
     id("org.jetbrains.dokka") version "2.2.0"
-    id("org.jetbrains.kotlinx.kover") version "0.9.9"
+    id("org.jetbrains.kotlinx.kover") version "0.9.11"
 }
 
 // Coverage is measured from `test`, which runs everything. Without this Kover's report tasks — and through
