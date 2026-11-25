@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+  <path d="M3 1.5h6.5L13 5v9.5H3z" fill="none" stroke="#6E6E6E" stroke-width="1"/>
+  <path d="M9.5 1.5V5H13" fill="none" stroke="#6E6E6E" stroke-width="1"/>
+  <text x="8" y="12.5" font-family="Arial, sans-serif" font-size="5" font-weight="bold" text-anchor="middle" fill="#3574F0">ASN</text>
+</svg>

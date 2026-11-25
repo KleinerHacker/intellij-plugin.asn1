@@ -1,0 +1,42 @@
+<!--
+  ~ Copyright (c) KleinerHacker alias Pfeiffer C Soft 2026.
+  ~ This work is licensed under the Apache License, Version 2.0.
+  ~ You may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at:
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, this software is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and limitations.
+  -->
+
+<!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
+<idea-plugin url="https://github.com/KleinerHacker/intellij-plugin.asn1">
+    <id>org.pcsoft.ij.plugin.asn-1</id>
+    <name>ASN.1</name>
+    <description><![CDATA[
+        <p>
+            <b>AI transparency notice:</b> the code and documentation of this project were largely created with AI
+            assistance (transparency notice pursuant to the EU AI Act).
+        </p>
+
+        <p>
+            Brings language support for <a href="https://www.itu.int/rec/T-REC-X.680">ASN.1</a> (Abstract Syntax
+            Notation One, ITU-T X.680) to the JetBrains IDE family.
+        </p>
+
+        <h3>File types</h3>
+        <ul>
+            <li><b>ASN.1 module files</b> &mdash; <code>.asn</code> and <code>.asn1</code> files are recognised and
+                shown with a dedicated icon.</li>
+        </ul>
+    ]]></description>
+    <version>0.1.0</version>
+    <vendor url="https://github.com/KleinerHacker">KleinerHacker</vendor>
+
+    <depends>com.intellij.modules.lang</depends>
+
+    <content>
+        <module name="asn-1.language"/>
+    </content>
+</idea-plugin>

@@ -1,0 +1,105 @@
+name: Run Gradle
+description: >-
+  Runs the Gradle wrapper with the given arguments and repeats the invocation when — and only when — it
+  failed for a reason that is not the project's fault: the build being unable to talk to a dependency
+  repository.
+
+  The IntelliJ Platform SDK and its test framework are resolved from cache-redirector.jetbrains.com on
+  every job, and every job resolves them independently (they run in parallel and therefore cannot share
+  one dependency cache). A single 5xx from that host — an outage lasting seconds — is enough to fail a
+  job whose siblings resolved the very same coordinates minutes earlier. Gradle's own retry gives up
+  after three attempts within a few seconds, which is far too short a window for that class of outage.
+
+  A compile error, a failing test or an assertion from the plugin verifier never produces one of the
+  markers matched below, so those still fail immediately on the first attempt: this action buys
+  resilience against the network, NOT against flaky tests.
+
+inputs:
+  arguments:
+    description: >-
+      The full argument line handed to the Gradle wrapper, e.g. "test -PtestSuite=integration
+      --build-cache". Word-split by the shell WITHOUT quote processing, so a single argument must not
+      contain spaces and must not be quoted — `-Pversion="1.0.0"` would reach Gradle with the quotes
+      still attached. Write `-Pversion=1.0.0`.
+    required: true
+  attempts:
+    description: Maximum number of attempts, the first one included.
+    required: false
+    default: '3'
+
+runs:
+  using: composite
+  steps:
+    - name: Run Gradle
+      shell: bash
+      # Passed as environment variables rather than interpolated into the script: the values never reach
+      # the shell as code, only as data.
+      #
+      # Anything else the Gradle process needs has to come from the workflow's or the job's `env:`, or be
+      # written to $GITHUB_ENV by an earlier step — those are one shared store that composite actions see.
+      # `env:` on the step that calls this action is NOT a documented part of that store.
+      env:
+        GRADLE_ARGUMENTS: ${{ inputs.arguments }}
+        GRADLE_ATTEMPTS: ${{ inputs.attempts }}
+      run: |
+        # The composite runner starts this script with `-e`; failing attempts must be handled here
+        # instead of aborting the step, so it is switched off deliberately.
+        set +e
+        set -uo pipefail
+
+        # Windows runners get the .bat wrapper, executed through cmd.exe by the MSYS layer. The POSIX
+        # wrapper would be the wrong choice there: without a .gitattributes pinning its line endings, a
+        # checkout with core.autocrlf=true turns its shebang into an unusable interpreter.
+        if [ "${RUNNER_OS:-}" = "Windows" ]; then
+          GRADLEW="./gradlew.bat"
+        else
+          GRADLEW="./gradlew"
+        fi
+
+        # Markers of a failure that lies outside this repository. Kept deliberately narrow — every entry
+        # describes the build talking to a repository, never the build itself producing a wrong result.
+        TRANSIENT='Received status code 5[0-9]{2} from server'
+        TRANSIENT="$TRANSIENT"'|Server returned HTTP response code: 5[0-9]{2}'
+        TRANSIENT="$TRANSIENT"'|Could not (GET|HEAD|PUT|POST) .http'
+        TRANSIENT="$TRANSIENT"'|Could not resolve all (files|dependencies|artifacts) for configuration'
+        TRANSIENT="$TRANSIENT"'|Could not (download|get resource) '
+        TRANSIENT="$TRANSIENT"'|Read timed out|Connection reset|Connection timed out|Connection refused'
+        TRANSIENT="$TRANSIENT"'|Network is unreachable|Temporary failure in name resolution'
+        TRANSIENT="$TRANSIENT"'|UnknownHostException|SocketTimeoutException|SSLHandshakeException|SSLException'
+        TRANSIENT="$TRANSIENT"'|Premature end of Content-Length delimited message body'
+
+        LOG="${RUNNER_TEMP:-/tmp}/gradle-attempt-$$.log"
+        ATTEMPT=1
+        DELAY=30
+
+        while :; do
+          echo "::group::Gradle attempt ${ATTEMPT}/${GRADLE_ATTEMPTS}: ${GRADLEW} ${GRADLE_ARGUMENTS}"
+          # Unquoted on purpose: the input is a whole argument line and has to be word-split.
+          # shellcheck disable=SC2086
+          "$GRADLEW" $GRADLE_ARGUMENTS 2>&1 | tee "$LOG"
+          STATUS=${PIPESTATUS[0]}
+          echo "::endgroup::"
+
+          if [ "$STATUS" -eq 0 ]; then
+            rm -f "$LOG"
+            exit 0
+          fi
+
+          if ! grep -Eq "$TRANSIENT" "$LOG"; then
+            echo "::error::Gradle failed with exit code ${STATUS}. The log shows no repository or network problem, so this is a real build failure — not retrying."
+            rm -f "$LOG"
+            exit "$STATUS"
+          fi
+
+          if [ "$ATTEMPT" -ge "$GRADLE_ATTEMPTS" ]; then
+            echo "::error::Gradle still fails after ${GRADLE_ATTEMPTS} attempts with a repository or network problem. The dependency repositories are most likely unavailable."
+            rm -f "$LOG"
+            exit "$STATUS"
+          fi
+
+          echo "::warning::Attempt ${ATTEMPT} failed while talking to a dependency repository — retrying in ${DELAY}s."
+          rm -f "$LOG"
+          sleep "$DELAY"
+          ATTEMPT=$((ATTEMPT + 1))
+          DELAY=$((DELAY * 4))
+        done
