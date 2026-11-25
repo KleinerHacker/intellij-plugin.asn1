@@ -23,7 +23,8 @@ The order of the defaults is: encoding reference, tag default, extension default
 default is reported as error. Comments (`-- ...` and nested `/* ... */`) and line breaks are allowed between all
 parts.
 
-The module body is accepted without checks for now.
+The module body is a sequence of type assignments (`Name ::= ...`) and value assignments (`name Type ::= ...`).
+Text that belongs to no assignment is reported as an error. The right hand sides are not checked yet.
 
 ## Object Identifier
 

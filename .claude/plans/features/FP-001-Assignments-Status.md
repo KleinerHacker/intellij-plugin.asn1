@@ -1,12 +1,12 @@
 # Feature Status: Assignments
 
-Status: NOT_STARTED
+Status: IN_PROGRESS
 
 ## Implementation Plans
 
 | ID | Implementation Plan | Status |
 |----|---------------------|--------|
-| IP-01 | Assignment skeleton | NOT_STARTED |
+| IP-01 | Assignment skeleton | DONE |
 | IP-02 | Type notation | NOT_STARTED |
 | IP-03 | Value notation | NOT_STARTED |
 | IP-04 | Constraints | NOT_STARTED |
@@ -19,4 +19,4 @@ Status: NOT_STARTED
 
 ## Notes
 
-Feature Plan created. No implementation plan has been started yet.
+IP-01 implemented, build successful. IP-02 to IP-06 are open.

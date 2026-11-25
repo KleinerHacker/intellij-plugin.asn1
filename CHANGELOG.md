@@ -11,6 +11,9 @@
 - **Module definition.** The module header (`Name { object identifier } DEFINITIONS ... ::= BEGIN ... END`) is
   parsed, including all forms of the object identifier and the encoding, tag and extension defaults. A wrong order
   or a repeated default and numbers with leading zeros are reported. The parser copes with incomplete text.
+- **Assignments in the module body.** Type assignments (`Name ::= ...`) and value assignments
+  (`name Type ::= ...`) are recognised in the module body; text that belongs to no assignment is reported as an
+  error. The right hand sides are not checked yet.
 - **Syntax highlighting.** Keywords, `::=`, numbers, comments, braces, the module name and the arcs of the object
   identifier are highlighted with the colors of the standard color scheme; the colors can be changed in the color
   settings (*ASN.1*).
