@@ -1,5 +1,19 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
-  <path d="M3 1.5h6.5L13 5v9.5H3z" fill="none" stroke="#6E6E6E" stroke-width="1"/>
-  <path d="M9.5 1.5V5H13" fill="none" stroke="#6E6E6E" stroke-width="1"/>
-  <text x="8" y="12.5" font-family="Arial, sans-serif" font-size="5" font-weight="bold" text-anchor="middle" fill="#3574F0">ASN</text>
+  <!-- ASN.1 file type icon: document sheet with folded corner and an OID tree motif, colors taken from the logo -->
+  <defs>
+    <linearGradient id="asn1Border" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#8B5CF6"/>
+      <stop offset="1" stop-color="#3B82F6"/>
+    </linearGradient>
+  </defs>
+  <!-- Sheet body (dark navy tile) -->
+  <path d="M2.5 1.5h7L13.5 5.5v9h-11z" fill="#0F0A3C" stroke="url(#asn1Border)" stroke-width="1" stroke-linejoin="round"/>
+  <!-- Folded corner -->
+  <path d="M9.5 1.5v4h4z" fill="url(#asn1Border)"/>
+  <!-- OID tree edges -->
+  <path d="M5 6.5V12M5 9h3.5M5 12h3.5" fill="none" stroke="#FFFFFF" stroke-width="1" stroke-linecap="round"/>
+  <!-- OID tree nodes: root in magenta, leaves in white -->
+  <circle cx="5" cy="6" r="1.5" fill="#E040FB"/>
+  <circle cx="9.5" cy="9" r="1.25" fill="#FFFFFF"/>
+  <circle cx="9.5" cy="12" r="1.25" fill="#E040FB"/>
 </svg>

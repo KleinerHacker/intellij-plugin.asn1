@@ -39,4 +39,14 @@ class AsnFileTypeTest : BasePlatformTestCase() {
         assertEquals("asn", AsnFileType.defaultExtension)
         assertFalse(AsnFileType.description.isBlank())
     }
+
+    /**
+     * Use case: an `.asn` file is opened and the platform builds its PSI.
+     * Expected: the parser definition of the ASN.1 language is registered and creates an [AsnFile].
+     */
+    fun testParserDefinitionIsRegistered() {
+        val definition = com.intellij.lang.LanguageParserDefinitions.INSTANCE.forLanguage(AsnLanguage)
+        assertTrue(definition is org.pcsoft.intellij.plugin.asn1.language.parser.AsnParserDefinition)
+        assertTrue(myFixture.configureByText("module.asn", "M DEFINITIONS ::= BEGIN END") is AsnFile)
+    }
 }

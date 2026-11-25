@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ASN.1 object identifier registry",
+  "description": "Known arcs of the object identifier tree, used for the completion of object identifier values. Uniqueness of `name` and `number` among the children of one node cannot be expressed in JSON Schema and is checked by the tests.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["roots"],
+  "properties": {
+    "roots": {
+      "description": "The arcs directly below the root of the object identifier tree.",
+      "type": "array",
+      "items": { "$ref": "#/$defs/node" }
+    }
+  },
+  "$defs": {
+    "node": {
+      "description": "One arc of the object identifier tree.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "number", "description"],
+      "properties": {
+        "name": {
+          "description": "The name form of the arc (identifier, e.g. `iso`): starts with a lower case letter, may contain digits and single hyphens.",
+          "type": "string",
+          "pattern": "^[a-z][a-zA-Z0-9]*(-[a-zA-Z0-9]+)*$"
+        },
+        "number": {
+          "description": "The number form of the arc.",
+          "type": "integer",
+          "minimum": 0
+        },
+        "description": {
+          "description": "Short description of the arc, shown in the completion popup.",
+          "type": "string",
+          "minLength": 1
+        },
+        "children": {
+          "description": "The arcs directly below this arc.",
+          "type": "array",
+          "items": { "$ref": "#/$defs/node" }
+        }
+      }
+    }
+  }
+}

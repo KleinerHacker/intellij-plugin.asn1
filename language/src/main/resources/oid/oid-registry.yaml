@@ -1,0 +1,212 @@
+# yaml-language-server: $schema=oid-registry.schema.json
+#
+# Known arcs of the ASN.1 object identifier tree. Used for the completion of object identifier values.
+# Only arcs that are fixed by a standard or a well-known specification are listed; the tree is NOT complete.
+# Each node: `name` (name form), `number` (number form), `description`, optional `children`.
+#
+# Checked against the OID repository https://oid-base.com (2026-11-25) and ITU-T X.660. The names are the primary
+# identifiers given there, e.g. `attributeType` and `certificateExtension` (alias `id-ce`).
+roots:
+  # ITU-T X.660, Annex A: the three root arcs
+  - name: itu-t
+    number: 0
+    description: ITU-T (formerly CCITT)
+    children:
+      - name: recommendation
+        number: 0
+        description: ITU-T recommendations
+      - name: question
+        number: 1
+        description: ITU-T questions
+      - name: administration
+        number: 2
+        description: Administrations (X.121 country codes)
+      - name: network-operator
+        number: 3
+        description: Network operators (X.121 data network identification codes)
+      - name: identified-organization
+        number: 4
+        description: Identified organizations
+      - name: r-recommendation
+        number: 5
+        description: ITU-R recommendations
+      - name: data
+        number: 9
+        description: Data
+
+  - name: iso
+    number: 1
+    description: ISO
+    children:
+      - name: standard
+        number: 0
+        description: ISO standards
+      - name: registration-authority
+        number: 1
+        description: ISO registration authorities
+      - name: member-body
+        number: 2
+        description: ISO member bodies (ISO 3166 numeric country codes)
+        children:
+          - name: de
+            number: 276
+            description: Germany
+          - name: us
+            number: 840
+            description: United States of America
+            children:
+              # RSA Laboratories, PKCS series
+              - name: rsadsi
+                number: 113549
+                description: RSA Data Security, Inc.
+                children:
+                  - name: pkcs
+                    number: 1
+                    description: Public-Key Cryptography Standards
+                    children:
+                      - name: pkcs-1
+                        number: 1
+                        description: RSA cryptography
+                      - name: pkcs-7
+                        number: 7
+                        description: Cryptographic message syntax
+                      - name: pkcs-9
+                        number: 9
+                        description: Selected attribute types
+                      - name: pkcs-12
+                        number: 12
+                        description: Personal information exchange syntax
+              # ANSI X9.62 (other identifier: ansi-X9-62)
+              - name: ansi-x962
+                number: 10045
+                description: ANSI X9.62 (elliptic curve cryptography)
+      - name: identified-organization
+        number: 3
+        description: Organizations identified by an international code designator (ISO 6523)
+        children:
+          # RFC 1155, RFC 1213
+          - name: dod
+            number: 6
+            description: United States Department of Defense
+            children:
+              - name: internet
+                number: 1
+                description: The Internet
+                children:
+                  - name: directory
+                    number: 1
+                    description: OSI directory
+                  - name: mgmt
+                    number: 2
+                    description: Management
+                    children:
+                      - name: reserved
+                        number: 0
+                        description: Reserved
+                      - name: mib-2
+                        number: 1
+                        description: Management information base II (RFC 1213)
+                      - name: pib
+                        number: 2
+                        description: Policy information base
+                  - name: experimental
+                    number: 3
+                    description: Experimental use
+                  - name: private
+                    number: 4
+                    description: Private use
+                    children:
+                      - name: reserved
+                        number: 0
+                        description: Reserved
+                      - name: enterprise
+                        number: 1
+                        description: Private enterprise numbers (IANA)
+                  - name: security
+                    number: 5
+                    description: Security
+                  - name: snmpV2
+                    number: 6
+                    description: SNMP version 2
+                  - name: mail
+                    number: 7
+                    description: Mail
+                  - name: features
+                    number: 8
+                    description: Features
+
+  - name: joint-iso-itu-t
+    number: 2
+    description: Joint ISO and ITU-T
+    children:
+      - name: presentation
+        number: 0
+        description: OSI presentation layer
+      # ITU-T X.690, X.691, X.692, X.693, X.696, X.697
+      - name: asn1
+        number: 1
+        description: Abstract Syntax Notation One
+        children:
+          - name: specification
+            number: 0
+            description: ASN.1 specifications
+          - name: basic-encoding
+            number: 1
+            description: Basic Encoding Rules (BER)
+          - name: ber-derived
+            number: 2
+            description: Encoding rules derived from BER
+            children:
+              - name: canonical-encoding
+                number: 0
+                description: Canonical Encoding Rules (CER)
+              - name: distinguished-encoding
+                number: 1
+                description: Distinguished Encoding Rules (DER)
+          - name: packed-encoding
+            number: 3
+            description: Packed Encoding Rules (PER)
+          - name: ecn
+            number: 4
+            description: Encoding Control Notation (ECN)
+          - name: xml-encoding
+            number: 5
+            description: XML Encoding Rules (XER)
+          - name: oer-encoding
+            number: 6
+            description: Octet Encoding Rules (OER)
+          - name: jer-encoding
+            number: 7
+            description: JSON Encoding Rules (JER)
+      - name: association-control
+        number: 2
+        description: OSI association control
+      - name: reliable-transfer
+        number: 3
+        description: OSI reliable transfer
+      - name: remote-operations
+        number: 4
+        description: OSI remote operations
+      # ITU-T X.500, X.509 (other identifiers of ds: directory; of certificateExtension: id-ce)
+      - name: ds
+        number: 5
+        description: Directory services
+        children:
+          - name: attributeType
+            number: 4
+            description: Attribute types (X.520)
+          - name: objectClass
+            number: 6
+            description: Object classes
+          - name: certificateExtension
+            number: 29
+            description: Certificate extensions (X.509)
+      - name: mhs
+        number: 6
+        description: Message handling systems
+      - name: country
+        number: 16
+        description: Countries (ISO 3166)
+      - name: uuid
+        number: 25
+        description: Universally unique identifiers

@@ -16,12 +16,11 @@ description: Format and file layout for plans in .claude/plans. Use when writing
 
 ## Files
 
-* The plan MUST be written into the local `.claude/plans` directory, together with a status file
-    * Naming scheme:
-        * Plan: `<Name>.md`
-        * Status: `<Name>-status.md`
-    * The status MUST ALWAYS be kept up to date
-* Plans and plan status MUST NEVER be added to GIT
+* The plan MUST be written into the local `.claude/plans` directory
+    * Naming scheme: `<Name>.md`
+* An implementation plan MUST NOT get a status file
+    * ONLY the Feature Plan gets a status file, see the command `feature-plan`
+* Plans MUST ALWAYS be added to GIT (`git add`) together with the change they describe
+    * Plans stay in `.claude/plans` after the plan is finished, they are NOT cleaned up
 * When restarting an existing plan after an interruption, plan mode MUST be entered
     * The remaining items are laid out again according to the prescribed scheme
-* After plan is finished cleanup `.claude/plans` folder

@@ -22,7 +22,7 @@
 
 plugins {
     id("org.jetbrains.dokka") version "2.2.0"
-    id("org.jetbrains.kotlinx.kover") version "0.9.9"
+    id("org.jetbrains.kotlinx.kover") version "0.9.11"
 }
 
 // Dokka MUST aggregate over all child modules from the root — otherwise the generated API docs would

@@ -13,10 +13,31 @@
 <!-- ASN.1 language content module descriptor (:language): language level registrations. Declared as content module in the main plugin.xml. -->
 <idea-plugin>
     <extensions defaultExtensionNs="com.intellij">
+        <applicationService
+                serviceImplementation="org.pcsoft.intellij.plugin.asn1.language.services.AsnOidRegistryService"/>
+
         <fileType name="ASN.1"
                   language="ASN.1"
                   implementationClass="org.pcsoft.intellij.plugin.asn1.language.AsnFileType"
                   fieldName="INSTANCE"
                   extensions="asn;asn1"/>
+
+        <lang.parserDefinition language="ASN.1"
+                               implementationClass="org.pcsoft.intellij.plugin.asn1.language.parser.AsnParserDefinition"/>
+
+        <lang.syntaxHighlighterFactory language="ASN.1"
+                                       implementationClass="org.pcsoft.intellij.plugin.asn1.language.parser.AsnSyntaxHighlighterFactory"/>
+        <annotator language="ASN.1"
+                   implementationClass="org.pcsoft.intellij.plugin.asn1.language.parser.AsnAnnotator"/>
+        <colorSettingsPage implementation="org.pcsoft.intellij.plugin.asn1.language.feature.editor.AsnColorSettingsPage"/>
+
+        <lang.braceMatcher language="ASN.1"
+                           implementationClass="org.pcsoft.intellij.plugin.asn1.language.feature.editor.AsnBraceMatcher"/>
+
+        <completion.contributor language="ASN.1"
+                                implementationClass="org.pcsoft.intellij.plugin.asn1.language.feature.completion.AsnCompletionContributor"/>
+
+        <lang.documentationProvider language="ASN.1"
+                                    implementationClass="org.pcsoft.intellij.plugin.asn1.language.feature.documentation.AsnDocumentationProvider"/>
     </extensions>
 </idea-plugin>
