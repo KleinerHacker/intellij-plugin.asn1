@@ -1,5 +1,7 @@
 # Global Rules
 
+ASN.1 Syntax Parser Plugin for IntelliJ
+
 ## Concurrency
 
 * Concurrent or long-running processes (e.g. `build`, `test`, `verifyPlugin`, `koverXmlReport`)

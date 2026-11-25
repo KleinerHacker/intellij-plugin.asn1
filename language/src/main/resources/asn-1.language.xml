@@ -13,6 +13,9 @@
 <!-- ASN.1 language content module descriptor (:language): language level registrations. Declared as content module in the main plugin.xml. -->
 <idea-plugin>
     <extensions defaultExtensionNs="com.intellij">
+        <applicationService
+                serviceImplementation="org.pcsoft.intellij.plugin.asn1.language.services.AsnOidRegistryService"/>
+
         <fileType name="ASN.1"
                   language="ASN.1"
                   implementationClass="org.pcsoft.intellij.plugin.asn1.language.AsnFileType"
@@ -33,5 +36,8 @@
 
         <completion.contributor language="ASN.1"
                                 implementationClass="org.pcsoft.intellij.plugin.asn1.language.feature.completion.AsnCompletionContributor"/>
+
+        <lang.documentationProvider language="ASN.1"
+                                    implementationClass="org.pcsoft.intellij.plugin.asn1.language.feature.documentation.AsnDocumentationProvider"/>
     </extensions>
 </idea-plugin>

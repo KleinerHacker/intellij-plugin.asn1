@@ -9,7 +9,9 @@ IDEs.
 
 > [!NOTE]
 > **AI transparency notice:** the code and documentation of this project were largely created with AI assistance
-> (transparency notice pursuant to the EU AI Act).
+> (transparency notice pursuant to the EU AI Act). The object identifier registry used for completion
+> (`oid-registry.yaml`) was compiled with AI assistance and checked against public OID repositories; it is incomplete,
+> so verify an arc against the official registry before relying on it.
 
 ## Documentation
 
@@ -26,6 +28,9 @@ IDEs.
 * Syntax highlighting, color settings page and brace matching
 * Completion of the tag default (`EXPLICIT TAGS`, `IMPLICIT TAGS`, `AUTOMATIC TAGS`)
 * Completion of the module keywords `DEFINITIONS`, `BEGIN` and `END`
+* Completion of the known object identifier arcs (`iso(1)`, `identified-organization(3)`, `dod(6)`, ...) inside
+  the object identifier of a module header, based on the registry `oid-registry.yaml`
+* Quick documentation of the known object identifier arcs (description, number, dotted notation)
 * Error tolerant parsing: incomplete text never breaks the editor
 
 ### IDE Compatibility
@@ -60,6 +65,7 @@ Reference: [ITU-T X.680](https://www.itu.int/rec/T-REC-X.680) — last checked: 
 |-------------------------------------------------|-------------|
 | Name, number and name with number forms         | Implemented |
 | Reference to a defined value as component       | Partial     |
+| Completion of the known arcs (partial registry) | Partial     |
 
 ### Editor Features
 
@@ -69,6 +75,8 @@ Reference: [ITU-T X.680](https://www.itu.int/rec/T-REC-X.680) — last checked: 
 | Brace matching                                              | Implemented |
 | Completion of the tag default                               | Implemented |
 | Completion of `DEFINITIONS`, `BEGIN` and `END`              | Implemented |
+| Completion of known object identifier arcs                  | Partial     |
+| Quick documentation of known object identifier arcs         | Partial     |
 | Error tolerant parsing while typing                         | Implemented |
 | Further completion, navigation, refactoring, formatting     | Planned     |
 

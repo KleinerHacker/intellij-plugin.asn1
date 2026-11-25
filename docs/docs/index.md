@@ -5,7 +5,9 @@
 !!! note "AI transparency notice"
 
     The code and documentation of this project were largely created with AI assistance
-    (transparency notice pursuant to the EU AI Act).
+    (transparency notice pursuant to the EU AI Act). The object identifier registry used for completion
+    (`oid-registry.yaml`) was compiled with AI assistance and checked against public OID repositories; it is
+    incomplete, so verify an arc against the official registry before relying on it.
 
 ---
 
@@ -24,8 +26,8 @@ module header:
 
 - **File types** — `.asn` and `.asn1` files are recognised and shown with a dedicated icon
 - **Module definition** — parsing of the module header including the object identifier, syntax highlighting,
-  brace matching and completion of the tag default (`EXPLICIT TAGS`, `IMPLICIT TAGS`, `AUTOMATIC TAGS`) and of the module keywords
-  `DEFINITIONS`, `BEGIN` and `END`
+  brace matching and completion of the tag default (`EXPLICIT TAGS`, `IMPLICIT TAGS`, `AUTOMATIC TAGS`), of the module keywords
+  `DEFINITIONS`, `BEGIN` and `END` and of the known object identifier arcs
 
 See [File Types](file-types.md) and [Module Definition](module-definition.md) for details. The full list of supported features is kept in the
 [README](https://github.com/KleinerHacker/intellij-plugin.asn1#implementation-status).

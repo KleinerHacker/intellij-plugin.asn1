@@ -68,6 +68,23 @@ The structural keywords are offered where they are missing: `DEFINITIONS` behind
 identifier, `BEGIN` behind `::=` and `END` behind `BEGIN` or inside the module body. A keyword that the module
 contains already is not offered again, and nothing is offered inside comments.
 
+### Object Identifier Arcs
+
+Inside the braces of the module's object identifier the known arcs are offered, for example `iso(1)` at the start
+and `member-body(2)` or `identified-organization(3)` behind `iso`. The arcs already written select the position in
+the tree, no matter whether they are written as name (`iso`), as number (`1`) or as name with number (`iso(1)`).
+Each entry shows the name, the number and a short description. Typing a part of the name or the number narrows the
+list. If the caret stands in front of an existing `(`, only the name is inserted.
+
+The quick documentation (hover or `Ctrl+Q`) of an arc shows its description, name, number and the dotted notation
+of its path, e.g. `1.3.6` for `dod`. It works on the name and on the number of an arc. Arcs that are not in the
+registry have no documentation.
+
+The arcs come from the registry file `oid/oid-registry.yaml` inside the plugin (described by the JSON Schema
+`oid-registry.schema.json`). It lists the three root arcs and the arcs below them that are fixed by a standard; it
+is NOT complete, since most arcs are assigned by their owners. Nothing is offered below an arc that the registry does
+not know.
+
 ## Incomplete Text
 
 The editor copes with incomplete text at any time while typing: what is missing is reported as error, the rest of

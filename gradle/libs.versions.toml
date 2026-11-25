@@ -1,6 +1,7 @@
 [versions]
 junit = "4.13.2"
 jackson = "2.22.2"
+json-schema-validator = "1.5.6"
 kotlin = "2.4.20"
 changelog = "2.5.0"
 foojay-resolver = "1.0.0"
@@ -17,6 +18,8 @@ kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "
 kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlin" }
 jackson-yaml = { module = "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml", version.ref = "jackson" }
 jackson-kotlin = { module = "com.fasterxml.jackson.module:jackson-module-kotlin", version.ref = "jackson" }
+# Test only: validates oid-registry.yaml against its JSON Schema.
+json-schema-validator = { module = "com.networknt:json-schema-validator", version.ref = "json-schema-validator" }
 
 [plugins]
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }

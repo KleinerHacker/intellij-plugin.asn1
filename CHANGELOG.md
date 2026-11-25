@@ -19,6 +19,12 @@
   `AUTOMATIC TAGS` are offered.
 - **Completion of module keywords.** `DEFINITIONS` behind the module name, `BEGIN` behind `::=` and `END` inside
   the module body are offered as long as the module does not contain them yet.
+- **Completion of object identifier arcs.** Inside the object identifier of a module header the known arcs
+  (`iso(1)`, `identified-organization(3)`, `dod(6)`, ...) are offered with number and description, depending on the
+  arcs already written. The list is incomplete: it contains the three root arcs and the arcs fixed by standards.
+- **Documentation of object identifier arcs.** The quick documentation (hover, `Ctrl+Q`) of an arc in the object
+  identifier shows its description, name, number and dotted notation, e.g. `1.3.6` for `dod`. Only arcs of the
+  incomplete registry are documented.
 - **New file icon.** The icon of ASN.1 files has been redesigned.
 - **New plugin logo.** The plugin icon, the readme and the documentation use the new ASN.1 logo; the documentation
   colour scheme (light and dark mode) follows the logo.

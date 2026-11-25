@@ -18,6 +18,7 @@ import com.intellij.codeInsight.completion.CompletionProvider
 import com.intellij.codeInsight.completion.CompletionResultSet
 import com.intellij.codeInsight.completion.CompletionType
 import com.intellij.codeInsight.lookup.LookupElementBuilder
+import com.intellij.openapi.components.service
 import com.intellij.patterns.PlatformPatterns
 import com.intellij.psi.PsiComment
 import com.intellij.psi.PsiElement
@@ -27,12 +28,15 @@ import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.util.ProcessingContext
 import org.pcsoft.intellij.plugin.asn1.PluginBundle
 import org.pcsoft.intellij.plugin.asn1.language.AsnLanguage
+import org.pcsoft.intellij.plugin.asn1.language.parser.psi.AsnObjIdSupport
 import org.pcsoft.intellij.plugin.asn1.language.parser.psi.AsnTypes
+import org.pcsoft.intellij.plugin.asn1.language.services.AsnOidRegistryService
 
 /**
  * Completion of the ASN.1 language. Offers the tag default of a module header
- * (`EXPLICIT TAGS`, `IMPLICIT TAGS`, `AUTOMATIC TAGS`) and the structural keywords of a module definition
- * (`DEFINITIONS`, `BEGIN`, `END`) as long as the module does not contain them yet.
+ * (`EXPLICIT TAGS`, `IMPLICIT TAGS`, `AUTOMATIC TAGS`), the structural keywords of a module definition
+ * (`DEFINITIONS`, `BEGIN`, `END`) as long as the module does not contain them yet, and the known arcs inside an
+ * object identifier.
  */
 class AsnCompletionContributor : CompletionContributor() {
     init {
@@ -45,6 +49,11 @@ class AsnCompletionContributor : CompletionContributor() {
             CompletionType.BASIC,
             PlatformPatterns.psiElement().withLanguage(AsnLanguage),
             ModuleKeywordProvider,
+        )
+        extend(
+            CompletionType.BASIC,
+            PlatformPatterns.psiElement().withLanguage(AsnLanguage),
+            ObjIdArcProvider,
         )
     }
 
@@ -112,11 +121,7 @@ class AsnCompletionContributor : CompletionContributor() {
             if (position is PsiComment) return
             // The keyword that already follows the position (e.g. `::= <caret> BEGIN`) is not offered a second time,
             // even if error recovery of the dummy-identifier tree moved it out of the module.
-            var next = PsiTreeUtil.nextLeaf(position, true)
-            while (next != null && (next is PsiWhiteSpace || next is PsiComment)) {
-                next = PsiTreeUtil.nextLeaf(next, true)
-            }
-            val nextType = next?.node?.elementType
+            val nextType = nextSignificantLeaf(position)?.node?.elementType
             val keywords = listOf(
                 Triple(
                     "DEFINITIONS", "completion.keyword.definitions",
@@ -186,6 +191,39 @@ class AsnCompletionContributor : CompletionContributor() {
             return false
         }
     }
+
+    /**
+     * Offers the known arcs (name form with number form, e.g. `internet(1)`) inside the braces of a definitive
+     * identifier or an object identifier value. The arcs already written in front of the caret select the node of
+     * the registry whose children are offered; at the start of the braces the root arcs are offered. Nothing is
+     * offered for an unknown path.
+     */
+    object ObjIdArcProvider : CompletionProvider<CompletionParameters>() {
+        override fun addCompletions(
+            parameters: CompletionParameters,
+            context: ProcessingContext,
+            result: CompletionResultSet,
+        ) {
+            val position = parameters.position
+            if (position is PsiComment) return
+            val arcContext = AsnObjIdSupport.arcContextBefore(position) ?: return
+            val children = service<AsnOidRegistryService>().registry.childrenOf(arcContext.path)
+            if (children.isEmpty()) return
+
+            // The number form is already in the text when the name is followed by `(`: insert only the name.
+            val nameOnly = nextSignificantLeaf(position)?.node?.elementType == AsnTypes.LPAREN
+            val target = if (arcContext.numberPrefix.isEmpty()) result else result.withPrefixMatcher(arcContext.numberPrefix)
+            for (node in children) {
+                val text = if (nameOnly) node.name else "${node.name}(${node.number})"
+                target.addElement(
+                    LookupElementBuilder.create(text)
+                        .withLookupString(node.name)
+                        .withLookupString(node.number.toString())
+                        .withTypeText(node.description, true),
+                )
+            }
+        }
+    }
 }
 
 /**
@@ -195,6 +233,17 @@ private fun previousSignificantLeaf(element: PsiElement): PsiElement? {
     var leaf = PsiTreeUtil.prevLeaf(element, true)
     while (leaf != null && (leaf is PsiWhiteSpace || leaf is PsiComment)) {
         leaf = PsiTreeUtil.prevLeaf(leaf, true)
+    }
+    return leaf
+}
+
+/**
+ * The closest leaf behind [element] that is neither whitespace nor a comment, or `null` at the end of the file.
+ */
+private fun nextSignificantLeaf(element: PsiElement): PsiElement? {
+    var leaf = PsiTreeUtil.nextLeaf(element, true)
+    while (leaf != null && (leaf is PsiWhiteSpace || leaf is PsiComment)) {
+        leaf = PsiTreeUtil.nextLeaf(leaf, true)
     }
     return leaf
 }

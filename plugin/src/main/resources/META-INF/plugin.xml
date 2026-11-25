@@ -41,6 +41,11 @@
             <li><b>Completion</b> &mdash; the tag default <code>EXPLICIT TAGS</code>, <code>IMPLICIT TAGS</code>
                 and <code>AUTOMATIC TAGS</code>, and the module keywords <code>DEFINITIONS</code>,
                 <code>BEGIN</code> and <code>END</code>.</li>
+            <li><b>Object identifier completion</b> &mdash; the known arcs (<code>iso(1)</code>,
+                <code>identified-organization(3)</code>, <code>dod(6)</code>, ...) inside the object identifier of a
+                module header.</li>
+            <li><b>Object identifier documentation</b> &mdash; quick documentation of an arc with description, number
+                and dotted notation.</li>
         </ul>
     ]]></description>
     <version>0.1.0</version>

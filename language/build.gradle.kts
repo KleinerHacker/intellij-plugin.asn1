@@ -46,6 +46,13 @@ kover {
     }
 }
 
+dependencies {
+    // Reads the object identifier registry (oid/oid-registry.yaml) into the Kotlin data classes.
+    implementation(libs.jackson.yaml)
+    implementation(libs.jackson.kotlin)
+    testImplementation(libs.json.schema.validator)
+}
+
 val parsingRoot = "src/main/resources/parsing"
 val parserPackage = "org/pcsoft/intellij/plugin/asn1/language/parser"
 
