@@ -21,7 +21,7 @@
 // ─────────────────────────────────────────────────────────────────────────────────────────────
 
 plugins {
-    id("org.jetbrains.dokka") version "2.2.0"
+    id("org.jetbrains.dokka") version "2.3.0"
     id("org.jetbrains.kotlinx.kover") version "0.9.11"
 }
 
