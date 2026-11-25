@@ -41,7 +41,7 @@ buildscript {
 
 plugins {
     id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0"
-    id("org.jetbrains.intellij.platform.settings") version "2.18.1"
+    id("org.jetbrains.intellij.platform.settings") version "2.20.1"
 }
 
 // Relocate the local build cache when GRADLE_BUILD_CACHE_DIR is set. On CI the `build` job populates that
